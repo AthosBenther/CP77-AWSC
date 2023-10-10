@@ -1,0 +1,46 @@
+<?php
+
+$folders = [
+    'app',
+    'vendors'
+];
+
+$autoloaderPath = "vendors/ab-lua-libs/autoloader.lua";
+
+$autoload = [];
+
+
+foreach ($folders as $folder) {
+    $autoload = array_merge($autoload, scanFolder($folder));
+}
+
+function scanFolder($folderPath) {
+    $autoload = [];
+    $files = scandir($folderPath);
+
+    foreach ($files as $file) {
+        if ($file !== '.' && $file !== '..') {
+            $filePath = $folderPath . '/' . $file;
+
+            if (is_dir($filePath)) {
+                $autoload = array_merge($autoload, scanFolder($filePath));
+            } elseif (pathinfo($file, PATHINFO_EXTENSION) === 'lua' && $file !== 'autoloader.lua') {
+                $moduleName = pathinfo($file, PATHINFO_FILENAME);
+                $autoload[] = "require('" . str_replace("\\", "/", $folderPath) . "/$moduleName');";
+            }
+        }
+    }
+
+    return $autoload;
+}
+
+
+$autoloaderContent = implode("\n", $autoload);
+
+if (!is_dir(dirname($autoloaderPath))) {
+    mkdir(dirname($autoloaderPath), 0777, true);
+}
+
+file_put_contents($autoloaderPath, $autoloaderContent);
+
+echo "Autoloader content saved to $autoloaderPath";

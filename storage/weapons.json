@@ -1,0 +1,1370 @@
+{
+	"RangedWeapon": {
+		"HeavyWeapon": {
+			"HMG": {
+				"HMG": {
+					"LocalizedName": "Mk.31 HMG",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.15000000596046,
+							"flatPath": "Base_HMG_Technical_Stats_inline1",
+							"default": 0.15000000596046
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 133,
+							"flatPath": "Base_HMG_Damage_Stats_inline0",
+							"default": 133
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 200,
+							"flatPath": "Base_HMG_Technical_Stats_inline2",
+							"default": 200
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","Preload","Weapon","Unique","HeavyWeapon","ForceDismember","DiscardOnEmpty","TakeAndEquip","HideInBackpackUI","HideAtVendor","HMG"]
+				}
+			}
+		},
+		"TechWeapon": {
+			"ShotgunWeapon": {
+				"Satara": {
+					"LocalizedName": "DB-2 Satara",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.30000001192093,
+							"flatPath": "Base_Satara_Technical_Stats_inline1",
+							"default": 0.30000001192093
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 91,
+							"flatPath": "Base_Satara_Damage_Stats_inline0",
+							"default": 91
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 0,
+							"flatPath": "Base_Satara_Technical_Stats_inline6",
+							"default": 0
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","TechWeapon","Preload","Weapon","Shotgun Dual","T2_Inject_Weapon"]
+				}
+			},
+			"Revolver": {
+				"Quasar": {
+					"LocalizedName": "DR-12 Quasar",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.18000000715256,
+							"flatPath": "Base_Quasar_Technical_Stats_inline1",
+							"default": 0.18000000715256
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 48,
+							"flatPath": "Base_Quasar_Damage_Stats_inline0",
+							"default": 48
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1.5,
+							"flatPath": "Base_Quasar_Technical_Stats_inline6",
+							"default": 1.5
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","Revolver"]
+				},
+				"Burya": {
+					"LocalizedName": "RT-46 Burya",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.60000002384186,
+							"flatPath": "Base_Burya_Technical_Stats_inline1",
+							"default": 0.60000002384186
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 38,
+							"flatPath": "Base_Burya_Damage_Stats_inline0",
+							"default": 38
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1.25,
+							"flatPath": "Base_Burya_Technical_Stats_inline6",
+							"default": 1.25
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","Revolver","T2_Inject_Weapon","Techtronika"]
+				}
+			},
+			"Rifle Precision": {
+				"Achilles": {
+					"LocalizedName": "M-179e Achilles",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.20000000298023,
+							"flatPath": "Base_Achilles_Technical_Stats_inline1",
+							"default": 0.20000000298023
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 44,
+							"flatPath": "Base_Achilles_Damage_Stats_inline0",
+							"default": 44
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1,
+							"flatPath": "Base_Achilles_Technical_Stats_inline6",
+							"default": 1
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","TechWeapon","Preload","Weapon","Rifle Precision","T2_Inject_Weapon"]
+				}
+			},
+			"SMG": {
+				"Senkoh": {
+					"LocalizedName": "Senkoh LX",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.12999999523163,
+							"flatPath": "Base_Senkoh_Technical_Stats_inline1",
+							"default": 0.12999999523163
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 51,
+							"flatPath": "Base_Senkoh_Damage_Stats_inline0",
+							"default": 51
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 30,
+							"flatPath": "Base_Senkoh_Technical_Stats_inline6",
+							"default": 30
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","SMG","T3_Inject_Weapon"]
+				}
+			},
+			"Handgun": {
+				"Grit": {
+					"LocalizedName": "HA-4 Grit",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.20000000298023,
+							"flatPath": "Base_Grit_Technical_Stats_inline1",
+							"default": 0.20000000298023
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 48,
+							"flatPath": "Base_Grit_Damage_Stats_inline0",
+							"default": 48
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1.5,
+							"flatPath": "Base_Grit_Technical_Stats_inline6",
+							"default": 1.5
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","Handgun","Dogtown_Weapon"]
+				},
+				"Ticon": {
+					"LocalizedName": "Militech Ticon",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.30000001192093,
+							"flatPath": "Base_Ticon_Technical_Stats_inline1",
+							"default": 0.30000001192093
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 30,
+							"flatPath": "Base_Ticon_Damage_Stats_inline0",
+							"default": 30
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 21,
+							"flatPath": "Base_Ticon_Technical_Stats_inline6",
+							"default": 21
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","Handgun","Dogtown_Weapon"]
+				},
+				"Omaha": {
+					"LocalizedName": "M-76e Omaha",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.17769999802113,
+							"flatPath": "Base_Omaha_Technical_Stats_inline1",
+							"default": 0.17769999802113
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 62,
+							"flatPath": "Base_Omaha_Damage_Stats_inline0",
+							"default": 62
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 0,
+							"flatPath": "Base_Omaha_Technical_Stats_inline6",
+							"default": 0
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","Handgun","T2_Inject_Weapon"]
+				},
+				"Kenshin": {
+					"LocalizedName": "JKE-X2 Kenshin",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.20000000298023,
+							"flatPath": "Base_Kenshin_Technical_Stats_inline1",
+							"default": 0.20000000298023
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 48,
+							"flatPath": "Base_Kenshin_Damage_Stats_inline0",
+							"default": 48
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 20,
+							"flatPath": "Base_Kenshin_Technical_Stats_inline6",
+							"default": 20
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","TechWeapon","Preload","Weapon","Handgun","T3_Inject_Weapon"]
+				}
+			},
+			"Rifle Sniper": {
+				"Rasetsu": {
+					"LocalizedName": "Rasetsu",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 1.2000000476837,
+							"flatPath": "Base_Rasetsu_Technical_Stats_inline1",
+							"default": 1.2000000476837
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 25,
+							"flatPath": "Base_Rasetsu_Damage_Stats_inline0",
+							"default": 25
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1,
+							"flatPath": "Base_Rasetsu_Technical_Stats_inline6",
+							"default": 1
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Rifle Sniper","TechWeapon","Preload","Weapon"]
+				},
+				"Nekomata": {
+					"LocalizedName": "Nekomata",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.60000002384186,
+							"flatPath": "Base_Nekomata_Technical_Stats_inline1",
+							"default": 0.60000002384186
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 42,
+							"flatPath": "Base_Nekomata_Damage_Stats_inline0",
+							"default": 42
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1,
+							"flatPath": "Base_Nekomata_Technical_Stats_inline6",
+							"default": 1
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Rifle Sniper","TechWeapon","Preload","Weapon"]
+				}
+			}
+		},
+		"PowerWeapon": {
+			"LMG": {
+				"Defender": {
+					"LocalizedName": "Defender",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.090899996459484,
+							"flatPath": "Base_Defender_Technical_Stats_inline1",
+							"default": 0.090899996459484
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 65,
+							"flatPath": "Base_Defender_Damage_Stats_inline0",
+							"default": 65
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 80,
+							"flatPath": "Base_Defender_Technical_Stats_inline2",
+							"default": 80
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","LMG","PowerWeapon","Preload","Weapon"]
+				},
+				"MA70": {
+					"LocalizedName": "MA70 HB",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.1330000013113,
+							"flatPath": "Base_MA70_Technical_Stats_inline1",
+							"default": 0.1330000013113
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 60,
+							"flatPath": "Base_MA70_Damage_Stats_inline0",
+							"default": 60
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 60,
+							"flatPath": "Base_MA70_Technical_Stats_inline2",
+							"default": 60
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","LMG","PowerWeapon","Preload","Weapon"]
+				}
+			},
+			"Revolver": {
+				"Metel": {
+					"LocalizedName": "Metel",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.60000002384186,
+							"flatPath": "Base_Metel_Technical_Stats_inline1",
+							"default": 0.60000002384186
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 45,
+							"flatPath": "Base_Metel_Damage_Stats_inline0",
+							"default": 45
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 8,
+							"flatPath": "Base_Metel_Technical_Stats_inline2",
+							"default": 8
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Revolver","Dogtown_Weapon","Techtronika"]
+				},
+				"Overture": {
+					"LocalizedName": "Overture",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.40000000596046,
+							"flatPath": "Base_Overture_Technical_Stats_inline1",
+							"default": 0.40000000596046
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 40,
+							"flatPath": "Base_Overture_Damage_Stats_inline0",
+							"default": 40
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 6,
+							"flatPath": "Base_Overture_Technical_Stats_inline2",
+							"default": 6
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Revolver","T3_Inject_Weapon"]
+				},
+				"Nova": {
+					"LocalizedName": "DR5 Nova",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.30000001192093,
+							"flatPath": "Base_Nova_Technical_Stats_inline1",
+							"default": 0.30000001192093
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 45,
+							"flatPath": "Base_Nova_Damage_Stats_inline0",
+							"default": 45
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 6,
+							"flatPath": "Base_Nova_Technical_Stats_inline2",
+							"default": 6
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Revolver"]
+				}
+			},
+			"Rifle Assault": {
+				"Ajax": {
+					"LocalizedName": "M251s Ajax",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.1330000013113,
+							"flatPath": "Base_Ajax_Technical_Stats_inline1",
+							"default": 0.1330000013113
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 58,
+							"flatPath": "Base_Ajax_Damage_Stats_inline0",
+							"default": 58
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 30,
+							"flatPath": "Base_Ajax_Technical_Stats_inline2",
+							"default": 30
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","PowerWeapon","Preload","Weapon","Rifle Assault","T2_Inject_Weapon"]
+				},
+				"Copperhead": {
+					"LocalizedName": "D5 Copperhead",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.090000003576279,
+							"flatPath": "Base_Copperhead_Technical_Stats_inline1",
+							"default": 0.090000003576279
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 53,
+							"flatPath": "Base_Copperhead_Damage_Stats_inline0",
+							"default": 53
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 30,
+							"flatPath": "Base_Copperhead_Technical_Stats_inline2",
+							"default": 30
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","PowerWeapon","Preload","Weapon","Rifle Assault"]
+				},
+				"Umbra": {
+					"LocalizedName": "DA8 Umbra",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.079999998211861,
+							"flatPath": "Base_Umbra_Technical_Stats_inline1",
+							"default": 0.079999998211861
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 57,
+							"flatPath": "Base_Umbra_Damage_Stats_inline0",
+							"default": 57
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 40,
+							"flatPath": "Base_Umbra_Technical_Stats_inline2",
+							"default": 40
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","PowerWeapon","Preload","Weapon","Rifle Assault"]
+				},
+				"Masamune": {
+					"LocalizedName": "HJSH-18 Masamune",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.17000000178814,
+							"flatPath": "Base_Masamune_Technical_Stats_inline1",
+							"default": 0.17000000178814
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 39,
+							"flatPath": "Base_Masamune_Damage_Stats_inline0",
+							"default": 39
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 0.079999998211861,
+							"flatPath": "Base_Masamune_Technical_Stats_inline2",
+							"default": 0.079999998211861
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","PowerWeapon"]
+				},
+				"Kyubi": {
+					"LocalizedName": "Kyubi",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.20000000298023,
+							"flatPath": "Base_Kyubi_Technical_Stats_inline1",
+							"default": 0.20000000298023
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 55,
+							"flatPath": "Base_Kyubi_Damage_Stats_inline0",
+							"default": 55
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 20,
+							"flatPath": "Base_Kyubi_Technical_Stats_inline2",
+							"default": 20
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","PowerWeapon","Preload","Weapon","Rifle Assault","T3_Inject_Weapon"]
+				}
+			},
+			"SMG": {
+				"Guillotine": {
+					"LocalizedName": "Guillotine",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.075000002980232,
+							"flatPath": "Base_Guillotine_Technical_Stats_inline1",
+							"default": 0.075000002980232
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 70,
+							"flatPath": "Base_Guillotine_Damage_Stats_inline0",
+							"default": 70
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 45,
+							"flatPath": "Base_Guillotine_Technical_Stats_inline2",
+							"default": 45
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","SMG"]
+				},
+				"Saratoga": {
+					"LocalizedName": "M221 Saratoga",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.065999999642372,
+							"flatPath": "Base_Saratoga_Technical_Stats_inline1",
+							"default": 0.065999999642372
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 63,
+							"flatPath": "Base_Saratoga_Damage_Stats_inline0",
+							"default": 63
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 40,
+							"flatPath": "Base_Saratoga_Technical_Stats_inline2",
+							"default": 40
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","SMG"]
+				},
+				"Pulsar": {
+					"LocalizedName": "DS1 Pulsar",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.079999998211861,
+							"flatPath": "Base_Pulsar_Technical_Stats_inline1",
+							"default": 0.079999998211861
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 71,
+							"flatPath": "Base_Pulsar_Damage_Stats_inline0",
+							"default": 71
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 40,
+							"flatPath": "Base_Pulsar_Technical_Stats_inline2",
+							"default": 40
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","SMG"]
+				}
+			},
+			"Rifle Precision": {
+				"Sor22": {
+					"LocalizedName": "SOR-22",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.5,
+							"flatPath": "Base_Sor22_Technical_Stats_inline1",
+							"default": 0.5
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 42,
+							"flatPath": "Base_Sor22_Damage_Stats_inline0",
+							"default": 42
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 10,
+							"flatPath": "Base_Sor22_Technical_Stats_inline2",
+							"default": 10
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","PowerWeapon","Preload","Weapon","Rifle Precision"]
+				},
+				"Pozhar": {
+					"LocalizedName": "VST-37 Pozhar",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.28000000119209,
+							"flatPath": "Base_Pozhar_Technical_Stats_inline1",
+							"default": 0.28000000119209
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 90,
+							"flatPath": "Base_Pozhar_Damage_Stats_inline0",
+							"default": 90
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 12,
+							"flatPath": "Base_Pozhar_Technical_Stats_inline2",
+							"default": 12
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","PowerWeapon","Preload","Weapon","Rifle Precision","T3_Inject_Weapon","Techtronika"]
+				},
+				"Kolac": {
+					"LocalizedName": "Kolac",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.5,
+							"flatPath": "Base_Kolac_Technical_Stats_inline1",
+							"default": 0.5
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 41,
+							"flatPath": "Base_Kolac_Damage_Stats_inline0",
+							"default": 41
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 6,
+							"flatPath": "Base_Kolac_Technical_Stats_inline2",
+							"default": 6
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","PowerWeapon","Preload","Weapon","Rifle Precision"]
+				}
+			},
+			"ShotgunWeapon": {
+				"Carnage": {
+					"LocalizedName": "Carnage",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 1.25,
+							"flatPath": "Base_Carnage_Technical_Stats_inline1",
+							"default": 1.25
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 73,
+							"flatPath": "Base_Carnage_Damage_Stats_inline0",
+							"default": 73
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 4,
+							"flatPath": "Base_Carnage_Technical_Stats_inline2",
+							"default": 4
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","PowerWeapon","Preload","Weapon","Shotgun","AnimCycleRound"]
+				},
+				"Testera": {
+					"LocalizedName": "DB-2 Testera",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.5,
+							"flatPath": "Base_Testera_Technical_Stats_inline1",
+							"default": 0.5
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 107,
+							"flatPath": "Base_Testera_Damage_Stats_inline0",
+							"default": 107
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 2,
+							"flatPath": "Base_Testera_Technical_Stats_inline2",
+							"default": 2
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","PowerWeapon","Preload","Weapon","Shotgun Dual"]
+				},
+				"Crusher": {
+					"LocalizedName": "Crusher",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.40000000596046,
+							"flatPath": "Base_Crusher_Technical_Stats_inline1",
+							"default": 0.40000000596046
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 94,
+							"flatPath": "Base_Crusher_Damage_Stats_inline0",
+							"default": 94
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 12,
+							"flatPath": "Base_Crusher_Technical_Stats_inline2",
+							"default": 12
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","PowerWeapon","Preload","Weapon","T3_Inject_Weapon"]
+				},
+				"Tactician": {
+					"LocalizedName": "M2038 Tactician",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.86659997701645,
+							"flatPath": "Base_Tactician_Technical_Stats_inline1",
+							"default": 0.86659997701645
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 81,
+							"flatPath": "Base_Tactician_Damage_Stats_inline0",
+							"default": 81
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 8,
+							"flatPath": "Base_Tactician_Technical_Stats_inline2",
+							"default": 8
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","PowerWeapon","Preload","Weapon","Shotgun","AnimCycleRound","T2_Inject_Weapon"]
+				},
+				"Igla": {
+					"LocalizedName": "DB-4 Igla",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.20000000298023,
+							"flatPath": "Base_Igla_Technical_Stats_inline1",
+							"default": 0.20000000298023
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 85,
+							"flatPath": "Base_Igla_Damage_Stats_inline0",
+							"default": 85
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 2,
+							"flatPath": "Base_Igla_Technical_Stats_inline2",
+							"default": 2
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","ShotgunWeapon","PowerWeapon","Preload","Weapon","Shotgun Dual"]
+				}
+			},
+			"Handgun": {
+				"Nue": {
+					"LocalizedName": "Nue",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.0099999997764826,
+							"flatPath": "Base_Nue_Technical_Stats_inline1",
+							"default": 0.099999994039536
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 57,
+							"flatPath": "Base_Nue_Damage_Stats_inline0",
+							"default": 57
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 10,
+							"flatPath": "Base_Nue_Technical_Stats_inline2",
+							"default": 17
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Handgun"]
+				},
+				"Unity": {
+					"LocalizedName": "Unity",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.30000001192093,
+							"flatPath": "Base_Unity_Technical_Stats_inline1",
+							"default": 0.30000001192093
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 56,
+							"flatPath": "Base_Unity_Damage_Stats_inline0",
+							"default": 56
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 12,
+							"flatPath": "Base_Unity_Technical_Stats_inline2",
+							"default": 12
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Handgun"]
+				},
+				"Slaughtomatic": {
+					"LocalizedName": "Slaught-O-Matic",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.16660000383854,
+							"flatPath": "Base_Slaughtomatic_Technical_Stats_inline1",
+							"default": 0.16660000383854
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 66,
+							"flatPath": "Base_Slaughtomatic_Damage_Stats_inline0",
+							"default": 66
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 0.10000000149012,
+							"flatPath": "Base_Slaughtomatic_Technical_Stats_inline2",
+							"default": 0.10000000149012
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Handgun","DiscardOnEmpty","AutoScalingItem","Slaughtomatic"]
+				},
+				"Liberty": {
+					"LocalizedName": "Liberty",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.27500000596046,
+							"flatPath": "Base_Liberty_Technical_Stats_inline1",
+							"default": 0.27500000596046
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 50,
+							"flatPath": "Base_Liberty_Damage_Stats_inline0",
+							"default": 50
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 14,
+							"flatPath": "Base_Liberty_Technical_Stats_inline2",
+							"default": 14
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Handgun"]
+				},
+				"Lexington": {
+					"LocalizedName": "M-10AF Lexington",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.125,
+							"flatPath": "Base_Lexington_Technical_Stats_inline1",
+							"default": 0.125
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 56,
+							"flatPath": "Base_Lexington_Damage_Stats_inline0",
+							"default": 56
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 20,
+							"flatPath": "Base_Lexington_Technical_Stats_inline2",
+							"default": 20
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","PowerWeapon","Preload","Weapon","Handgun","T2_Inject_Weapon"]
+				}
+			},
+			"Rifle Sniper": {
+				"Grad": {
+					"LocalizedName": "SPT32 Grad",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2.7000000476837,
+							"flatPath": "Base_Grad_Technical_Stats_inline1",
+							"default": 2.7000000476837
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 20,
+							"flatPath": "Base_Grad_Damage_Stats_inline0",
+							"default": 20
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 4,
+							"flatPath": "Base_Grad_Technical_Stats_inline2",
+							"default": 4
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Rifle Sniper","PowerWeapon","Preload","Weapon","AnimCycleRound","Techtronika"]
+				},
+				"Osprey": {
+					"LocalizedName": "NDI Osprey",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.34999999403954,
+							"flatPath": "Base_Osprey_Technical_Stats_inline1",
+							"default": 0.34999999403954
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 43,
+							"flatPath": "Base_Osprey_Damage_Stats_inline0",
+							"default": 43
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 0.079999998211861,
+							"flatPath": "Base_Osprey_Technical_Stats_inline2",
+							"default": 0.079999998211861
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Rifle Sniper","PowerWeapon","Preload","Weapon"]
+				},
+				"RocketLauncher": {
+					"LocalizedName": "SPT32 Grad",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2.2000000476837,
+							"flatPath": "Base_RocketLauncher_Technical_Stats_inline1",
+							"default": 2.2000000476837
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 27,
+							"flatPath": "Base_RocketLauncher_Damage_Stats_inline0",
+							"default": 27
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 4,
+							"flatPath": "Base_RocketLauncher_Technical_Stats_inline2",
+							"default": 4
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Rifle Sniper","PowerWeapon","Preload","Weapon","AnimCycleRound"]
+				}
+			}
+		},
+		"SmartWeapon": {
+			"SMG": {
+				"Shingen": {
+					"LocalizedName": "TKI-20 Shingen",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.15000000596046,
+							"flatPath": "Base_Shingen_Technical_Stats_inline1",
+							"default": 0.15000000596046
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 45,
+							"flatPath": "Base_Shingen_Damage_Stats_inline0",
+							"default": 45
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1,
+							"flatPath": "Base_Shingen_Technical_Stats_inline5",
+							"default": 1
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","DriverCombatRangedWeapon","DriverCombatBikeWeapon","Smart","SmartWeapon","Preload","Weapon","SMG","T3_Inject_Weapon"]
+				},
+				"Dian": {
+					"LocalizedName": "G-58 Dian",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2,
+							"flatPath": "Base_Dian_Technical_Stats_inline1",
+							"default": 2
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 64,
+							"flatPath": "Base_Dian_Damage_Stats_inline0",
+							"default": 64
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 45,
+							"flatPath": "Base_Dian_Technical_Stats_inline5",
+							"default": 45
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","DriverCombatRangedWeapon","DriverCombatBikeWeapon","Smart","SmartWeapon","Preload","Weapon","WeaponAttachment","HasFirstEquip","SMG","T3_Inject_Weapon"]
+				}
+			},
+			"Rifle Assault": {
+				"Hercules": {
+					"LocalizedName": "Hercules 3AX",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2,
+							"flatPath": "Base_Hercules_Technical_Stats_inline1",
+							"default": 2
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 53,
+							"flatPath": "Base_Hercules_Damage_Stats_inline0",
+							"default": 53
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 90,
+							"flatPath": "Base_Hercules_Technical_Stats_inline5",
+							"default": 90
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","Smart","SmartWeapon","Preload","Weapon","Rifle Assault"]
+				},
+				"Sidewinder": {
+					"LocalizedName": "D5 Sidewinder",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 1.6599999666214,
+							"flatPath": "Base_Sidewinder_Technical_Stats_inline1",
+							"default": 1.6599999666214
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 65,
+							"flatPath": "Base_Sidewinder_Damage_Stats_inline0",
+							"default": 65
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1,
+							"flatPath": "Base_Sidewinder_Technical_Stats_inline5",
+							"default": 1
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Preload","Weapon","Rifle Assault","Smart","SmartWeapon","Preload","Weapon","Rifle Assault"]
+				}
+			},
+			"Rifle Sniper": {
+				"Ashura": {
+					"LocalizedName": "Ashura",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 0.60000002384186,
+							"flatPath": "Base_Ashura_Technical_Stats_inline1",
+							"default": 0.60000002384186
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 35,
+							"flatPath": "Base_Ashura_Damage_Stats_inline0",
+							"default": 35
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 0,
+							"flatPath": "Base_Ashura_Technical_Stats_inline5",
+							"default": 0
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","inventoryDoubleSlot","Rifle Sniper","Smart","SmartWeapon","Preload","Weapon"]
+				}
+			},
+			"Handgun": {
+				"Yukimura": {
+					"LocalizedName": "HJKE-11 Yukimura",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2.25,
+							"flatPath": "Base_Yukimura_Technical_Stats_inline1",
+							"default": 2.25
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 53,
+							"flatPath": "Base_Yukimura_Damage_Stats_inline0",
+							"default": 53
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 30,
+							"flatPath": "Base_Yukimura_Technical_Stats_inline5",
+							"default": 30
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","Smart","SmartWeapon","Preload","Weapon","WeaponAttachment","HasFirstEquip","Handgun","T2_Inject_Weapon"]
+				},
+				"Kappa": {
+					"LocalizedName": "Kappa",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2.5,
+							"flatPath": "Base_Kappa_Technical_Stats_inline1",
+							"default": 2.5
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 53,
+							"flatPath": "Base_Kappa_Damage_Stats_inline0",
+							"default": 53
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 1,
+							"flatPath": "Base_Kappa_Technical_Stats_inline5",
+							"default": 1
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","Smart","SmartWeapon","Preload","Weapon","WeaponAttachment","HasFirstEquip","Handgun","T3_Inject_Weapon"]
+				},
+				"Chao": {
+					"LocalizedName": "A-22B Chao",
+					"stats": {
+						"cycleTime": {
+							"statType": "BaseStats.CycleBaseTime",
+							"custom": 2.5,
+							"flatPath": "Base_Chao_Technical_Stats_inline1",
+							"default": 2.5
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 25,
+							"flatPath": "Base_Chao_Damage_Stats_inline0",
+							"default": 25
+						},
+						"magazine": {
+							"statType": "BaseStats.MagazineCapacityBase",
+							"custom": 21,
+							"flatPath": "Base_Chao_Technical_Stats_inline5",
+							"default": 21
+						}
+					},
+					"tags": ["Weapon","RangedWeapon","OneHandedRangedWeapon","DriverCombatRangedWeapon","DriverCombatBikeWeapon","Smart","SmartWeapon","Preload","Weapon","WeaponAttachment","HasFirstEquip","Handgun","T3_Inject_Weapon"]
+				}
+			}
+		}
+	},
+	"MeleeWeapon": {
+		"BladeWeapon": {
+			"BladeWeapon": {
+				"Katana": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Katana_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"statType": "BaseStats.DPS",
+							"custom": 73,
+							"flatPath": "Base_Katana_Damage_Stats_inline0",
+							"default": 73
+						},
+						"magazine": {
+							"flatPath": "Base_Katana_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","BladeWeapon","FinisherFront","Katana","Melee","FinisherBack","DriverCombatBikeWeapon"]
+				},
+				"Blade": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Blade_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"flatPath": "Base_Blade_Damage_Stats_inline0",
+							"statType": "BaseStats.DPS"
+						},
+						"magazine": {
+							"flatPath": "Base_Blade_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","BladeWeapon"]
+				},
+				"Machete": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Machete_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"flatPath": "Base_Machete_Damage_Stats_inline0",
+							"statType": "BaseStats.DPS"
+						},
+						"magazine": {
+							"flatPath": "Base_Machete_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","BladeWeapon","One Hand Blade","OneHandBladeFinisher","FinisherFront","FinisherBack","DriverCombatBikeWeapon"]
+				},
+				"Chainsword": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Chainsword_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"flatPath": "Base_Chainsword_Damage_Stats_inline0",
+							"statType": "BaseStats.DPS"
+						},
+						"magazine": {
+							"flatPath": "Base_Chainsword_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","BladeWeapon","ChainswordFinisher","FinisherFront","FinisherBack","DriverCombatBikeWeapon"]
+				}
+			}
+		},
+		"BluntWeapon": {
+			"Baton": {
+				"Baton": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Baton_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"flatPath": "Base_Baton_Damage_Stats_inline0",
+							"statType": "BaseStats.DPS"
+						},
+						"magazine": {
+							"flatPath": "Base_Baton_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","BluntWeapon","Baton","FinisherFront","FinisherBack","DriverCombatBikeWeapon"]
+				}
+			}
+		},
+		"ThrowableWeapon": {
+			"One Hand Blade": {
+				"Axe": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Axe_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"flatPath": "Base_Axe_Damage_Stats_inline0",
+							"statType": "BaseStats.DPS"
+						},
+						"magazine": {
+							"flatPath": "Base_Axe_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","ThrowableWeapon","One Hand Blade","AxeFinisher","FinisherFront","FinisherBack","Throwable"]
+				}
+			},
+			"Knife": {
+				"Knife": {
+					"LocalizedName": "",
+					"stats": {
+						"cycleTime": {
+							"flatPath": "Base_Knife_Technical_Stats_inline1",
+							"statType": "BaseStats.CycleBaseTime"
+						},
+						"damage": {
+							"flatPath": "Base_Knife_Damage_Stats_inline0",
+							"statType": "BaseStats.DPS"
+						},
+						"magazine": {
+							"flatPath": "Base_Knife_Technical_Stats_inline2",
+							"statType": "BaseStats.MagazineCapacityBase"
+						}
+					},
+					"tags": ["Weapon","Preload","MeleeWeapon","Core","Melee","ThrowableWeapon","Throwable","Knife","FinisherFront","FinisherBack"]
+				}
+			}
+		}
+	}
+}
