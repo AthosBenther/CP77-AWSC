@@ -1,0 +1,83 @@
+<?php
+
+$envFile = '.env';
+
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    foreach ($lines as $line) {
+        if (strpos($line, '=') !== false) {
+            list($key, $value) = explode('=', $line, 2);
+            $key  = trim($key);
+            $value = trim($value);
+            $value = $value == "true" || $value == "false" ? $value == "true" : $value;
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
+    }
+}
+
+
+$copyFolders = [
+    "app",
+    "config",
+    "vendors",
+    "views",
+    "storage"
+];
+
+$copyFiles = [
+    "init.lua" => null,
+    ".env.production" => ".env"
+];
+
+$deployName = $_ENV["DEPLOY_NAME"] ?? null;
+$deployPath = $_ENV["DEPLOY_PATH"] ?? "/bin/x64/plugins/cyber_engine_tweaks/mods/";
+
+unlink("./deployment/$deployName.zip");
+exec("rmdir .\\deployment\\$deployName /s /q");
+
+$ignoreFiles = file("./deployment/.deployignorefiles", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?? [];
+
+$ignoreFilesArgs = "";
+foreach ($ignoreFiles as $file) {
+    $ignoreFilesArgs .= " /xf $file";
+}
+
+
+$ignoreDirs = file("./deployment/.deployignoredirs", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?? [];
+
+$ignoreDirsArgs = "";
+foreach ($ignoreDirs as $dir) {
+    $ignoreDirsArgs .= " /XD $dir";
+    $copyFolders = array_diff($copyFolders, [$dir]);
+}
+
+
+if ($deployName != false) {
+    $deployPath =  "./deployment/" . $deployName . $deployPath . $deployName;
+    $deployPath =  str_replace('/', '\\', $deployPath);
+} else {
+    throw new Exception("Variable DEPLOY_NAME not present or null in .env file", 1);
+}
+
+exec("mkdir " . $deployPath);
+
+foreach ($copyFolders as $key => $folder) {
+    $folderPath = $deployPath . "\\" . $folder . "\\";
+    exec("mkdir " . $folderPath);
+    $cmd = "robocopy  " . $folder . " " . $folderPath . " /MIR /E $ignoreDirsArgs $ignoreFilesArgs ";
+    echo "\n\nRunning: " . $cmd;
+    exec($cmd);
+}
+
+foreach ($copyFiles as $file => $newFile) {
+    $newFile = $newFile ?? $file;
+    $cmd = "copy " . $file . " " . $deployPath . "\\" . $newFile . "";
+    echo "\n\nRunning: " . $cmd;
+    exec($cmd);
+}
+
+exec("7z a ./deployment/$deployName.zip ./deployment/$deployName");
+
+exec("rmdir .\\deployment\\$deployName /s /q");

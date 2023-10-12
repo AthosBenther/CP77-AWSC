@@ -7,7 +7,8 @@ GenCfg = {
         "Warden",
         "Palica",
         "Authority",
-        "Borg4a"
+        "Borg4a",
+        "RocketLauncher"
     },
     range = {
         'MeleeWeapon',
@@ -70,7 +71,7 @@ function GenCfg.generate()
 
     for index, record in ipairs(fWeaponItemRecords) do
         local weaponName = string.gsub(record:GetRecordID().value, "Items.Base_", "")
-        local tags = table_map(record:Tags(), function(t) return t.value end)
+        local tags = table_map(record:Tags(), function(k, t) return t.value end)
 
         local thisRange = table_intersect(GenCfg.range, tags)[1]
         local thisClass = table_intersect(GenCfg.class, tags)[1]
@@ -83,12 +84,8 @@ function GenCfg.generate()
             and weaponName ~= nil
 
         if (fullyClassified) then
-            local techStatsInline = "Base_" .. weaponName .. "_Technical_Stats_inline"
-            local dmgStatsInline0 = "Base_" .. weaponName .. "_Damage_Stats_inline0"
-            local magInlineNo = 2
-
-            if (table_contains(tags, "SmartWeapon")) then magInlineNo = 5 end
-            if (table_contains(tags, "TechWeapon")) then magInlineNo = 6 end
+            local dmgStatsInline0 = "Items.Base_" .. weaponName .. "_Damage_Stats_inline0"
+            local triggerModePath = "Items.Base_" .. weaponName 
 
             if (GenCfg.weapons[thisRange] == nil) then
                 GenCfg.weapons[thisRange] = {}
@@ -100,30 +97,53 @@ function GenCfg.generate()
                 GenCfg.weapons[thisRange][thisClass][thisKind] = {}
             end
 
+            local magFlatPath = GenCfg.findFlat(
+                "Items.Base_" .. weaponName .. "_Technical_Stats.statModifiers",
+                "BaseStats.MagazineCapacityBase"
+            )
+            local cycleFlatPath = GenCfg.findFlat(
+                "Items.Base_" .. weaponName .. "_Technical_Stats.statModifiers",
+                "BaseStats.CycleTimeBase"
+            )
+            
+            local triggerMode = {
+                flatPath = triggerModePath,
+                statType = "BaseStats.TriggerMode",
+                default = TweakDB:GetFlat(triggerModePath .. ".primaryTriggerMode").value,
+                custom = TweakDB:GetFlat(triggerModePath .. ".primaryTriggerMode").value,
+            }
+
+            local stats = {
+                damage = {
+                    flatPath = dmgStatsInline0,
+                    statType = "BaseStats.DPS",
+                    default = TweakDB:GetFlat(dmgStatsInline0 .. '.value'),
+                    custom = TweakDB:GetFlat(dmgStatsInline0 .. '.value'),
+                },
+                triggerMode = triggerMode
+            }
+
+            if magFlatPath ~= nil then
+                stats["magazine"] = {
+                    flatPath = magFlatPath,
+                    statType = "BaseStats.MagazineCapacityBase",
+                    default = TweakDB:GetFlat(magFlatPath .. '.value'),
+                    custom = TweakDB:GetFlat(magFlatPath .. '.value')
+                }
+            end
+
+            if magFlatPath ~= nil then
+                stats["cycleTime"] = {
+                    flatPath = cycleFlatPath,
+                    statType = "BaseStats.CycleTimeBase",
+                    default = TweakDB:GetFlat(cycleFlatPath .. '.value'),
+                    custom = TweakDB:GetFlat(cycleFlatPath .. '.value'),
+                }
+            end
+
             GenCfg.weapons[thisRange][thisClass][thisKind][weaponName] = {
                 LocalizedName = Game.GetLocalizedItemNameByCName(record:DisplayName()),
-                stats = {
-                    -- baseEmptyReloadTime = weaponItemRecord:BaseEmptyReloadTime(),
-                    -- baseReloadTime = weaponItemRecord:BaseReloadTime(),
-                    magazine = {
-                        flatPath = techStatsInline .. magInlineNo,
-                        statType = "BaseStats.MagazineCapacityBase",
-                        default = TweakDB:GetFlat('Items.' .. techStatsInline .. magInlineNo .. '.value'),
-                        custom = TweakDB:GetFlat('Items.' .. techStatsInline .. magInlineNo .. '.value')
-                    },
-                    damage = {
-                        flatPath = dmgStatsInline0,
-                        statType = "BaseStats.DPS",
-                        default = TweakDB:GetFlat('Items.' .. dmgStatsInline0 .. '.value'),
-                        custom = TweakDB:GetFlat('Items.' .. dmgStatsInline0 .. '.value'),
-                    },
-                    cycleTime = {
-                        flatPath = techStatsInline .. "1",
-                        statType = "BaseStats.CycleBaseTime",
-                        default = TweakDB:GetFlat('Items.' .. techStatsInline .. '1.value'),
-                        custom = TweakDB:GetFlat('Items.' .. techStatsInline .. '1.value'),
-                    }
-                },
+                stats = stats,
                 tags = tags
             }
         end
@@ -132,4 +152,15 @@ function GenCfg.generate()
     FileManager.saveAsJson(GenCfg.weapons, "weapons.json")
 end
 
+function GenCfg.findFlat(statGroup, statType)
+    local mods = TweakDB:GetFlat(statGroup)
+    for key, mod in pairs(mods or {}) do
+        local dbStatType = TweakDB:GetFlat(mod.value .. ".statType").value
+        if dbStatType == statType then return mod.value end
+    end
+    return nil
+end
+
 return GenCfg
+
+-- Items.Base_Nue.statModifierGroups

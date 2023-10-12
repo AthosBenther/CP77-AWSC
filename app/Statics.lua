@@ -36,7 +36,5 @@ function Statics.GetModifiers()
         )
     end
 
-    FileManager.saveAsJson(recsTable, "recsTable.json")
+    FileManager.saveAsJson(recsTable, "recstable.json")
 end
-
-Items.Base_Weapon_inline85
