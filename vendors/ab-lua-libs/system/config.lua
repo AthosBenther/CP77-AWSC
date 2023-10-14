@@ -20,8 +20,8 @@ end
 function config(config, default)
     default = default or nil
 
-    params = string_split(config, ".")
-    cfgLvl = configs
+    local params = string_split(config, ".")
+    local cfgLvl = configs
 
     for _, value in pairs(params) do
         cfgLvl = cfgLvl[value] or nil
