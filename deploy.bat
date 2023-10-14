@@ -1,0 +1,2 @@
+cd deployment
+dotnet run
