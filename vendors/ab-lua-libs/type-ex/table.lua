@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 function table_filter(data, callback)
     local result = {}
     for key, value in ipairs(data) do
@@ -57,6 +58,11 @@ function table_map(data, callback)
     return data
 end
 
+---Computes the intersection of arrays
+---@param dataA table The table with master values to check.
+---@param dataB table Table to compare values against
+---@param keepKeys? boolean Indicates if keys are preserved
+---@return table result Returns a table containing all the values of tables that are present in all the arguments
 function table_intersect(dataA, dataB, keepKeys)
     keepKeys = keepKeys or false
     local intersection = {}
@@ -72,4 +78,26 @@ function table_intersect(dataA, dataB, keepKeys)
         end
     end
     return intersection
+end
+
+
+--- Counts table values. 
+---@param data table The table to be counted
+---@param recursive? boolean Counts values of subtables
+---@return integer count
+function table_count(data, recursive)
+    recursive = recursive or false
+    local count = 0
+
+    for _, v in pairs(data) do
+        if type(v) == "table" then
+            if recursive then
+            else
+                count = count + 1
+            end
+        else
+            count = count + 1
+        end
+    end
+    return count
 end
