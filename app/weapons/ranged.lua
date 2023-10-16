@@ -65,7 +65,7 @@ function Ranged.Init()
                             Main.SetRecordValue(stats.damage.flatPath, "value", value)
                             Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.damage.custom =
                                 value
-                            FileManager.saveAsJson(Main.weapons.RangedWeapon, 'weapons.json')
+                            FileManager.saveAsJson(Main.weapons, 'weapons.json')
                         end
                     )
                 Main.SetRecordValue(stats.damage.flatPath, "value", stats.damage.custom)
@@ -86,7 +86,7 @@ function Ranged.Init()
                             Main.SetRecordValue(stats.magazine.flatPath, "value", value)
                             Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.magazine.custom =
                                 value
-                            FileManager.saveAsJson(Main.weapons.RangedWeapon, 'weapons.json')
+                            FileManager.saveAsJson(Main.weapons, 'weapons.json')
                         end
                     )
                 Main.SetRecordValue(stats.magazine.flatPath, "value", stats.magazine.custom)
@@ -108,10 +108,78 @@ function Ranged.Init()
                             Main.SetRecordValue(stats.cycleTime.flatPath, "value", value)
                             Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.cycleTime.custom =
                                 value
-                            FileManager.saveAsJson(Main.weapons.RangedWeapon, 'weapons.json')
+                            FileManager.saveAsJson(Main.weapons, 'weapons.json')
                         end
                     )
                 Main.SetRecordValue(stats.cycleTime.flatPath, "value", stats.cycleTime.custom)
+
+                -- EFFECTIVE RANGE
+                uiOptions[class][kind][weaponRecordName]["EffectiveRange"] =
+                    ui.addRangeFloat(
+                        "/AWSCRanged/" .. weaponRecordName, --path
+                        stats.EffectiveRange.uiLabel,       --label
+                        stats.EffectiveRange.uiDescription, --description
+                        0.1,                                --min
+                        100,                                --max
+                        0.1,                                --step
+                        "%.1f",                             --format
+                        stats.EffectiveRange.custom + 0.0,  --currentValue
+                        stats.EffectiveRange.default + 0.0, --defaultValue
+                        function(value)                     --callback
+                            Main.SetRecordValue(stats.EffectiveRange.flatPath, "value", value)
+                            Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.EffectiveRange.custom =
+                                value
+                            FileManager.saveAsJson(Main.weapons, 'weapons.json')
+                        end
+                    )
+                Main.SetRecordValue(stats.EffectiveRange.flatPath, "value", stats.EffectiveRange.custom)
+
+
+                if class == "SmartWeapon" then
+                    -- SmartGunHipTimeToLock
+                    uiOptions[class][kind][weaponRecordName]["SmartGunHipTimeToLock"] =
+                        ui.addRangeFloat(
+                            "/AWSCRanged/" .. weaponRecordName,        --path
+                            stats.SmartGunHipTimeToLock.uiLabel,       --label
+                            stats.SmartGunHipTimeToLock.uiDescription, --description
+                            0.001,                                     --min
+                            3,                                         --max
+                            0.001,                                     --step
+                            "%.3f",                                    --format
+                            stats.SmartGunHipTimeToLock.custom + 0.0,  --currentValue
+                            stats.SmartGunHipTimeToLock.default + 0.0, --defaultValue
+                            function(value)                            --callback
+                                Main.SetRecordValue(stats.SmartGunHipTimeToLock.flatPath, "value", value)
+                                Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.SmartGunHipTimeToLock.custom =
+                                    value
+                                FileManager.saveAsJson(Main.weapons, 'weapons.json')
+                            end
+                        )
+                    Main.SetRecordValue(stats.SmartGunHipTimeToLock.flatPath, "value", stats.SmartGunHipTimeToLock
+                        .custom)
+
+                    -- SmartGunAdsTimeToLock
+                    uiOptions[class][kind][weaponRecordName]["SmartGunAdsTimeToLock"] =
+                        ui.addRangeFloat(
+                            "/AWSCRanged/" .. weaponRecordName,        --path
+                            stats.SmartGunAdsTimeToLock.uiLabel,       --label
+                            stats.SmartGunAdsTimeToLock.uiDescription, --description
+                            0.001,                                     --min
+                            3,                                         --max
+                            0.001,                                     --step
+                            "%.3f",                                    --format
+                            stats.SmartGunAdsTimeToLock.custom + 0.0,  --currentValue
+                            stats.SmartGunAdsTimeToLock.default + 0.0, --defaultValue
+                            function(value)                            --callback
+                                Main.SetRecordValue(stats.SmartGunAdsTimeToLock.flatPath, "value", value)
+                                Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.SmartGunAdsTimeToLock.custom =
+                                    value
+                                FileManager.saveAsJson(Main.weapons, 'weapons.json')
+                            end
+                        )
+                    Main.SetRecordValue(stats.SmartGunAdsTimeToLock.flatPath, "value", stats.SmartGunAdsTimeToLock
+                        .custom)
+                end
 
                 -- TRIGGER MODE
                 -- Has to be eddited on Preset_Weapon_Default

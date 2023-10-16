@@ -49,7 +49,7 @@ function Melee.Init()
                 )
 
                 -- Range
-                uiOptions[class][kind][weaponRecordName]["range"] =
+                uiOptions[class][kind][weaponRecordName]["Range"] =
                     ui.addRangeFloat(
                         "/AWSCMelee/" .. weaponRecordName,         --path
                         "Base Range",                              --label
@@ -58,16 +58,16 @@ function Melee.Init()
                         30,                                        --max
                         1,                                         --step
                         "%.0f",                                    --format
-                        stats.range.custom + 0.0,                  --currentValue
-                        stats.range.default + 0.0,                 --defaultValue
+                        stats.Range.custom + 0.0,                  --currentValue
+                        stats.Range.default + 0.0,                 --defaultValue
                         function(value)                            --callback
-                            Main.SetRecordValue(stats.range.flatPath, "value", value)
-                            Main.weapons.MeleeWeapon[class][kind][weaponRecordName].stats.range.custom =
+                            Main.SetRecordValue(stats.Range.flatPath, "value", value)
+                            Main.weapons.MeleeWeapon[class][kind][weaponRecordName].stats.Range.custom =
                                 value
-                            FileManager.saveAsJson(Main.weapons.MeleeWeapon, 'weapons.json')
+                            FileManager.saveAsJson(Main.weapons, 'weapons.json')
                         end
                     )
-                Main.SetRecordValue(stats.range.flatPath, "value", stats.range.custom)
+                Main.SetRecordValue(stats.Range.flatPath, "value", stats.Range.custom)
             end
         end
     end

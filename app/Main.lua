@@ -60,24 +60,14 @@ function Main.init()
     registerForEvent("onInit", function()
         log("AWSC: Hello World!")
 
-        --Statics.FixDamage()
-        Main.weapons = FileManager.loadJson('weapons.json')
+        local fileValidation = ConfigFile.Validate()
 
-        if
-            Main.weapons == nil
-            or table_count(Main.weapons) < 1
-            or config("configs.forcenew", false)
-        then
-            log("Main: Generating new json")
-            GenCfg.generate()
-            -- Main.weapons = FileManager.loadJson('weapons.json')
+        if fileValidation ~= true then
+            log("Weapons.json file validation failed. Errors: ")
+            log(fileValidation)
         end
 
-        Main.weapons = FileManager.loadJson('weapons.json')
-
-        Retcon.init()
-
-        Main.weapons = Retcon.weapons
+        ConfigFile.Generate(fileValidation ~= true or config("configs.forcenew", false))
 
         Ranged.Init()
         Melee.Init()
@@ -93,8 +83,3 @@ function Main.SetRecordValue(path, field, value)
 end
 
 return Main
-
---   "Carnage_Recoil": 1,
---   "Carnage_Spread": 1,
---   "Carnage_Sway": 1,
---   "Carnage_ReloadTime": 1,

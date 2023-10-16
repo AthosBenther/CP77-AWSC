@@ -19,15 +19,15 @@ function Debug.genDump(data, depth)
         local s = '\n\t' .. tabs .. '{ '
         local i = 0
 
-        for k, v in pairs(data) do
-            if type(k) ~= 'number' then k = '"' .. k .. '"' end
-            s = s .. '\n\t' .. tabs .. '[' .. k .. '] = ' .. Debug.genDump(v, depth + 1)
+        for key, value in pairs(data) do
+            if type(key) ~= 'number' then key = '"' .. key .. '"' end
+            s = s .. '\n\t' .. tabs .. key .. '= ' .. Debug.genDump(value, depth + 1)
             i = i + 1
-            if (#data >= i) then s = s .. ',' end
+            if (table_count(data) >= i) then s = s .. ',' end
         end
         return s .. '\n\t' .. tabs .. '} '
     else
-        return tostring(data)
+        return "(" .. type(data) .. ") " .. tostring(data)
     end
 end
 
