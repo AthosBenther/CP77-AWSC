@@ -5,8 +5,9 @@ FixPozhar = {
 function FixPozhar()
     local pRifles = Retcon.weapons.RangedWeapon.PowerWeapon['Rifle Precision']
 
-    local pozhar = pRifles.Pozhar
-    if pozhar then
+    
+    if pRifles.Pozhar then
+        local pozhar = pRifles.Pozhar
         local pRiflesRetcon = {}
         for pRifleName, pRifle in pairs(pRifles) do
             if pRifleName ~= "Pozhar" then
