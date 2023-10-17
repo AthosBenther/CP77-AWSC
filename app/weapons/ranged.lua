@@ -53,7 +53,6 @@ function Ranged.Init()
                 local weaponProperties = Main.weapons.RangedWeapon[class][kind][weaponRecordName]
                 local stats = weaponProperties.stats
                 local weaponName = weaponProperties.LocalizedName
-                log(weaponName)
                 ui.addSubcategory(
                     "/AWSCRanged/weapon",
                     weaponName
@@ -61,16 +60,16 @@ function Ranged.Init()
                 -- Damage
 
                 ui.addRangeFloat(
-                    "/AWSCRanged/weapon",                           --path
-                    " Base Damage",                                 --label
-                    "Base Damage (Scales with weapon quality)",     --description
-                    1,                                              --min
-                    3000,                                           --max
-                    1,                                              --step
-                    "%.0f",                                         --format
-                    stats.damage.custom + 0.0,                      --currentValue
-                    stats.damage.default + 0.0,                     --defaultValue
-                    function(value)                                 --callback
+                    "/AWSCRanged/weapon",                       --path
+                    " Base Damage",                             --label
+                    "Base Damage (Scales with weapon quality)", --description
+                    1,                                          --min
+                    3000,                                       --max
+                    1,                                          --step
+                    "%.0f",                                     --format
+                    stats.damage.custom + 0.0,                  --currentValue
+                    stats.damage.default + 0.0,                 --defaultValue
+                    function(value)                             --callback
                         Main.SetRecordValue(stats.damage.flatPath, "value", value)
                         Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.damage.custom =
                             value
@@ -82,16 +81,16 @@ function Ranged.Init()
                 -- MAGAZINE
 
                 ui.addRangeFloat(
-                    "/AWSCRanged/weapon",             --path
-                    " Magazine",                      --label
-                    "Base Magazine Capacity",         --description
-                    1,                                --min
-                    300,                              --max
-                    1,                                --step
-                    "%.0f",                           --format
-                    stats.magazine.custom + 0.0,      --currentValue
-                    stats.magazine.default + 0.0,     --defaultValue
-                    function(value)                   --callback
+                    "/AWSCRanged/weapon",         --path
+                    " Magazine",                  --label
+                    "Base Magazine Capacity",     --description
+                    1,                            --min
+                    300,                          --max
+                    1,                            --step
+                    "%.0f",                       --format
+                    stats.magazine.custom + 0.0,  --currentValue
+                    stats.magazine.default + 0.0, --defaultValue
+                    function(value)               --callback
                         Main.SetRecordValue(stats.magazine.flatPath, "value", value)
                         Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.magazine.custom =
                             value
@@ -104,16 +103,16 @@ function Ranged.Init()
                 -- CYCLE TIME
 
                 ui.addRangeFloat(
-                    "/AWSCRanged/weapon",                    --path
-                    " Cycle Time",                           --label
-                    "Base Cycle Time (in Milliseconds)",     --description
-                    0.01,                                    --min
-                    5,                                       --max
-                    0.001,                                    --step
-                    "%.3f",                                  --format
-                    stats.cycleTime.custom + 0.0,            --currentValue
-                    stats.cycleTime.default + 0.0,           --defaultValue
-                    function(value)                          --callback
+                    "/AWSCRanged/weapon",                --path
+                    " Cycle Time",                       --label
+                    "Base Cycle Time (in Milliseconds)", --description
+                    0.01,                                --min
+                    5,                                   --max
+                    0.001,                               --step
+                    "%.3f",                              --format
+                    stats.cycleTime.custom + 0.0,        --currentValue
+                    stats.cycleTime.default + 0.0,       --defaultValue
+                    function(value)                      --callback
                         Main.SetRecordValue(stats.cycleTime.flatPath, "value", value)
                         Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.cycleTime.custom =
                             value
@@ -125,16 +124,16 @@ function Ranged.Init()
                 -- EFFECTIVE RANGE
 
                 ui.addRangeFloat(
-                    "/AWSCRanged/weapon",                   --path
-                    stats.EffectiveRange.uiLabel,           --label
-                    stats.EffectiveRange.uiDescription,     --description
-                    0.1,                                    --min
-                    100,                                    --max
-                    0.1,                                    --step
-                    "%.1f",                                 --format
-                    stats.EffectiveRange.custom + 0.0,      --currentValue
-                    stats.EffectiveRange.default + 0.0,     --defaultValue
-                    function(value)                         --callback
+                    "/AWSCRanged/weapon",               --path
+                    stats.EffectiveRange.uiLabel,       --label
+                    stats.EffectiveRange.uiDescription, --description
+                    0.1,                                --min
+                    100,                                --max
+                    0.1,                                --step
+                    "%.1f",                             --format
+                    stats.EffectiveRange.custom + 0.0,  --currentValue
+                    stats.EffectiveRange.default + 0.0, --defaultValue
+                    function(value)                     --callback
                         Main.SetRecordValue(stats.EffectiveRange.flatPath, "value", value)
                         Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.EffectiveRange.custom =
                             value
@@ -148,16 +147,16 @@ function Ranged.Init()
                     -- SmartGunHipTimeToLock
 
                     ui.addRangeFloat(
-                        "/AWSCRanged/weapon",                          --path
-                        stats.SmartGunHipTimeToLock.uiLabel,           --label
-                        stats.SmartGunHipTimeToLock.uiDescription,     --description
-                        0.001,                                         --min
-                        3,                                             --max
-                        0.001,                                         --step
-                        "%.3f",                                        --format
-                        stats.SmartGunHipTimeToLock.custom + 0.0,      --currentValue
-                        stats.SmartGunHipTimeToLock.default + 0.0,     --defaultValue
-                        function(value)                                --callback
+                        "/AWSCRanged/weapon",                      --path
+                        stats.SmartGunHipTimeToLock.uiLabel,       --label
+                        stats.SmartGunHipTimeToLock.uiDescription, --description
+                        0.001,                                     --min
+                        3,                                         --max
+                        0.001,                                     --step
+                        "%.3f",                                    --format
+                        stats.SmartGunHipTimeToLock.custom + 0.0,  --currentValue
+                        stats.SmartGunHipTimeToLock.default + 0.0, --defaultValue
+                        function(value)                            --callback
                             Main.SetRecordValue(stats.SmartGunHipTimeToLock.flatPath, "value", value)
                             Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.SmartGunHipTimeToLock.custom =
                                 value
@@ -170,16 +169,16 @@ function Ranged.Init()
                     -- SmartGunAdsTimeToLock
 
                     ui.addRangeFloat(
-                        "/AWSCRanged/weapon",                          --path
-                        stats.SmartGunAdsTimeToLock.uiLabel,           --label
-                        stats.SmartGunAdsTimeToLock.uiDescription,     --description
-                        0.001,                                         --min
-                        3,                                             --max
-                        0.001,                                         --step
-                        "%.3f",                                        --format
-                        stats.SmartGunAdsTimeToLock.custom + 0.0,      --currentValue
-                        stats.SmartGunAdsTimeToLock.default + 0.0,     --defaultValue
-                        function(value)                                --callback
+                        "/AWSCRanged/weapon",                      --path
+                        stats.SmartGunAdsTimeToLock.uiLabel,       --label
+                        stats.SmartGunAdsTimeToLock.uiDescription, --description
+                        0.001,                                     --min
+                        3,                                         --max
+                        0.001,                                     --step
+                        "%.3f",                                    --format
+                        stats.SmartGunAdsTimeToLock.custom + 0.0,  --currentValue
+                        stats.SmartGunAdsTimeToLock.default + 0.0, --defaultValue
+                        function(value)                            --callback
                             Main.SetRecordValue(stats.SmartGunAdsTimeToLock.flatPath, "value", value)
                             Main.weapons.RangedWeapon[class][kind][weaponRecordName].stats.SmartGunAdsTimeToLock.custom =
                                 value
@@ -216,6 +215,7 @@ function Ranged.Init()
 
         setKind(1)
     end
+
     ui.addSelectorString(
         "/AWSCRanged/classSelector",
         "Classes",
@@ -227,6 +227,16 @@ function Ranged.Init()
     )
 
     setClass(1)
+
+    for class, kinds in pairs(Main.weapons.RangedWeapon) do
+        for kind, weapons in pairs(kinds) do
+            for weapon, weaponProps in pairs(weapons) do
+                for statIndex, stat in pairs(weaponProps.stats) do
+                    Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                end
+            end
+        end
+    end
 end
 
 return Ranged
