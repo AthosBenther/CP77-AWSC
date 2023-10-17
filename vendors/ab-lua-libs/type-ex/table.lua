@@ -103,10 +103,11 @@ function table_keys(data)
 end
 
 function table_map(data, callback)
+    result = {}
     for key, value in pairs(data) do
-        data[key] = callback(key, value)
+        result[key] = callback(key, value)
     end
-    return data
+    return result
 end
 
 ---Computes the intersection of arrays

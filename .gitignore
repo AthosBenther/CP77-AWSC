@@ -1,2 +1,10 @@
 .vscode
-app/Main.bkp
+.env
+db.sqlite3
+*.log
+*.zip
+*.bkp
+storage/
+deployment/obj/
+deployment/bin/
+CP77-AWSC.sln
