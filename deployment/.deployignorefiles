@@ -1,5 +1,5 @@
 *.log
 *.txt
 *.bkp
-recsTable.json
+*.json
 Statics.lua
