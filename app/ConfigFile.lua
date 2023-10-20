@@ -3,11 +3,14 @@ ConfigFile = {
     weapons = {}
 }
 
+---Generates the configurations file
+---@param newFile boolean Indicates if a new file should be generated, or if it should try to update an existing file
 function ConfigFile.Generate(newFile)
     local newFile = newFile or false
     --FileManager.saveAsJson(nil, 'weapons.json')
 
-    if not newFile then
+    -- loads config file if not forcing the cration of a new one
+    if not newFile or config("configs.forcenew", false) then
         ConfigFile.weapons = FileManager.openJson('weapons.json');
     end
 

@@ -61,6 +61,7 @@ function Main.init()
         log("AWSC: Hello World!")
 
         local fileValidation = ConfigFile.Validate()
+        Main.UI = GetMod("nativeSettings")
 
         if fileValidation ~= true then
             log("Weapons.json file validation failed. Errors: ")
@@ -71,8 +72,23 @@ function Main.init()
 
         ConfigFile.Generate(fileValidation ~= true or config("configs.forcenew", false))
 
-        RangedUI.Init()
-        MeleeUI.Init()
+
+        for range, classes in pairs(Main.weapons) do
+            for class, kinds in pairs(classes) do
+                for kind, weapons in pairs(kinds) do
+                    for weapon, weaponProps in pairs(weapons) do
+                        for statIndex, stat in pairs(weaponProps.stats) do
+                            Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                        end
+                    end
+                end
+            end
+        end
+
+        if Main.UI then
+            Ranged.Init()
+            Melee.Init()
+        end
     end)
 end
 
