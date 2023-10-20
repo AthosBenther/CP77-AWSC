@@ -1,6 +1,6 @@
-Melee = {}
+MeleeUI = {}
 
-function Melee.Init()
+function MeleeUI.Init()
     local ui = GetMod("nativeSettings")
 
     ui.addTab(
@@ -128,4 +128,4 @@ function Melee.Init()
     end
 end
 
-return Melee
+return MeleeUI

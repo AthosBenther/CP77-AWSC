@@ -65,21 +65,39 @@ function Main.init()
         if fileValidation ~= true then
             log("Weapons.json file validation failed. Errors: ")
             log(fileValidation)
+        else
+            --MoveBase.init()
         end
 
         ConfigFile.Generate(fileValidation ~= true or config("configs.forcenew", false))
 
-        Ranged.Init()
-        Melee.Init()
+        RangedUI.Init()
+        MeleeUI.Init()
     end)
 end
 
 function Main.SetRecordValue(path, field, value)
+    if path == nil then log("Cannot set a record because it's path is not set") end
+    if field == nil then log("Cannot set a record because it's field is not set") end
+    if value == nil then log("Cannot set a record because it's value is not set") end
+
+    if path == nil
+        and field == nil
+        and value == nil
+    then
+        return false
+    end
+
     if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
         log("Error SetFlat: '" ..
             path .. "." .. field .. "' as '" .. value .. "'")
+        return false
     end
-    if not TweakDB:Update(path) then log("Error Update: " .. path) end
+    if not TweakDB:Update(path) then
+        log("Error Update: " .. path)
+        return false
+    end
+    return true
 end
 
 return Main
