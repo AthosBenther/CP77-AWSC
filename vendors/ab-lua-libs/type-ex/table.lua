@@ -60,19 +60,18 @@ function table_foreach(data, callback)
     end
 end
 
-function table_values(data)
-    local result = {}
-    for key, value in pairs(data) do
-        table.insert(result, value)
-    end
-    return result;
-end
-
 function table_indexOfKey(data, key)
     local i = 1
     for tKey, value in pairs(data) do
         if key == tKey then return i end
         i = i + 1
+    end
+    return nil
+end
+
+function table_indexOf(data, value)
+    for dataKey, dataValue in pairs(data) do
+        if dataValue == value then return dataKey end
     end
     return nil
 end
@@ -99,6 +98,23 @@ function table_intersect(dataA, dataB, keepKeys)
     return intersection
 end
 
+---Joins all table values into a string with a separator
+---@param data table
+---@param separator? string
+---@return string result
+function table_join(data, separator)
+    local separator = separator or ","
+    local result = data[1]
+
+    if table_count(data) > 1 then
+        for i = 2, table_count(data), 1 do
+            result = result .. separator .. data[i]
+        end
+    end
+
+    return result
+end
+
 function table_keys(data)
     local keys = {}
     for key, value in pairs(data) do
@@ -107,11 +123,49 @@ function table_keys(data)
     return keys
 end
 
-function table_map(data, callback)
-    local result = {}
+---comment
+---@param data table
+---@param callback function
+---@param keepNils? boolean Indcates if nil returns should be added in the results. Default is true
+---@return table result
+function table_map(data, callback, keepNils)
+    local keepNils = keepNils or true
+    local results = {}
     for key, value in pairs(data) do
-        result[key] = callback(key, value)
+        local result = callback(key, value)
+        if result then
+            results[key] = result
+        elseif keepNils then
+            results[key] = result
+        end
     end
+    return results
+end
+
+-- function table_merge(data, dataToMerge)
+--     local result = {}
+--     for key, value in pairs(data) do
+--         for mkey, mvalue in pairs(dataToMerge) do
+--             if key == mkey then result[key] = mvalue else result[key] = value
+--         end
+--     end
+-- end
+
+function table_merge(t1, t2)
+    local result = {}
+
+    for k, v in pairs(t1) do
+        result[k] = v
+    end
+
+    for k, v in pairs(t2) do
+        if type(k) == "number" then
+            table.insert(result, v)
+        else
+            result[k] = v
+        end
+    end
+
     return result
 end
 
@@ -153,4 +207,12 @@ function table_update(target, source)
         end
     end
     return target
+end
+
+function table_values(data)
+    local result = {}
+    for key, value in pairs(data) do
+        table.insert(result, value)
+    end
+    return result;
 end

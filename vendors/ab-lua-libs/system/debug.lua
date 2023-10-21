@@ -5,10 +5,10 @@ local Debug = {
     }
 }
 
---- Dumps, then dies
----@param data any
-function dd(data)
-    log(data, nil, true)
+
+function dd(...)
+    local args = { ... }
+    log(args)
     error("DUMP AND DIE")
 end
 
@@ -21,6 +21,11 @@ function Debug.genDump(data, depth)
 
         for key, value in pairs(data) do
             if type(key) ~= 'number' then key = '"' .. key .. '"' end
+            if type(value) == "userdata" then
+                local uddump = nil
+                pcall(function() uddump = Dump(value, true) end)
+                if uddump then value = uddump end
+            end
             s = s .. '\n\t' .. tabs .. key .. '= ' .. Debug.genDump(value, depth + 1)
             i = i + 1
             if (table_count(data) >= i) then s = s .. ',' end
@@ -32,9 +37,11 @@ function Debug.genDump(data, depth)
 end
 
 function log(data, toFile, die, force)
-    toFile = toFile or false
-    die = die or false
-    force = force or false
+    local toFile = toFile or false
+    local die = die or false
+    local force = force or false
+
+
 
     if config("app.debug") or force then
         if toFile then

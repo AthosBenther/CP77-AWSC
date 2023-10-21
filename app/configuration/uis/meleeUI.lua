@@ -1,7 +1,7 @@
 MeleeUI = {}
 
 function MeleeUI.Init()
-    local ui = GetMod("nativeSettings")
+    local ui = Main.UI
 
     ui.addTab(
         "/AWSCMelee",

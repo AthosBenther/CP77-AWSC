@@ -4,18 +4,64 @@ ConfigFile = {
     weapons = {}
 }
 
+---Generates the configurations file
+---@param newFile boolean Indicates if a new file should be generated, or if it should try to update an existing file
 function ConfigFile.Generate(newFile)
     local newFile = newFile or false
     --FileManager.saveAsJson(nil, 'weapons.json')
 
-    if not newFile then
-        ConfigFile.weapons = FileManager.openJson('weapons.json');
+    -- loads config file if not forcing the cration of a new one
+    if not newFile or config("configs.forcenew", false) then
+        --ConfigFile.weapons = FileManager.openJson('weapons.json');
     end
 
     ConfigFile.weaponItemRecords = TweakDB:GetRecords('gamedataWeaponItem_Record')
-    log("AWSC: loaded " .. #ConfigFile.weaponItemRecords .. " Weapon Item Records")
+    log("AWSC: loaded " .. table_count(ConfigFile.weaponItemRecords) .. " Weapon Item Records")
 
-    local fWeaponItemRecords = table_values(
+
+    local recs = {}
+    local DPSs = {}
+
+    local defaultWeapons = {}
+
+    for k, record in pairs(ConfigFile.weaponItemRecords) do
+        local recordPath = record:GetRecordID().value
+        if string_endswith(recordPath, "Default") then defaultWeapons[recordPath] = record end
+    end
+
+    for weaponRecordPath, weaponRecord in pairs(defaultWeapons) do
+        local classification = Weapon.Classify(weaponRecord, weaponRecordPath)
+        if (ConfigFile.weapons[classification.Range] == nil) then
+            ConfigFile.weapons[classification.Range] = {}
+        end
+        if (ConfigFile.weapons[classification.Range][classification.Class] == nil) then
+            ConfigFile.weapons[classification.Range][classification.Class] = {}
+        end
+
+        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind] == nil) then
+            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind] = {}
+        end
+
+        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)] == nil) then
+            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)] = {}
+        end
+
+        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"] == nil) then
+            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"] = {}
+        end
+
+        local variantData = Weapon.GetVariantData(weaponRecord, weaponRecordPath, classification)
+        ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"]["Default"] =
+            weaponRecordPath
+    end
+
+    --dd(ConfigFile.weapons)
+    FileManager.saveAsJson(ConfigFile.weapons, "a.json")
+    dd()
+
+
+
+    local baseWeaponItemRecords = table_values(
         table_filter(
             ConfigFile.weaponItemRecords,
             function(key, record)
@@ -34,9 +80,9 @@ function ConfigFile.Generate(newFile)
         )
     )
 
-    log("Filtered weapons: " .. #fWeaponItemRecords)
+    log("Filtered base weapons: " .. #baseWeaponItemRecords)
 
-    for index, record in ipairs(fWeaponItemRecords) do
+    for index, record in ipairs(baseWeaponItemRecords) do
         local weaponName = string.gsub(record:GetRecordID().value, "Items.Base_", "")
         local localizedName = Game.GetLocalizedItemNameByCName(record:DisplayName())
         if localizedName == "" then localizedName = weaponName end
@@ -46,11 +92,11 @@ function ConfigFile.Generate(newFile)
         local thisClasses = table_intersect(ConfigStatics.class, tags)
         local thisKinds = table_intersect(ConfigStatics.kind, tags)
 
-        local uKinds = {}
+        local uniqueKinds = {}
         for index, value in ipairs(thisKinds) do
-            uKinds[value] = index
+            uniqueKinds[value] = index
         end
-        thisKinds = table_keys(uKinds)
+        thisKinds = table_keys(uniqueKinds)
 
         local thisRange = thisRanges[1]
         local thisClass = thisClasses[1]
@@ -246,30 +292,6 @@ function ConfigFile.Melee(weaponName, thisClass, thisKind)
     end
 
     return stats
-end
-
-function ConfigFile.FindFlat(statGroup, statType, weaponName)
-    weaponName = weaponName or nil
-
-    if statGroup == nil then
-        local inline = ConfigFile.fullFlatSearch(statType, weaponName)
-        return inline
-    end
-    local mods = TweakDB:GetFlat(statGroup)
-    for key, mod in pairs(mods or {}) do
-        local dbStatType = TweakDB:GetFlat(mod.value .. ".statType").value
-        if dbStatType == statType then return mod.value end
-    end
-    return nil
-end
-
-function ConfigFile.fullFlatSearch(statType, weaponName)
-    local statGroups = TweakDB:GetFlat("Items.Base_" .. weaponName .. ".statModifierGroups")
-
-    for key, statGroup in pairs(statGroups) do
-        local inline = ConfigFile.FindFlat(statGroup.value .. ".statModifiers", statType)
-        if inline then return inline end
-    end
 end
 
 function ConfigFile.Validate()

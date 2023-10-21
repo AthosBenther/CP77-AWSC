@@ -1,5 +1,6 @@
 ConfigFile = {
     description = "Advanced Weapon Stat Customization",
+    weaponItemRecords = {},
     weapons = {}
 }
 
@@ -14,22 +15,24 @@ function ConfigFile.Generate(newFile)
         ConfigFile.weapons = FileManager.openJson('weapons.json');
     end
 
-    local weaponItemRecords = TweakDB:GetRecords('gamedataWeaponItem_Record')
-    log("AWSC: loaded " .. #weaponItemRecords .. " Weapon Item Records")
+    ConfigFile.weaponItemRecords = TweakDB:GetRecords('gamedataWeaponItem_Record')
+    log("AWSC: loaded " .. #ConfigFile.weaponItemRecords .. " Weapon Item Records")
 
     local baseWeaponItemRecords = table_values(
         table_filter(
-            weaponItemRecords,
+            ConfigFile.weaponItemRecords,
             function(key, record)
                 local recordName = record:GetRecordID().value
                 local weaponName = string.gsub(recordName, "Items.Base_", "")
                 local localizedName = Game.GetLocalizedItemNameByCName(record:DisplayName()) or weaponName
                 local nameParts = string_split(recordName, "_")
 
+                --if string_startsWith(recordName, "Items.Base_") and #nameParts > 2 then dd(nameParts) end
+
                 return string_startsWith(recordName, "Items.Base_")
-                    and not table_contains(ConfigFile.class, nameParts[2] .. "Weapon")
+                    and not table_contains(ConfigStatics.class, nameParts[2] .. "Weapon")
                     and localizedName ~= "!OBSOLETE"
-                    and not table_contains(ConfigFile.forbiddenWeapons, weaponName)
+                    and not table_contains(ConfigStatics.forbiddenWeapons, weaponName)
             end
         )
     )
@@ -84,9 +87,10 @@ function ConfigFile.Generate(newFile)
 
                 local newWeapon = {
                     LocalizedName = localizedName,
-                    stats = ConfigFile.Ranged(weaponName, thisClass, thisKind),
-                    -- tags = tags
+                    variants = ConfigFile.GetVariants(weaponName, localizedName)
                 }
+
+                newWeapon.variants.Base = ConfigFile.Ranged(weaponName, thisClass, thisKind)
 
                 ConfigFile.weapons[thisRange][thisClass][thisKind][weaponName] = table_update(weapon, newWeapon)
             else
@@ -94,9 +98,10 @@ function ConfigFile.Generate(newFile)
 
                 local newWeapon = {
                     LocalizedName = localizedName,
-                    stats = ConfigFile.Melee(weaponName, thisClass, thisKind),
-                    -- tags = tags
+                    variants = ConfigFile.GetVariants(weaponName, localizedName)
                 }
+
+                newWeapon.variants.Base = ConfigFile.Ranged(weaponName, thisClass, thisKind)
 
                 ConfigFile.weapons[thisRange][thisClass][thisKind][weaponName] = table_update(weapon, newWeapon)
             end
@@ -105,6 +110,52 @@ function ConfigFile.Generate(newFile)
     FileManager.saveAsJson(ConfigFile.weapons, "weapons.json")
     Main.weapons = ConfigFile.weapons
     ConfigFile.weapons = nil
+end
+
+function ConfigFile.GetVariants(weaponName, baseLocName)
+    local vWeaponItemRecords = table_values(
+        table_filter(
+            ConfigFile.weaponItemRecords,
+            function(key, record)
+                local recordName = record:GetRecordID().value
+                local tags = table_map(record:Tags(), function(k, t) return t.value end)
+                local isDeprecatedIconic = table_contains(tags, "DeprecatedIconic")
+                local isLeftHand = string.find(recordName, "_Left_Hand") ~= nil
+                local isRetrofix = string.find(recordName, "Retrofix") ~= nil
+                local isForbiddenVariant = table_contains(ConfigStatics.forbiddenVariations,
+                    string.gsub(recordName, "Items.", ""))
+
+                return string_startsWith(recordName, "Items.Preset_" .. weaponName)
+                    --and isIconic
+                    and not isDeprecatedIconic
+                    and not isLeftHand
+                    and not isRetrofix
+                    and not isForbiddenVariant
+            end
+        )
+    )
+
+    local data = {}
+
+    for key, record in pairs(vWeaponItemRecords) do
+        local localizedName = Game.GetLocalizedItemNameByCName(record:DisplayName())
+        local vTag = table_map(record:VisualTags(), function(k, t) return t.value end)[1]
+
+        local result = {
+            recordName = record:GetRecordID().value,
+            isIconic = table_contains(table_map(record:Tags(), function(k, t) return t.value end), "IconicWeapon"),
+            -- tags = table_map(record:Tags(), function(k, t) return t.value end)
+            vTag = vTag
+        }
+
+        if baseLocName ~= localizedName then
+            result["localizedName"] = localizedName
+        end
+
+        data[vTag] = result
+    end
+
+    return data
 end
 
 function ConfigFile.Ranged(weaponName, thisClass, thisKind)
@@ -148,7 +199,6 @@ function ConfigFile.Ranged(weaponName, thisClass, thisKind)
             uiLabel = "Ads Lock Time",
             statModifiers = "Items.Base_" .. weaponName .. "_SmartGun_Stats.statModifiers"
         }
-
     }
 
 

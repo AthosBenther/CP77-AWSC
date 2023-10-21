@@ -1,7 +1,7 @@
 RangedUI = {}
 
 function RangedUI.Init()
-    local ui = GetMod("nativeSettings")
+    local ui = Main.UI
 
     ui.addTab(
         "/AWSCRanged",
