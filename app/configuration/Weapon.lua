@@ -47,7 +47,7 @@ function Weapon.GetVariantData(weapon, recordPath, classification)
 
     local classiData = Weapon.VariantData[classification.Range].data
     if classiData then
-        variantData = table_merge(variantData, Weapon.genVarData(classiData, recordPath))
+        variantData = Weapon.genVarData(classiData, recordPath)
     end
     return variantData
 end
@@ -55,8 +55,11 @@ end
 function Weapon.genVarData(classiData, recordPath)
     local result = {}
     for key, data in pairs(classiData) do
-        result[key] = data
-        local flatPath = Weapon.findStatModifier(data.statType, recordPath)
+        result[key] = {}
+        for key2, value2 in pairs(data) do
+            result[key][key2] = value2
+        end
+        local flatPath = Weapon.findStatModifier(data.statType, recordPath2)
 
         result[key]["flatPath"] = flatPath
         result[key]["default"] = TweakDB:GetFlat(flatPath .. ".value")
@@ -98,10 +101,10 @@ end
 
 function Weapon.GetName(data, stopOn)
     local stopOn = stopOn or ""
-    parts = string_split(data, "_")
+    local parts = string_split(data, "_")
     table.remove(parts, 1)
-    stop = table_indexOf(parts, "Default") - 1
-    nameParts = {}
+    local stop = table_indexOf(parts, "Default") - 1
+    local nameParts = {}
     for i = 1, stop, 1 do
         nameParts[i] = parts[i]
     end

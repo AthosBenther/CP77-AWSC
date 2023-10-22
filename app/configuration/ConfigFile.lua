@@ -52,7 +52,7 @@ function ConfigFile.Generate(newFile)
 
         local variantData = Weapon.GetVariantData(weaponRecord, weaponRecordPath, classification)
         ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"]["Default"] =
-            weaponRecordPath
+            variantData
     end
 
     --dd(ConfigFile.weapons)
