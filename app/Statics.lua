@@ -17,24 +17,33 @@ function Statics.FixDamage()
 end
 
 function Statics.GetModifiers()
-    recPath = "gamedataCombinedStatModifier_Record";
+    local recPath = "gamedataCombinedStatModifier_Record";
 
-    recs = TweakDB:GetRecords(recPath);
+    local recs = TweakDB:GetRecords(recPath);
 
-    recsTable = {}
-    for key, rec in pairs(recs) do
-        recID = rec:GetID().value
+    local recsTable = {}
 
+    recs = table_filter(recs,
+        function(k, rec) return string_startsWith(rec:GetID().value, "Items.Base_Weapon_inline") end)
+
+    table_map(recs, function(k, rec)
         pcall(function()
-            if (string_startsWith(recID, "Items.Base_Weapon_inline")) then
-                recsTable[recID] = {
-                    refStat = rec:RefStat():GetRecordID().value,
-                    statType = rec:StatType():GetRecordID().value
-                }
-            end
-        end
-        )
-    end
+            local recID = rec:GetID().value
+
+            recsTable[recID] = {
+                modifierType = rec:ModifierType().value,
+                opSymbol = rec:OpSymbol().value,
+                refObject = rec:RefObject().value,
+                refStat = rec:RefStat():GetRecordID().value,
+                statType = rec:StatType():GetRecordID().value,
+                value = rec:Value()
+            }
+        end)
+    end)
+
+    table.sort(recsTable)
 
     FileManager.saveAsJson(recsTable, "recstable.json")
 end
+
+return Statics
