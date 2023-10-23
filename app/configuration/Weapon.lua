@@ -1,12 +1,31 @@
 Weapon = {
     VariantData = {
         RangedWeapon = {
-            HeavyWeapon = {},
-            PowerWeapon = {},
+            HeavyWeapon = nil,
+            PowerWeapon = nil,
             SmartWeapon = {
-                data = {}
+                data = {
+                    SmartGunHipTimeToLock = {
+                        uiDescription = "Hip Lock Time",
+                        statType = "BaseStats.SmartGunHipTimeToLock",
+                        uiLabel = "Hip Lock Time",
+                        min = 0.001,
+                        max = 3,
+                        step = 0.001,
+                        format = "%.3f",
+                    },
+                    SmartGunAdsTimeToLock = {
+                        uiDescription = "Ads Lock Time",
+                        statType = "BaseStats.SmartGunAdsTimeToLock",
+                        uiLabel = "Ads Lock Time",
+                        min = 0.001,
+                        max = 3,
+                        step = 0.001,
+                        format = "%.3f",
+                    }
+                }
             },
-            TechWeapon = {},
+            TechWeapon = nil,
             data = {
                 damage = {
                     uiLabel = "Base Damage",
@@ -16,12 +35,62 @@ Weapon = {
                     max = 1500,
                     step = 1,
                     format = "%f"
+                },
+                magazine = {
+                    uiDescription = "Base Magazine Capacity",
+                    statType = "BaseStats.MagazineCapacityBase",
+                    uiLabel = "Magazine",
+                    min = 0,
+                    max = 300,
+                    step = 1,
+                    format = "%f"
+                },
+                cycleTime = {
+                    uiDescription = "Base Cycle Time (in Milliseconds)",
+                    statType = "BaseStats.CycleTimeBase",
+                    uiLabel = "Cycle Time",
+                    min = 0.001,
+                    max = 5,
+                    step = 0.001,
+                    format = "%.3f"
+                },
+                EffectiveRange = {
+                    uiDescription = "Effective Range",
+                    statType = "BaseStats.EffectiveRange",
+                    uiLabel = "Effective Range",
+                    min = 0.1,
+                    max = 100,
+                    step = 0.1,
+                    format = "%.1f",
                 }
+
             }
         },
         MeleeWeapon = {
-
-            data = {}
+            ThrowableWeapon = {
+                data = {
+                    EffectiveRange = {
+                        uiDescription = "Thrown Range",
+                        statType = "BaseStats.EffectiveRange",
+                        uiLabel = "Throwing Range",
+                        min = 0.1,
+                        max = 100,
+                        step = 0.1,
+                        format = "%.1f",
+                    }
+                }
+            },
+            data = {
+                Range = {
+                    uiDescription = "Attack Range",
+                    statType = "BaseStats.Range",
+                    uiLabel = "Attack Range",
+                    min = 0.1,
+                    max = 100,
+                    step = 0.1,
+                    format = "%.1f",
+                }
+            }
         }
 
     }
@@ -42,28 +111,58 @@ function Weapon.Classify(weapon, recordPath)
     }
 end
 
-function Weapon.GetVariantData(weapon, recordPath, classification)
+function Weapon.GetVariantData(weaponName, recordPath, classification)
     local variantData = {}
 
-    local classiData = Weapon.VariantData[classification.Range].data
-    if classiData then
-        variantData = Weapon.genVarData(classiData, recordPath)
+    if Weapon.VariantData[classification.Range] then
+        local classiDataRange = Weapon.VariantData[classification.Range].data
+        variantData = table_merge(variantData, Weapon.genVarData(classiDataRange, recordPath, weaponName, classification))
+
+        if Weapon.VariantData[classification.Range][classification.Class] then
+            local classiDataClass = Weapon.VariantData[classification.Range][classification.Class].data
+            variantData = table_merge(variantData,
+                Weapon.genVarData(classiDataClass, recordPath, weaponName, classification))
+
+            if Weapon.VariantData[classification.Range][classification.Class][classification.Type] then
+                local classiDataKind = Weapon.VariantData[classification.Range][classification.Class]
+                    [classification.Type]
+                    .data
+                variantData = table_merge(variantData,
+                    Weapon.genVarData(classiDataKind, recordPath, weaponName, classification))
+            end
+        end
     end
+
     return variantData
 end
 
-function Weapon.genVarData(classiData, recordPath)
+function Weapon.genVarData(classiData, recordPath, weaponName, classification)
     local result = {}
     for key, data in pairs(classiData) do
         result[key] = {}
         for key2, value2 in pairs(data) do
             result[key][key2] = value2
         end
-        local flatPath = Weapon.findStatModifier(data.statType, recordPath2)
+        local flatPath = Weapon.findStatModifier(data.statType, recordPath)
+
+        if not flatPath then dd(data, recordPath, classification) end
+
+        local weapon = Weapon.Find(weaponName, classification)
+        local defaultFlatPath = nil
+
+        if weapon then
+            if weapon.Variants.Default then
+                defaultFlatPath = weapon.Variants.Default[key].flatPath
+            end
+        end
+
+        if defaultFlatPath == flatPath then goto continue end
 
         result[key]["flatPath"] = flatPath
         result[key]["default"] = TweakDB:GetFlat(flatPath .. ".value")
         result[key]["custom"] = result[key]["default"]
+
+        ::continue::
     end
     return result
 end
@@ -110,6 +209,37 @@ function Weapon.GetName(data, stopOn)
     end
     local name = table_join(nameParts, "_")
     return name
+end
+
+function Weapon.GetVariantName(variantRecordName, variantRecord)
+    if (Weapon.IsIconic(variantRecord)) then return Weapon.GetLocalizedName(variantRecord) end
+    local vTag = table_map(variantRecord:VisualTags(), function(k, t) return t.value end)[1]
+    return vTag
+end
+
+function Weapon.IsIconic(weaponRecord)
+    return table_contains(table_map(weaponRecord:Tags(), function(k, t) return t.value end), "IconicWeapon")
+end
+
+function Weapon.GetLocalizedName(weaponRecord)
+    return Game.GetLocalizedItemNameByCName(weaponRecord:DisplayName())
+end
+
+function Weapon.Find(weaponName, classification, weaponsTable)
+    local weaponsTable = weaponsTable or ConfigFile.weapons
+    local weapon = {}
+    if pcall(
+            function()
+                weapon = weaponsTable
+                    [classification.Range]
+                    [classification.Class]
+                    [classification.Kind]
+                    [weaponName]
+            end
+        ) then
+        return weapon
+    end
+    return nil
 end
 
 return Weapon

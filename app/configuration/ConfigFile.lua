@@ -26,11 +26,27 @@ function ConfigFile.Generate(newFile)
 
     for k, record in pairs(ConfigFile.weaponItemRecords) do
         local recordPath = record:GetRecordID().value
-        if string_endswith(recordPath, "Default") then defaultWeapons[recordPath] = record end
+        local isDefault = string_endswith(recordPath, "Default")
+        if not isDefault then goto continue end
+        local weaponName = Weapon.GetName(recordPath)
+
+        local localizedName = Game.GetLocalizedItemNameByCName(record:DisplayName()) or weaponName
+
+
+        if
+            isDefault
+            and localizedName ~= "!OBSOLETE"
+            and not table_contains(ConfigStatics.forbiddenWeapons, weaponName)
+        then
+            defaultWeapons[recordPath] = record
+        end
+
+        ::continue::
     end
 
     for weaponRecordPath, weaponRecord in pairs(defaultWeapons) do
         local classification = Weapon.Classify(weaponRecord, weaponRecordPath)
+        local weaponName = Weapon.GetName(weaponRecordPath)
         if (ConfigFile.weapons[classification.Range] == nil) then
             ConfigFile.weapons[classification.Range] = {}
         end
@@ -42,22 +58,55 @@ function ConfigFile.Generate(newFile)
             ConfigFile.weapons[classification.Range][classification.Class][classification.Kind] = {}
         end
 
-        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)] == nil) then
-            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)] = {}
+        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName] == nil) then
+            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName] = {}
         end
 
-        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"] == nil) then
-            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"] = {}
+        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"] == nil) then
+            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"] = {}
         end
 
-        local variantData = Weapon.GetVariantData(weaponRecord, weaponRecordPath, classification)
-        ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][Weapon.GetName(weaponRecordPath)]["Variants"]["Default"] =
-            variantData
+        local defaultVariantData = Weapon.GetVariantData(weaponName, weaponRecordPath, classification)
+        ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"]["Default"] =
+            defaultVariantData
+
+
+
+        local variants = {}
+
+        for k, record in pairs(ConfigFile.weaponItemRecords) do
+            local recordPath = record:GetRecordID().value
+
+            local isVariant = string_startsWith(recordPath, "Items.Preset_" .. weaponName)
+            local isValidVariant = not string_contains(recordPath, ConfigStatics.forbiddenVariationTerms)
+            local tags = table_map(record:Tags(), function(k, t) return t.value end)
+            local isDeprecatedIconic = table_contains(tags, "DeprecatedIconic")
+
+            if isVariant
+                and isValidVariant
+                and not string_endswith(recordPath, "Default")
+                and not isDeprecatedIconic
+            then
+                variants[recordPath] =
+                    record
+            end
+        end
+
+        for variantRecordPath, variantRecord in pairs(variants) do
+            local variantName = Weapon.GetVariantName(variantRecordPath, variantRecord)
+            local variantClassification = Weapon.Classify(variantRecord, variantRecordPath)
+
+            local variantData = Weapon.GetVariantData(variantName, variantRecordPath, variantClassification)
+
+            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"][variantName] =
+                variantData
+        end
     end
+
 
     --dd(ConfigFile.weapons)
     FileManager.saveAsJson(ConfigFile.weapons, "a.json")
-    dd()
+    dd("file saved")
 
 
 

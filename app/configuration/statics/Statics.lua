@@ -14,9 +14,13 @@ ConfigStatics = {
         "Machete_Borg",
         "One_Hand_Blade"
     },
-    forbiddenVariations = {
-        "Preset_Nue_Arasaka_2020",
-        "Preset_Nue_Arasaka_2020_Unbreakable"
+    forbiddenVariationTerms = {
+        "Retrofix",
+        "Left_Hand",
+        "Scene",
+        "Hologram",
+        "2020",
+        "Unbreakable"
     },
     range = {
         'MeleeWeapon',

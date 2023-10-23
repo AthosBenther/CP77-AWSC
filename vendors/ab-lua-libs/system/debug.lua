@@ -23,7 +23,7 @@ function Debug.genDump(data, depth)
             if type(key) ~= 'number' then key = '"' .. key .. '"' end
             if type(value) == "userdata" then
                 local uddump = nil
-                pcall(function() uddump = Dump(value, true) end)
+                pcall(function() uddump = Dump(value, false) end)
                 if uddump then value = uddump end
             end
             s = s .. '\n\t' .. tabs .. key .. '= ' .. Debug.genDump(value, depth + 1)
