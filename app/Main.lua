@@ -70,15 +70,22 @@ function Main.init()
             --MoveBase.init()
         end
 
-        ConfigFile.Generate(fileValidation ~= true or config("configs.forcenew", false))
+        ConfigFile.Init(fileValidation ~= true)
 
 
         for range, classes in pairs(Main.weapons) do
             for class, kinds in pairs(classes) do
                 for kind, weapons in pairs(kinds) do
-                    for weapon, weaponProps in pairs(weapons) do
-                        for statIndex, stat in pairs(weaponProps.stats) do
-                            Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                    for weapon, weaponData in pairs(weapons) do
+                        for variant, stats in pairs(weaponData.Variants) do
+                            for k, stat in pairs(stats) do
+                                if
+                                    stat.flatPath
+                                    and stat.custom
+                                then
+                                    Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                                end
+                            end
                         end
                     end
                 end
@@ -86,8 +93,8 @@ function Main.init()
         end
 
         if Main.UI then
-            Ranged.Init()
-            Melee.Init()
+            RangedUI.Init()
+            --MeleeUI.Init()
         end
     end)
 end
@@ -98,9 +105,14 @@ function Main.SetRecordValue(path, field, value)
     if value == nil then log("Cannot set a record because it's value is not set") end
 
     if path == nil
-        and field == nil
-        and value == nil
+        or field == nil
+        or value == nil
     then
+        dd(
+            path,
+            field,
+            value
+        )
         return false
     end
 

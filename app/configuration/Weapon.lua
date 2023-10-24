@@ -27,26 +27,35 @@ Weapon = {
             },
             TechWeapon = nil,
             data = {
-                damage = {
-                    uiLabel = "Base Damage",
-                    uiDescription = "Base Damage (Scales with weapon quality)",
+                LocalizedName = "",
+                Crosshair = {
+                    uiComponent = "SelectorString",
+                    uiLabel = "Crosshair",
+                    uiDescription = "Weapon Crosshair"
+                },
+                Damage = {
+                    uiComponent = "Rangefloat",
+                    uiLabel = "Damage",
+                    uiDescription = "Damage (Scales with weapon quality)",
                     statType = "BaseStats.DPS",
                     min = 0,
                     max = 1500,
                     step = 1,
-                    format = "%f"
+                    format = "%.0f"
                 },
-                magazine = {
-                    uiDescription = "Base Magazine Capacity",
+                Magazine = {
+                    uiComponent = "Rangefloat",
+                    uiDescription = "Magazine Capacity",
                     statType = "BaseStats.MagazineCapacityBase",
                     uiLabel = "Magazine",
                     min = 0,
                     max = 300,
                     step = 1,
-                    format = "%f"
+                    format = "%.0f"
                 },
-                cycleTime = {
-                    uiDescription = "Base Cycle Time (in Milliseconds)",
+                CycleTime = {
+                    uiComponent = "Rangefloat",
+                    uiDescription = "Cycle Time (in Milliseconds)",
                     statType = "BaseStats.CycleTimeBase",
                     uiLabel = "Cycle Time",
                     min = 0.001,
@@ -55,6 +64,7 @@ Weapon = {
                     format = "%.3f"
                 },
                 EffectiveRange = {
+                    uiComponent = "Rangefloat",
                     uiDescription = "Effective Range",
                     statType = "BaseStats.EffectiveRange",
                     uiLabel = "Effective Range",
@@ -81,6 +91,7 @@ Weapon = {
                 }
             },
             data = {
+                LocalizedName = nil,
                 Range = {
                     uiDescription = "Attack Range",
                     statType = "BaseStats.Range",
@@ -111,24 +122,47 @@ function Weapon.Classify(weapon, recordPath)
     }
 end
 
-function Weapon.GetVariantData(weaponName, recordPath, classification)
-    local variantData = {}
+---comment
+---@param weaponName string
+---@param recordPath string
+---@param classification table
+---@param weaponRecord gamedataWeaponItem_Record
+---@return table
+function Weapon.GetVariantData(weaponName, recordPath, classification, weaponRecord)
+    local variantData = {
+        recordPath = recordPath
+    }
 
     if Weapon.VariantData[classification.Range] then
         local classiDataRange = Weapon.VariantData[classification.Range].data
-        variantData = table_merge(variantData, Weapon.genVarData(classiDataRange, recordPath, weaponName, classification))
+        variantData = table_merge(variantData,
+            Weapon.genVarData(classiDataRange, recordPath, weaponName, classification, weaponRecord))
 
         if Weapon.VariantData[classification.Range][classification.Class] then
             local classiDataClass = Weapon.VariantData[classification.Range][classification.Class].data
             variantData = table_merge(variantData,
-                Weapon.genVarData(classiDataClass, recordPath, weaponName, classification))
+                Weapon.genVarData(
+                    classiDataClass,
+                    recordPath,
+                    weaponName,
+                    classification,
+                    weaponRecord
+                )
+            )
 
             if Weapon.VariantData[classification.Range][classification.Class][classification.Type] then
                 local classiDataKind = Weapon.VariantData[classification.Range][classification.Class]
                     [classification.Type]
                     .data
                 variantData = table_merge(variantData,
-                    Weapon.genVarData(classiDataKind, recordPath, weaponName, classification))
+                    Weapon.genVarData(
+                        classiDataKind,
+                        recordPath,
+                        weaponName,
+                        classification,
+                        weaponRecord
+                    )
+                )
             end
         end
     end
@@ -136,33 +170,60 @@ function Weapon.GetVariantData(weaponName, recordPath, classification)
     return variantData
 end
 
-function Weapon.genVarData(classiData, recordPath, weaponName, classification)
+---comment
+---@param classiData table
+---@param recordPath string
+---@param weaponName string
+---@param classification table
+---@param weaponRecord gamedataWeaponItem_Record
+---@return table
+function Weapon.genVarData(classiData, recordPath, weaponName, classification, weaponRecord)
     local result = {}
-    for key, data in pairs(classiData) do
-        result[key] = {}
-        for key2, value2 in pairs(data) do
-            result[key][key2] = value2
+    for statsKey, statsData in pairs(classiData) do
+        local classiResult = {}
+        local tableWeapon = Weapon.Find(weaponName, classification)
+
+        if statsKey == "LocalizedName" then
+            result[statsKey] = Weapon.GetLocalizedName(recordPath)
         end
-        local flatPath = Weapon.findStatModifier(data.statType, recordPath)
 
-        if not flatPath then dd(data, recordPath, classification) end
+        -- Yeah this has to be done to break Luas passin-by-reference
+        for stat, statValue in pairs(statsData) do
+            classiResult[stat] = statValue
+        end
 
-        local weapon = Weapon.Find(weaponName, classification)
-        local defaultFlatPath = nil
+        if statsKey == "Crosshair" then
+            local xh = weaponRecord:Crosshair():GetRecordID().value
+            xh = string.gsub(xh, "Crosshairs.", "")
+            result[statsKey] = {}
+            result[statsKey]['default'] = xh
+            result[statsKey]['custom'] = xh
+        else
+            local flatPath = Weapon.findStatModifier(statsData.statType, recordPath)
 
-        if weapon then
-            if weapon.Variants.Default then
-                defaultFlatPath = weapon.Variants.Default[key].flatPath
+            if not flatPath then dd(statsData, recordPath, classification) end
+
+            local defaultFlatPath = nil
+
+            if tableWeapon then
+                if table_count(tableWeapon.Variants) > 0 then
+                    pcall(
+                        function()
+                            defaultFlatPath = tableWeapon.Variants.Default[statsKey].flatPath
+                        end
+                    )
+                end
+            end
+
+            if defaultFlatPath ~= flatPath then
+                classiResult["flatPath"] = flatPath
+                classiResult["modifierType"] = TweakDB:GetFlat(flatPath .. ".modifierType").value
+                classiResult["default"] = TweakDB:GetFlat(flatPath .. ".value")
+                classiResult["custom"] = classiResult["default"]
+
+                result[statsKey] = classiResult
             end
         end
-
-        if defaultFlatPath == flatPath then goto continue end
-
-        result[key]["flatPath"] = flatPath
-        result[key]["default"] = TweakDB:GetFlat(flatPath .. ".value")
-        result[key]["custom"] = result[key]["default"]
-
-        ::continue::
     end
     return result
 end
@@ -222,7 +283,9 @@ function Weapon.IsIconic(weaponRecord)
 end
 
 function Weapon.GetLocalizedName(weaponRecord)
-    return Game.GetLocalizedItemNameByCName(weaponRecord:DisplayName())
+    local thisWeaponRecord = weaponRecord
+    if type(weaponRecord) == "string" then thisWeaponRecord = TweakDB:GetRecord(weaponRecord) end
+    return Game.GetLocalizedItemNameByCName(thisWeaponRecord:DisplayName())
 end
 
 function Weapon.Find(weaponName, classification, weaponsTable)
