@@ -7,5 +7,5 @@ Autoloader.init()
 Config.Init()
 Mod.init = Main.init()
 FileManager.save("", "../" .. config("app.shortName") .. ".log")
-
-return Mod
+dd("app_enable", config("app.enable", true))
+if config("app.enabled", true) then return Mod end

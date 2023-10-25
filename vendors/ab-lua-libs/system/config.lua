@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 Config = {
 }
 
@@ -13,7 +14,7 @@ function Config.Init()
                 and name ~= 'autoloader.lua') then
             local cfg = string.sub(name, 1, -1 - #".lua")
             configs[cfg] = dofile("./config/" .. name)[cfg]
-        end
+                    end
     end
 end
 
