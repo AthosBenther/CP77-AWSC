@@ -60,7 +60,7 @@ function table_foreach(data, callback)
     end
 end
 
-function table_getValues(data)
+function table_values(data)
     local result = {}
     for key, value in pairs(data) do
         table.insert(result, value)
@@ -77,6 +77,11 @@ function table_indexOfKey(data, key)
     return nil
 end
 
+---Computes the intersection of arrays
+---@param dataA table The table with master values to check.
+---@param dataB table Table to compare values against
+---@param keepKeys? boolean Indicates if keys are preserved
+---@return table result Returns a table containing all the values of tables that are present in all the arguments
 function table_intersect(dataA, dataB, keepKeys)
     keepKeys = keepKeys or false
     local intersection = {}
@@ -103,18 +108,28 @@ function table_keys(data)
 end
 
 function table_map(data, callback)
-    result = {}
+    local result = {}
     for key, value in pairs(data) do
         result[key] = callback(key, value)
     end
     return result
 end
 
----Computes the intersection of arrays
----@param dataA table The table with master values to check.
----@param dataB table Table to compare values against
----@param keepKeys? boolean Indicates if keys are preserved
----@return table result Returns a table containing all the values of tables that are present in all the arguments
+function table_remove(data, key)
+    local result = {}
+    if type(key) == "number" then
+        result = data
+        table.remove(result, key)
+        return result
+    else
+        for dataKey, dataValue in pairs(data) do
+            if key ~= dataKey then
+                result[dataKey] = dataValue
+            end
+        end
+        return result
+    end
+end
 
 function table_unset(data, key)
     local result = {}
