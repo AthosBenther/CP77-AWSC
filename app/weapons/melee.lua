@@ -1,7 +1,7 @@
 Melee = {}
 
 function Melee.Init()
-    local ui = GetMod("nativeSettings")
+    local ui = Main.UI
 
     ui.addTab(
         "/AWSCMelee",
@@ -116,16 +116,6 @@ function Melee.Init()
     )
 
     setClass(1)
-
-    for class, kinds in pairs(Main.weapons.MeleeWeapon) do
-        for kind, weapons in pairs(kinds) do
-            for weapon, weaponProps in pairs(weapons) do
-                for statIndex, stat in pairs(weaponProps.stats) do
-                    Main.SetRecordValue(stat.flatPath, "value", stat.custom)
-                end
-            end
-        end
-    end
 end
 
 return Melee
