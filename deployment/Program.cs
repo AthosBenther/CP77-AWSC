@@ -60,11 +60,14 @@ class Program
 
         foreach (string folder in copyFolders)
         {
-            string folderPath = Path.Combine(deployPath, folder);
-            Directory.CreateDirectory(folderPath);
-            string cmd = $"robocopy {Environment.CurrentDirectory}\\{folder} {folderPath} /MIR /E {ignoreDirsArgs} {ignoreFilesArgs} /NFL /NDL /NJH /NJS /nc /ns /np";
-            //Console.WriteLine($"\n\nRunning: {cmd}");
-            ExecuteCommand(cmd);
+            if (Directory.Exists(folder))
+            {
+                string folderPath = Path.Combine(deployPath, folder);
+                Directory.CreateDirectory(folderPath);
+                string cmd = $"robocopy {Environment.CurrentDirectory}\\{folder} {folderPath} /MIR /E {ignoreDirsArgs} {ignoreFilesArgs} /NFL /NDL /NJH /NJS /nc /ns /np";
+                //Console.WriteLine($"\n\nRunning: {cmd}");
+                ExecuteCommand(cmd);
+            }
         }
 
         foreach (var entry in copyFiles)
