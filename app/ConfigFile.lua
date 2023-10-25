@@ -66,7 +66,7 @@ function ConfigFile.Generate(newFile)
     local weaponItemRecords = TweakDB:GetRecords('gamedataWeaponItem_Record')
     log("AWSC: loaded " .. #weaponItemRecords .. " Weapon Item Records")
 
-    local fWeaponItemRecords = table_getValues(
+    local fWeaponItemRecords = table_values(
         table_filter(
             weaponItemRecords,
             function(key, record)
