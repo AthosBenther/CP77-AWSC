@@ -26,6 +26,7 @@ function Env.readEnv()
 end
 
 function env(envKey, default)
-    default = default or nil
-    return Env.readEnv()[envKey] or default
+    local default = default or nil
+    if Env.readEnv()[envKey] == nil then return default end
+    return Env.readEnv()[envKey]
 end
