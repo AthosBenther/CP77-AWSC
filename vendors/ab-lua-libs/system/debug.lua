@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 local Debug = {
     channels = {
         console = 1,

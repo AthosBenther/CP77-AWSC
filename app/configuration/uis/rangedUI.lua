@@ -1,4 +1,37 @@
-RangedUI = {}
+RangedUI = {
+    xhairsOptions = {
+        [1] = "Basic",
+        [2] = "BlackwallForce",
+        [3] = "Custom_HMG",
+        [4] = "Cyberware_Mantis_Blades",
+        [5] = "Cyberware_Projectile_Launcher",
+        [6] = "Driver_Combat_Missile_Launcher",
+        [7] = "Driver_Combat_Power_Weapon",
+        [8] = "Hercules",
+        [9] = "Hex",
+        [10] = "Jailbreak_power",
+        [11] = "Jailbreak_smart",
+        [12] = "Jailbreak_tech",
+        [13] = "Melee_Bottle",
+        [14] = "Melee_Hammer",
+        [15] = "Melee_Knife",
+        [16] = "Melee_Nano_Wire",
+        [17] = "Melee_Strong_Arms",
+        [18] = "Melee",
+        [19] = "None",
+        [20] = "NoWeapon",
+        [21] = "Pistol",
+        [22] = "Power_Defender",
+        [23] = "Power_Overture",
+        [24] = "Power_Saratoga",
+        [25] = "Rasetsu",
+        [26] = "Simple",
+        [27] = "SmartGun",
+        [28] = "Tech_Hex",
+        [29] = "Tech_Round",
+        [30] = "Tech_Simple"
+    }
+}
 
 function RangedUI.Init()
     local ui = Main.UI
@@ -127,80 +160,84 @@ function RangedUI.Init()
                         variantLabel
                     )
 
-                    local xhairsOptions = {
-                        [1] = "Basic",
-                        [2] = "BlackwallForce",
-                        [3] = "Custom_HMG",
-                        [4] = "Cyberware_Mantis_Blades",
-                        [5] = "Cyberware_Projectile_Launcher",
-                        [6] = "Driver_Combat_Missile_Launcher",
-                        [7] = "Driver_Combat_Power_Weapon",
-                        [8] = "Hercules",
-                        [9] = "Hex",
-                        [10] = "Jailbreak_power",
-                        [11] = "Jailbreak_smart",
-                        [12] = "Jailbreak_tech",
-                        [13] = "Melee_Bottle",
-                        [14] = "Melee_Hammer",
-                        [15] = "Melee_Knife",
-                        [16] = "Melee_Nano_Wire",
-                        [17] = "Melee_Strong_Arms",
-                        [18] = "Melee",
-                        [19] = "None",
-                        [20] = "NoWeapon",
-                        [21] = "Pistol",
-                        [22] = "Power_Defender",
-                        [23] = "Power_Overture",
-                        [24] = "Power_Saratoga",
-                        [25] = "Rasetsu",
-                        [26] = "Simple",
-                        [27] = "SmartGun",
-                        [28] = "Tech_Hex",
-                        [29] = "Tech_Round",
-                        [30] = "Tech_Simple"
-                    }
-
-                    for stat, statValues in pairs(variant) do
-                        if type(statValues) == "table" then
-                            if variantName == "Default" then
-                                local xhdefault = statValues
+                    if variantName == "Default" and variant.Crosshair then
+                        local xhsuccess, errorMessage = pcall(
+                            function()
                                 ui.addSelectorString(
                                     "/AWSCRanged/variant",
                                     "Crosshair",
                                     "Crosshair",
-                                    xhairsOptions,
-                                    table_indexOf(xhairsOptions, variant.Crosshair.custom),
-                                    table_indexOf(xhairsOptions, variant.Crosshair.default),
+                                    RangedUI.xhairsOptions,
+                                    table_indexOf(RangedUI.xhairsOptions, variant.Crosshair.custom),
+                                    table_indexOf(RangedUI.xhairsOptions, variant.Crosshair.default),
                                     function(value)
-                                        TweakDB:SetFlat(
-                                            variantRecord:GetRecordID().value .. ".crosshair",
-                                            xhairsOptions[value]
-                                        )
+                                        local flatSuccess = Weapon.SetCrosshair(weapon, RangedUI.xhairsOptions[value])
+
+                                        if flatSuccess then
+                                            Main.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Crosshair.custom =
+                                                RangedUI.xhairsOptions[value]
+
+                                            FileManager.saveAsJson(Main.weapons,
+                                                config("storage.weapons", "weapons.json"))
+
+                                            log("RangedUI: Setting the crosshair for the '" ..
+                                                variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                        else
+                                            log("RangedUI: Failed setting the crosshair for the '" ..
+                                                variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                        end
+                                    end)
+                            end
+                        )
+                        if xhsuccess then
+                            variant = table_remove(variant, "Crosshair")
+                        else
+                            log("RangedUI:202: Failed to create the Crosshair control for the '" ..
+                                variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                            log(errorMessage)
+                        end
+                    end
+
+
+                    for stat, statValues in pairs(variant) do
+                        if type(statValues) == "table" then
+                            local status, errorMessage = pcall(function()
+                                log("RangedUI:182: Creating the " ..
+                                    statValues.uiLabel ..
+                                    " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                ui.addRangeFloat(
+                                    "/AWSCRanged/variant",    --path
+                                    statValues.uiLabel,       --label
+                                    statValues.uiDescription, --description
+                                    statValues.min,           --min
+                                    statValues.max,           --max
+                                    statValues.step,          --step
+                                    statValues.format,        --format
+                                    statValues.custom + 0.0,  --currentValue
+                                    statValues.default + 0.0, --defaultValue
+                                    function(value)           --callback
+                                        log("RangedUI:182: Setting " ..
+                                            statValues.uiLabel ..
+                                            " for the '" ..
+                                            variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                        Main.SetRecordValue(statValues.flatPath, "value", value)
+                                        Main.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
+                                            value
+                                        FileManager.saveAsJson(Main.weapons,
+                                            config("storage.weapons", "weapons.json"))
                                     end
                                 )
                             end
-                            if not pcall(
-                                    ui.addRangeFloat(
-                                        "/AWSCRanged/variant",    --path
-                                        statValues.uiLabel,       --label
-                                        statValues.uiDescription, --description
-                                        statValues.min,           --min
-                                        statValues.max,           --max
-                                        statValues.step,          --step
-                                        statValues.format,        --format
-                                        statValues.custom + 0.0,  --currentValue
-                                        statValues.default + 0.0, --defaultValue
-                                        function(value)           --callback
-                                            Main.SetRecordValue(statValues.flatPath, "value", value)
-                                            Main.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
-                                                value
-                                            FileManager.saveAsJson(Main.weapons,
-                                                config("storage.weapons", "weapons.json"))
-                                        end
-                                    )
-                                ) then
-                                log("Failed to set the " .. stat .. " stats for " .. weaponLabel)
+                            )
+
+                            if not status then
+                                log("RangedUI:202: Failed to create the control for the " ..
+                                    stat ..
+                                    " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                log(errorMessage)
+                                log(statValues)
                             end
+
                             Main.SetRecordValue(variant[stat].flatPath, "value", variant[stat].custom)
                         end
                     end

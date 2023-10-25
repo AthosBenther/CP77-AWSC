@@ -183,16 +183,15 @@ function Weapon.genVarData(classiData, recordPath, weaponName, classification, w
         local classiResult = {}
         local tableWeapon = Weapon.Find(weaponName, classification)
 
+        if type(statsData) == "table" then
+            for stat, statValue in pairs(statsData) do
+                classiResult[stat] = statValue
+            end
+        end
+
         if statsKey == "LocalizedName" then
             result[statsKey] = Weapon.GetLocalizedName(recordPath)
-        end
-
-        -- Yeah this has to be done to break Luas passin-by-reference
-        for stat, statValue in pairs(statsData) do
-            classiResult[stat] = statValue
-        end
-
-        if statsKey == "Crosshair" then
+        elseif statsKey == "Crosshair" then
             local xh = weaponRecord:Crosshair():GetRecordID().value
             xh = string.gsub(xh, "Crosshairs.", "")
             result[statsKey] = {}
@@ -201,7 +200,10 @@ function Weapon.genVarData(classiData, recordPath, weaponName, classification, w
         else
             local flatPath = Weapon.findStatModifier(statsData.statType, recordPath)
 
-            if not flatPath then dd(statsData, recordPath, classification) end
+            if not flatPath then
+                log("Weapon.lua:203: Can't find the flatPath for the weapon " ..
+                    recordPath .. ", stat " .. statsKey)
+            end
 
             local defaultFlatPath = nil
 
@@ -303,6 +305,26 @@ function Weapon.Find(weaponName, classification, weaponsTable)
         return weapon
     end
     return nil
+end
+
+function Weapon.SetCrosshair(storageWeapon, crosshair)
+    local flatSuccess = true
+    local commonVariants = { "Military", "Neon", "Pimp" }
+    for variant, variantData in pairs(storageWeapon.Variants) do
+        local variantRecord = variantData.recordPath
+        flatSuccess = flatSuccess and Main.SetRecordValue(
+            variantRecord, "crosshair",
+            "Crosshairs." .. crosshair)
+    end
+
+    local defaultVariantRecord = storageWeapon.Variants.Default.recordPath
+
+    for key, commonVariant in pairs(commonVariants) do
+        flatSuccess = flatSuccess and Main.SetRecordValue(
+            string.gsub(defaultVariantRecord, "Default", commonVariant), "crosshair",
+            "Crosshairs." .. crosshair)
+    end
+    return flatSuccess
 end
 
 return Weapon

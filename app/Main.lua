@@ -108,21 +108,23 @@ function Main.SetRecordValue(path, field, value)
         or field == nil
         or value == nil
     then
-        dd(
-            path,
-            field,
-            value
+        log(
+            {
+                path,
+                field,
+                value
+            }
         )
         return false
     end
 
     if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
-        log("Error SetFlat: '" ..
+        log("Failed to SetFlat: '" ..
             path .. "." .. field .. "' as '" .. value .. "'")
         return false
     end
     if not TweakDB:Update(path) then
-        log("Error Update: " .. path)
+        log("Failed to Update path: " .. path)
         return false
     end
     return true
