@@ -1,18 +1,20 @@
 ConfigFile = {
-    description = "Advanced Weapon Stat Customization",
     weapons = {}
 }
 
 function ConfigFile.Init(newFile)
     local newFile = newFile or false
-    --FileManager.saveAsJson(nil, 'weapons.json')
 
     -- loads config file if not forcing the cration of a new one
     if newFile or config("configs.forcenew", false) then
         ConfigFile.Generate()
+        MainUI.Init()
     else
-        Main.weapons = FileManager.openJson(config("storage.weapons", "weapons.json"))
+        ConfigFile.weapons = FileManager.openJson(config("storage.weapons", "weapons.json"))
+        MainUI.Init()
     end
+
+    ConfigFile.SetAllRecords()
 end
 
 function ConfigFile.Generate()
@@ -22,9 +24,8 @@ function ConfigFile.Generate()
 
     local defaultWeapons = {}
 
-    
-    for k, record in pairs(ConfigFile.weaponItemRecords) do
 
+    for k, record in pairs(ConfigFile.weaponItemRecords) do
         ---@type gamedataWeaponItem_Record
         local record = record
 
@@ -186,6 +187,29 @@ function ConfigFile.Validate()
         end
     end
     if table_count(errors) == 0 then return true else return errors end
+end
+
+function ConfigFile.SetAllRecords()
+    log("configFile: Setting all records")
+    for range, classes in pairs(ConfigFile.weapons) do
+        for class, kinds in pairs(classes) do
+            for kind, weapons in pairs(kinds) do
+                for weapon, weaponData in pairs(weapons) do
+                    for variant, stats in pairs(weaponData.Variants) do
+                        for k, stat in pairs(stats) do
+                            if
+                                stat.flatPath
+                                and stat.custom
+                            then
+                                Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    log("configFile: All records set!")
 end
 
 return ConfigFile

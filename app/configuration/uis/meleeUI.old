@@ -1,7 +1,7 @@
 MeleeUI = {}
 
 function Melee.Init()
-    local ui = Main.UI
+    local ui = MainUI.UI
 
     ui.addTab(
         "/AWSCMelee",
@@ -15,7 +15,7 @@ function Melee.Init()
         "Class"
     )
 
-    local options = table_keys(Main.weapons.MeleeWeapon)
+    local options = table_keys(ConfigFile.weapons.MeleeWeapon)
     local optionsLabels = table_map(options, function(k, v) return Main.classLabels[v] end)
 
     local activeClass = nil
@@ -30,7 +30,7 @@ function Melee.Init()
             classLabel
         )
 
-        local kinds = table_keys(Main.weapons.MeleeWeapon[class])
+        local kinds = table_keys(ConfigFile.weapons.MeleeWeapon[class])
         local kindLabels = table_map(kinds, function(k, kind) return Main.kindLabels[kind] end)
 
         local setKind = function(value)
@@ -43,14 +43,14 @@ function Melee.Init()
                 kindLabel
             )
 
-            local weapons = table_keys(Main.weapons.MeleeWeapon[class][kind])
+            local weapons = table_keys(ConfigFile.weapons.MeleeWeapon[class][kind])
             local weaponNames = table_map(weapons,
-                function(k, weapon) return Main.weapons.MeleeWeapon[class][kind][weapon].LocalizedName end)
+                function(k, weapon) return ConfigFile.weapons.MeleeWeapon[class][kind][weapon].LocalizedName end)
 
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCMelee/weapon")
                 local weaponRecordName = weapons[value]
-                local weaponProperties = Main.weapons.MeleeWeapon[class][kind][weaponRecordName]
+                local weaponProperties = ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName]
                 local stats = weaponProperties.stats
                 local weaponName = weaponProperties.LocalizedName
                 log(weaponName)
@@ -72,9 +72,9 @@ function Melee.Init()
                     stats.Range.default + 0.0,                 --defaultValue
                     function(value)                            --callback
                         Main.SetRecordValue(stats.Range.flatPath, "value", value)
-                        Main.weapons.MeleeWeapon[class][kind][weaponRecordName].stats.Range.custom =
+                        ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].stats.Range.custom =
                             value
-                        FileManager.saveAsJson(Main.weapons, 'weapons.json')
+                        FileManager.saveAsJson(ConfigFile.weapons, 'weapons.json')
                     end
                 )
                 Main.SetRecordValue(stats.Range.flatPath, "value", stats.Range.custom)

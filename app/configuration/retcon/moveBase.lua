@@ -1,8 +1,8 @@
 MoveBase = {}
 
 function MoveBase.init()
-    Main.weapons = FileManager.openJson("weapons.json")
-    for class, kinds in pairs(Main.weapons.RangedWeapon) do
+    ConfigFile.weapons = FileManager.openJson("weapons.json")
+    for class, kinds in pairs(ConfigFile.weapons.RangedWeapon) do
         for kind, weapons in pairs(kinds) do
             for weapon, weaponProps in pairs(weapons) do
                 if not weaponProps.variants then
@@ -16,11 +16,11 @@ function MoveBase.init()
                         weaponProps = table_remove(weaponProps,"stats")
                     end
                 end
-                Main.weapons.RangedWeapon[class][kind][weapon].weaponProps = weaponProps
+                ConfigFile.weapons.RangedWeapon[class][kind][weapon].weaponProps = weaponProps
             end
         end
     end
-    FileManager.saveAsJson(Main.weapons, "weapons2.json")
+    FileManager.saveAsJson(ConfigFile.weapons, "weapons2.json")
 end
 
 return MoveBase

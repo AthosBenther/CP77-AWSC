@@ -200,7 +200,7 @@ function ConfigFile.Generate(newFile)
         end
     end
     FileManager.saveAsJson(ConfigFile.weapons, "weapons.json")
-    Main.weapons = ConfigFile.weapons
+    ConfigFile.weapons = ConfigFile.weapons
     ConfigFile.weapons = nil
 end
 

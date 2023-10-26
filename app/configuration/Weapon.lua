@@ -62,18 +62,7 @@ Weapon = {
                     max = 5,
                     step = 0.001,
                     format = "%.3f"
-                },
-                EffectiveRange = {
-                    uiComponent = "Rangefloat",
-                    uiDescription = "Effective Range",
-                    statType = "BaseStats.EffectiveRange",
-                    uiLabel = "Effective Range",
-                    min = 0.1,
-                    max = 100,
-                    step = 0.1,
-                    format = "%.1f",
                 }
-
             }
         },
         MeleeWeapon = {
@@ -217,7 +206,7 @@ function Weapon.genVarData(classiData, recordPath, weaponName, classification, w
                 end
             end
 
-            if defaultFlatPath ~= flatPath then
+            if flatPath and defaultFlatPath ~= flatPath then
                 classiResult["flatPath"] = flatPath
                 classiResult["modifierType"] = TweakDB:GetFlat(flatPath .. ".modifierType").value
                 classiResult["default"] = TweakDB:GetFlat(flatPath .. ".value")
@@ -236,15 +225,39 @@ end
 ---@return unknown
 function Weapon.findStatModifier(statType, weaponPath)
     local statGroups = TweakDB:GetFlat(weaponPath .. ".statModifierGroups")
+    local result = nil
+    local weaponName = Weapon.GetName(weaponPath)
+    local defaultWeapon = string_split(weaponName, "_")[1]
+
     for key, statGroup in pairs(statGroups) do
         local modifiers = TweakDB:GetRecord(statGroup):StatModifiers()
+
         for key, modifier in pairs(modifiers or {}) do
-            local dbStatType = modifier:StatType():GetRecordID().value
-            local inline = modifier:GetRecordID().value
-            if dbStatType == statType and string_contains(inline, "inline") then return inline end
+            local dbStatType = nil
+            local modifierRecordName = modifier:GetRecordID().value
+
+
+            local status, errorMessage = pcall(function()
+                dbStatType = modifier:StatType():GetRecordID().value
+
+                if dbStatType and string_contains(modifierRecordName, defaultWeapon) then
+                    local inline = modifier:GetRecordID().value
+                    if dbStatType == statType and string_contains(inline, "inline") then
+                        result = inline
+                        return
+                    end
+                end
+            end)
+
+            if not status then
+                log("Weapon.lua: Error trying to find the stat '" .. statType .. "' in '" .. weaponPath .. "'")
+                log("dbStatType: " .. (dbStatType or "nil"))
+                log("dbStatType: " .. (modifier:GetRecordID().value or "nil"))
+                log(errorMessage)
+            end
         end
     end
-    return nil
+    return result
 end
 
 function Weapon.FindFlat(statGroup, statType, weaponPath)
@@ -261,14 +274,18 @@ function Weapon.FindFlat(statGroup, statType, weaponPath)
     return nil
 end
 
-function Weapon.GetName(data, stopOn)
-    local stopOn = stopOn or ""
-    local parts = string_split(data, "_")
+function Weapon.GetName(weaponPath, stopOn)
+    local stopOn = stopOn or "Default"
+    local parts = string_split(weaponPath, "_")
     table.remove(parts, 1)
-    local stop = table_indexOf(parts, "Default") - 1
     local nameParts = {}
-    for i = 1, stop, 1 do
-        nameParts[i] = parts[i]
+    if stopOn and string_contains(weaponPath, stopOn) then
+        local stop = table_indexOf(parts, stopOn) - 1
+        for i = 1, stop, 1 do
+            nameParts[i] = parts[i]
+        end
+    else
+        nameParts = parts
     end
     local name = table_join(nameParts, "_")
     return name

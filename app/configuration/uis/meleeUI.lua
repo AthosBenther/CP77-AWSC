@@ -1,7 +1,7 @@
 MeleeUI = {}
 
 function MeleeUI.Init()
-    local ui = Main.UI
+    local ui = MainUI.UI
 
     ui.addTab(
         "/AWSCMelee",
@@ -15,7 +15,7 @@ function MeleeUI.Init()
         "Class"
     )
 
-    local options = table_keys(Main.weapons.MeleeWeapon)
+    local options = table_keys(ConfigFile.weapons.MeleeWeapon)
     local optionsLabels = table_map(options, function(k, v) return Main.classLabels[v] end)
 
     local activeClass = nil
@@ -32,7 +32,7 @@ function MeleeUI.Init()
             classLabel
         )
 
-        local kinds = table_keys(Main.weapons.MeleeWeapon[class])
+        local kinds = table_keys(ConfigFile.weapons.MeleeWeapon[class])
         local kindLabels = table_map(kinds, function(k, kind) return Main.kindLabels[kind] end)
 
         local setKind = function(value)
@@ -47,9 +47,9 @@ function MeleeUI.Init()
                 kindLabel
             )
 
-            local weapons = table_keys(Main.weapons.MeleeWeapon[class][kind])
+            local weapons = table_keys(ConfigFile.weapons.MeleeWeapon[class][kind])
             local weaponNames = table_map(weapons,
-                function(k, weapon) return Main.weapons.MeleeWeapon[class][kind][weapon].LocalizedName end)
+                function(k, weapon) return ConfigFile.weapons.MeleeWeapon[class][kind][weapon].LocalizedName end)
 
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCMelee/weapon")
@@ -60,10 +60,10 @@ function MeleeUI.Init()
 
                 local weaponName = table_filter(weapons,
                     function(k, weapon)
-                        return Main.weapons.MeleeWeapon[class][kind][weapon].LocalizedName ==
+                        return ConfigFile.weapons.MeleeWeapon[class][kind][weapon].LocalizedName ==
                             weaponLabel
                     end)[1]
-                local weapon = Main.weapons.MeleeWeapon[class][kind][weaponName]
+                local weapon = ConfigFile.weapons.MeleeWeapon[class][kind][weaponName]
                 local variantNames = {
                     [1] = "Base",
                     [2] = "Default"
@@ -98,7 +98,7 @@ function MeleeUI.Init()
 
                     local variant = weapon.variants[vKey]
 
-                    -- local weaponProperties = Main.weapons.MeleeWeapon[class][kind][weaponRecordName].variants
+                    -- local weaponProperties = ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].variants
                     --     [variantKey]
                     -- local variant = weaponProperties.variant
 
@@ -121,9 +121,9 @@ function MeleeUI.Init()
                         variant.Range.default + 0.0,               --defaultValue
                         function(value)                            --callback
                             Main.SetRecordValue(variant.Range.flatPath, "value", value)
-                            Main.weapons.MeleeWeapon[class][kind][weaponRecordName].variant.Range.custom =
+                            ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].variant.Range.custom =
                                 value
-                            FileManager.saveAsJson(Main.weapons, 'weapons.json')
+                            FileManager.saveAsJson(ConfigFile.weapons, 'weapons.json')
                         end
                     ))
                     Main.SetRecordValue(variant.Range.flatPath, "value", variant.Range.custom)

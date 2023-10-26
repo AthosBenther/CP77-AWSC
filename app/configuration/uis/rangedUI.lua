@@ -34,7 +34,7 @@ RangedUI = {
 }
 
 function RangedUI.Init()
-    local ui = Main.UI
+    local ui = MainUI.UI
 
     ui.addTab(
         "/AWSCRanged",
@@ -48,7 +48,7 @@ function RangedUI.Init()
         "Class"
     )
 
-    local options = table_keys(Main.weapons.RangedWeapon)
+    local options = table_keys(ConfigFile.weapons.RangedWeapon)
     local optionsLabels = table_map(options, function(k, v) return Main.classLabels[v] end)
 
     local activeClass = nil
@@ -65,7 +65,7 @@ function RangedUI.Init()
             classLabel
         )
 
-        local kinds = table_keys(Main.weapons.RangedWeapon[class])
+        local kinds = table_keys(ConfigFile.weapons.RangedWeapon[class])
         local kindLabels = table_map(kinds, function(k, kind) return Main.kindLabels[kind] end)
 
         local setKind = function(value)
@@ -80,12 +80,12 @@ function RangedUI.Init()
                 kindLabel
             )
 
-            local weapons = table_keys(Main.weapons.RangedWeapon[class][kind])
+            local weapons = table_keys(ConfigFile.weapons.RangedWeapon[class][kind])
             local weaponNames = {}
 
             table_map(weapons,
                 function(k, weapon)
-                    weaponNames[k] = Main.weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
+                    weaponNames[k] = ConfigFile.weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
                 end
             )
 
@@ -97,14 +97,14 @@ function RangedUI.Init()
                 local weaponLabel = weaponNames[value]
                 local weaponRecordName = weapons[value]
 
-                local weapon = Weapon.Find(
+                local storageWeapon = Weapon.Find(
                     weaponRecordName,
                     {
                         Range = "RangedWeapon",
                         Class = class,
                         Kind = kind
                     },
-                    Main.weapons
+                    ConfigFile.weapons
                 )
 
                 local variantNames = {
@@ -117,42 +117,45 @@ function RangedUI.Init()
 
                 if not pcall(function()
                         table_map(
-                            weapon.Variants,
-                            function(variantName, variant)
-                                if table_count(variant) > 1 and variantName ~= "Default" then
-                                    if variant.LocalizedName == weapon.Variants.Default.LocalizedName then
+                            storageWeapon.Variants,
+                            function(variantName, storageVariant)
+                                if table_count(storageVariant) > 1 and variantName ~= "Default" then
+                                    if storageVariant.LocalizedName == storageWeapon.Variants.Default.LocalizedName then
                                         table.insert(variantNames, variantName)
                                         table.insert(variantLabels, variantName)
                                     else
-                                        table.insert(variantLabels, variant.LocalizedName)
+                                        table.insert(variantLabels, storageVariant.LocalizedName)
                                         table.insert(variantNames, variantName)
                                     end
                                 end
                             end
                         )
                     end) then
-                    dd("Inserting Variant failed: ", weapon.Variants)
+                    log("RanderUI: Inserting one or more " .. weaponLabel .. " variants failed")
                 end
 
                 ui.addSubcategory(
                     "/AWSCRanged/weapon",
                     weaponLabel
                 )
-                log("AWSC UI: ui.addSubcategory(\"/AWSCRanged/weapon\"," .. weaponLabel .. ")")
+
 
                 local setVariant = function(value)
-                    log("AWSC UI: setVariant(" .. value .. ")")
                     ui.removeSubcategory("/AWSCRanged/variant")
+                    ui.removeSubcategory("/AWSCRanged/iconicDisclaimer")
+
+
 
                     local variantName = variantNames[value]
                     local variantLabel = variantLabels[value]
 
 
-                    local variant = weapon.Variants[variantName]
+                    local storageVariant = storageWeapon.Variants[variantName]
 
+                    log("RangedUI: Setting variant " .. variantLabel)
 
                     ---@type gamedataWeaponItem_Record
-                    local variantRecord = TweakDB:GetRecord(variant.recordPath)
+                    --local variantRecord = TweakDB:GetRecord(storageVariant.recordPath)
 
 
                     ui.addSubcategory(
@@ -160,7 +163,9 @@ function RangedUI.Init()
                         variantLabel
                     )
 
-                    if variantName == "Default" and variant.Crosshair then
+                    local isIconic = false
+
+                    if variantName == "Default" and storageVariant.Crosshair then
                         local xhsuccess, errorMessage = pcall(
                             function()
                                 ui.addSelectorString(
@@ -168,16 +173,17 @@ function RangedUI.Init()
                                     "Crosshair",
                                     "Crosshair",
                                     RangedUI.xhairsOptions,
-                                    table_indexOf(RangedUI.xhairsOptions, variant.Crosshair.custom),
-                                    table_indexOf(RangedUI.xhairsOptions, variant.Crosshair.default),
+                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Crosshair.custom),
+                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Crosshair.default),
                                     function(value)
-                                        local flatSuccess = Weapon.SetCrosshair(weapon, RangedUI.xhairsOptions[value])
+                                        local flatSuccess = Weapon.SetCrosshair(storageWeapon,
+                                            RangedUI.xhairsOptions[value])
 
                                         if flatSuccess then
-                                            Main.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Crosshair.custom =
+                                            ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Crosshair.custom =
                                                 RangedUI.xhairsOptions[value]
 
-                                            FileManager.saveAsJson(Main.weapons,
+                                            FileManager.saveAsJson(ConfigFile.weapons,
                                                 config("storage.weapons", "weapons.json"))
 
                                             log("RangedUI: Setting the crosshair for the '" ..
@@ -190,59 +196,90 @@ function RangedUI.Init()
                             end
                         )
                         if xhsuccess then
-                            variant = table_remove(variant, "Crosshair")
+                            storageVariant = table_remove(storageVariant, "Crosshair")
                         else
-                            log("RangedUI:202: Failed to create the Crosshair control for the '" ..
+                            log("RangedUI: Failed to create the Crosshair control for the '" ..
                                 variantLabel .. "' variant of '" .. weaponLabel .. "'")
                             log(errorMessage)
                         end
+                    else
+                        isIconic = true
+                        storageVariant = table_remove(storageVariant, "Crosshair")
+                        log("RangedUI: '" ..
+                            variantLabel .. "' Identified as an Iconic")
+
+                        if table_count(storageVariant) < 3 then
+                            ui.removeSubcategory("/AWSCRanged/variant")
+                            ui.addSubcategory(
+                                "/AWSCRanged/iconicDisclaimer",
+                                variantName ..
+                                " inherit all its stats from Default, and may have hidden mods affecting certain attributes"
+                            )
+                        else
+                            ui.addSubcategory(
+                                "/AWSCRanged/iconicDisclaimer",
+                                "Note: Iconics inherit some stats from Default, and may have hidden mods affecting certain attributes"
+                            )
+                        end
                     end
 
+                    local subcat = "/AWSCRanged/variant"
+                    if isIconic then subcat = "/AWSCRanged/iconicDisclaimer" end
 
-                    for stat, statValues in pairs(variant) do
-                        if type(statValues) == "table" then
-                            local status, errorMessage = pcall(function()
-                                log("RangedUI:182: Creating the " ..
-                                    statValues.uiLabel ..
-                                    " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                                ui.addRangeFloat(
-                                    "/AWSCRanged/variant",    --path
-                                    statValues.uiLabel,       --label
-                                    statValues.uiDescription, --description
-                                    statValues.min,           --min
-                                    statValues.max,           --max
-                                    statValues.step,          --step
-                                    statValues.format,        --format
-                                    statValues.custom + 0.0,  --currentValue
-                                    statValues.default + 0.0, --defaultValue
-                                    function(value)           --callback
-                                        log("RangedUI:182: Setting " ..
-                                            statValues.uiLabel ..
-                                            " for the '" ..
-                                            variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                                        Main.SetRecordValue(statValues.flatPath, "value", value)
-                                        Main.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
-                                            value
-                                        FileManager.saveAsJson(Main.weapons,
-                                            config("storage.weapons", "weapons.json"))
-                                    end
-                                )
+                    local validStats = table_filter(storageVariant, function(k, v) return type(v) == "table" end)
+
+
+                    log("RangedUI: " .. table_count(validStats) .. " stats identified:")
+                    log(table_keys(validStats))
+
+                    for stat, statValues in pairs(validStats) do
+                        log("RangedUI: creating the control for " .. stat)
+
+                        local status, errorMessage = pcall(function()
+                            log("RangedUI: Creating the " ..
+                                statValues.uiLabel ..
+                                " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+
+                            local label = statValues.uiLabel
+                            local desc = statValues.uiDescription
+                            if statValues.modifierType == "Multiplier" then
+                                label = label .. " Multiplier"
+                                desc = desc .. " Multiplier"
                             end
+                            ui.addRangeFloat(
+                                subcat,                       --path
+                                label,                        --label
+                                statValues.uiDescription,     --description
+                                statValues.min,               --min
+                                statValues.max,               --max
+                                statValues.step,              --step
+                                statValues.format,            --format
+                                statValues.custom + 0.0,      --currentValue
+                                statValues.default + 0.0,     --defaultValue
+                                function(value)               --callback
+                                    log("RangedUI: Setting " ..
+                                        statValues.uiLabel ..
+                                        " for the '" ..
+                                        variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                    Main.SetRecordValue(statValues.flatPath, "value", value)
+                                    ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
+                                        value
+                                    FileManager.saveAsJson(ConfigFile.weapons,
+                                        config("storage.weapons", "weapons.json"))
+                                end
                             )
+                        end
+                        )
 
-                            if not status then
-                                log("RangedUI:202: Failed to create the control for the " ..
-                                    stat ..
-                                    " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                                log(errorMessage)
-                                log(statValues)
-                            end
-
-                            Main.SetRecordValue(variant[stat].flatPath, "value", variant[stat].custom)
+                        if not status then
+                            log("RangedUI: Failed to create the control for the " ..
+                                stat ..
+                                " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                            log(errorMessage)
+                            log(statValues)
                         end
                     end
                 end
-
 
                 ui.addSelectorString(
                     "/AWSCRanged/weapon",
