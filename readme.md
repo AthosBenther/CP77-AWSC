@@ -1,10 +1,12 @@
-Ok, chooms. Time to organize a road-map. The mod is rapidly expanding it's scope, what makes me rapidly lose track or focus lol.
+# Advanced Weapon Stat Customization
+This is a mod for Cyberpunk 2077.
 
-## THIS LIST WILL CHANGE AND BE EXPANDED.
-I don't remember all functions in one go. And user suggestions may impact the road map.
 
-So, lets list features, and try to tie it to versions:
+Requires [Cyber Engine Tweaks](https://github.com/maximegmd/CyberEngineTweaks)  
+Requires [Native Settings UI](https://github.com/justarandomguyintheinternet/CP77_nativeSettings)  
 
+
+## Roadmap
 
 ### Not version tied yet:
 - Mitigate damage scaling based on magazine size and fire rate
