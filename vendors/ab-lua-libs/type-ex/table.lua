@@ -36,7 +36,7 @@ end
 
 function table_filter(data, callback)
     local result = {}
-    for key, value in ipairs(data) do
+    for key, value in pairs(data) do
         if callback(key, value) then
             result[key] = value
         end

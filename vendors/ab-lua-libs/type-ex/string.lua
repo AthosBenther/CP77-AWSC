@@ -15,15 +15,15 @@ function string_split(subject, separator)
     return fields
 end
 
-function string_contains(str, ...)
+function string_contains(subject, ...)
     local args = ...
 
     if type(...) == "string" then
         args = {...}
     end
 
-    for index, sub in ipairs(args) do
-        if string.find(str, sub, 1, true) ~= nil then return true end
+    for index, arg in ipairs(args) do
+        if string.find(subject, arg, 1, true) ~= nil then return true end
     end
     return false
 end
