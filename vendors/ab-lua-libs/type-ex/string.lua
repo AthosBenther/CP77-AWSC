@@ -3,7 +3,7 @@ function string_startsWith(subject, start)
     return tostring(subject):sub(1, #start) == start
 end
 
-function string_endswith(subject, ending)
+function string_endsWith(subject, ending)
     return ending == "" or tostring(subject):sub(- #ending) == ending
 end
 

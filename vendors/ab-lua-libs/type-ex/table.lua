@@ -151,22 +151,23 @@ end
 --     end
 -- end
 
-function table_merge(t1, t2)
-    local result = {}
-
-    for k, v in pairs(t1) do
-        result[k] = v
-    end
-
-    for k, v in pairs(t2) do
-        if type(k) == "number" then
-            table.insert(result, v)
-        else
-            result[k] = v
+function table_merge(subject, incoming)
+    local function merge_recursive(target, source)
+        for k, v in pairs(source) do
+            if type(v) == "table" and type(target[k]) == "table" then
+                target[k] = merge_recursive(target[k], v)
+            else
+                if type(k) == "number" then
+                    table.insert(target, v)
+                else
+                    target[k] = v
+                end
+            end
         end
+        return target
     end
 
-    return result
+    return merge_recursive(subject, incoming)
 end
 
 function table_remove(data, key)
