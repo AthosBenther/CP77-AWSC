@@ -19,7 +19,7 @@ class Program
             "app",
             "config",
             "vendors",
-            "views",
+            "resources",
             "storage"
         };
 
