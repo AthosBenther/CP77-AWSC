@@ -10,6 +10,7 @@ function ConfigFile.Init(newFile)
         ConfigFile.Generate()
         MainUI.Init()
     else
+        ConfigFile.Load()
         MainUI.Init()
     end
 
@@ -23,7 +24,7 @@ function ConfigFile.Save()
     }
 
     if data.version then
-        FileManager.saveAsJson(data, config("storage.weapons", "weapons.json"))
+        FileManager.saveAsJson(data.data, config("storage.weapons", "weapons.json"))
     else
         error("ConfigFile: Can't save Weapons Stats. Game version is not valid!")
     end
