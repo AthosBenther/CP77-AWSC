@@ -11,8 +11,9 @@ function MainUI.Init()
 
         local status, errorMessage = pcall(function()
             RangedUI.Init()
-            --MeleeUI.Init()
-            log("MainUI: All UIs started!")
+            log("MainUI: Ranged UI started!")
+            MeleeUI.Init()
+            log("MainUI: Melee UI started!")
         end)
 
         if not status then
