@@ -183,7 +183,7 @@ function MeleeUI.Init()
                                             MeleeUI.xhairsOptions[value])
 
                                         if flatSuccess then
-                                            ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].Variants.Default.Crosshair.custom =
+                                            ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
                                                 MeleeUI.xhairsOptions[value]
 
                                             ConfigFile.Save()
@@ -228,7 +228,7 @@ function MeleeUI.Init()
                     local subcat = "/AWSCMelee/variant"
                     if isIconic then subcat = "/AWSCMelee/iconicDisclaimer" end
 
-                    local validStats = table_filter(storageVariant.Stats, function(k, v) return type(v) == "table" end)
+                    local validStats = table_filter(storageVariant.Stats, function(k, v) return (type(v) == "table" and k ~= "Crosshair")  end)
 
 
                     log("MeleeUI: " .. table_count(validStats) .. " stats identified:")
@@ -264,7 +264,7 @@ function MeleeUI.Init()
                                         " for the '" ..
                                         variantLabel .. "' variant of '" .. weaponLabel .. "'")
                                     Main.SetRecordValue(statValues.flatPath, "value", value)
-                                    ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
+                                    ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].Variants[variantName].Stats[stat].custom =
                                         value
                                         ConfigFile.Save()
                                 end

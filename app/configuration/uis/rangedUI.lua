@@ -180,10 +180,10 @@ function RangedUI.Init()
                                             RangedUI.xhairsOptions[value])
 
                                         if flatSuccess then
-                                            ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Crosshair.custom =
+                                            ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
                                                 RangedUI.xhairsOptions[value]
 
-                                                ConfigFile.Save()
+                                            ConfigFile.Save()
 
                                             log("RangedUI: Setting the crosshair for the '" ..
                                                 variantLabel .. "' variant of '" .. weaponLabel .. "'")
@@ -246,24 +246,24 @@ function RangedUI.Init()
                                 desc = desc .. " Multiplier"
                             end
                             ui.addRangeFloat(
-                                subcat,                       --path
-                                label,                        --label
-                                statValues.uiDescription,     --description
-                                statValues.min,               --min
-                                statValues.max,               --max
-                                statValues.step,              --step
-                                statValues.format,            --format
-                                statValues.custom + 0.0,      --currentValue
-                                statValues.default + 0.0,     --defaultValue
-                                function(value)               --callback
+                                subcat,                   --path
+                                label,                    --label
+                                statValues.uiDescription, --description
+                                statValues.min,           --min
+                                statValues.max,           --max
+                                statValues.step,          --step
+                                statValues.format,        --format
+                                statValues.custom + 0.0,  --currentValue
+                                statValues.default + 0.0, --defaultValue
+                                function(value)           --callback
                                     log("RangedUI: Setting " ..
                                         statValues.uiLabel ..
                                         " for the '" ..
                                         variantLabel .. "' variant of '" .. weaponLabel .. "'")
                                     Main.SetRecordValue(statValues.flatPath, "value", value)
-                                    ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
+                                    ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName].Stats[stat].custom =
                                         value
-                                        ConfigFile.Save()
+                                    ConfigFile.Save()
                                 end
                             )
                         end

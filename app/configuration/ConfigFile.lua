@@ -8,13 +8,12 @@ function ConfigFile.Init(newFile)
     -- loads config file if not forcing the cration of a new one
     if newFile or config("configs.forcenew", false) then
         ConfigFile.Generate()
-        MainUI.Init()
     else
         ConfigFile.Load()
-        MainUI.Init()
     end
 
     ConfigFile.SetAllRecords()
+    MainUI.Init()
 end
 
 function ConfigFile.Save()
@@ -213,13 +212,19 @@ function ConfigFile.SetAllRecords()
         for class, kinds in pairs(classes) do
             for kind, weapons in pairs(kinds) do
                 for weapon, weaponData in pairs(weapons) do
-                    for variant, stats in pairs(weaponData.Variants) do
-                        for k, stat in pairs(stats) do
-                            if
-                                stat.flatPath
-                                and stat.custom
-                            then
-                                Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                    for variant, properties in pairs(weaponData.Variants) do
+                        for propK, propValues in pairs(properties) do
+                            if type(propValues) == "table" then
+                                for statName, stat in pairs(propValues) do
+                                    if
+                                        stat.flatPath
+                                        and stat.custom
+                                    then
+                                        Main.SetRecordValue(stat.flatPath, "value", stat.custom)
+                                    elseif statName == "Crosshair" then
+                                        Weapon.SetCrosshair(weaponData, stat.custom)
+                                    end
+                                end
                             end
                         end
                     end
