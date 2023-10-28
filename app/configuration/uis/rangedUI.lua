@@ -92,7 +92,7 @@ function RangedUI.Init()
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCRanged/weapon")
                 ui.removeSubcategory("/AWSCRanged/variant")
-                log("AWSC UI: setWeapon(" .. value .. ")")
+                log("RangedUI: setWeapon(" .. value .. ")")
 
                 local weaponLabel = weaponNames[value]
                 local weaponRecordName = weapons[value]
@@ -165,7 +165,7 @@ function RangedUI.Init()
 
                     local isIconic = false
 
-                    if variantName == "Default" and storageVariant.Crosshair then
+                    if variantName == "Default" and storageVariant.Stats.Crosshair then
                         local xhsuccess, errorMessage = pcall(
                             function()
                                 ui.addSelectorString(
@@ -173,8 +173,8 @@ function RangedUI.Init()
                                     "Crosshair",
                                     "Crosshair",
                                     RangedUI.xhairsOptions,
-                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Crosshair.custom),
-                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Crosshair.default),
+                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Stats.Crosshair.custom),
+                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Stats.Crosshair.default),
                                     function(value)
                                         local flatSuccess = Weapon.SetCrosshair(storageWeapon,
                                             RangedUI.xhairsOptions[value])
@@ -183,8 +183,7 @@ function RangedUI.Init()
                                             ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Crosshair.custom =
                                                 RangedUI.xhairsOptions[value]
 
-                                            FileManager.saveAsJson(ConfigFile.weapons,
-                                                config("storage.weapons", "weapons.json"))
+                                                ConfigFile.Save()
 
                                             log("RangedUI: Setting the crosshair for the '" ..
                                                 variantLabel .. "' variant of '" .. weaponLabel .. "'")
@@ -196,7 +195,7 @@ function RangedUI.Init()
                             end
                         )
                         if xhsuccess then
-                            storageVariant = table_remove(storageVariant, "Crosshair")
+                            --storageVariant.Stats = table_remove(storageVariant.Stats, "Crosshair")
                         else
                             log("RangedUI: Failed to create the Crosshair control for the '" ..
                                 variantLabel .. "' variant of '" .. weaponLabel .. "'")
@@ -204,11 +203,11 @@ function RangedUI.Init()
                         end
                     else
                         isIconic = true
-                        storageVariant = table_remove(storageVariant, "Crosshair")
+                        storageVariant.Stats = table_remove(storageVariant.Stats, "Crosshair")
                         log("RangedUI: '" ..
                             variantLabel .. "' Identified as an Iconic")
 
-                        if table_count(storageVariant) < 3 then
+                        if table_count(storageVariant.Stats) < 3 then
                             ui.removeSubcategory("/AWSCRanged/variant")
                             ui.addSubcategory(
                                 "/AWSCRanged/iconicDisclaimer",
@@ -226,7 +225,7 @@ function RangedUI.Init()
                     local subcat = "/AWSCRanged/variant"
                     if isIconic then subcat = "/AWSCRanged/iconicDisclaimer" end
 
-                    local validStats = table_filter(storageVariant, function(k, v) return type(v) == "table" end)
+                    local validStats = table_filter(storageVariant.Stats, function(k, v) return type(v) == "table" end)
 
 
                     log("RangedUI: " .. table_count(validStats) .. " stats identified:")
@@ -264,8 +263,7 @@ function RangedUI.Init()
                                     Main.SetRecordValue(statValues.flatPath, "value", value)
                                     ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName][stat].custom =
                                         value
-                                    FileManager.saveAsJson(ConfigFile.weapons,
-                                        config("storage.weapons", "weapons.json"))
+                                        ConfigFile.Save()
                                 end
                             )
                         end

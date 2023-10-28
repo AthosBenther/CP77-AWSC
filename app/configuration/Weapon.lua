@@ -5,90 +5,116 @@ Weapon = {
             PowerWeapon = nil,
             SmartWeapon = {
                 data = {
-                    SmartGunHipTimeToLock = {
-                        uiDescription = "Hip Lock Time",
-                        statType = "BaseStats.SmartGunHipTimeToLock",
-                        uiLabel = "Hip Lock Time",
-                        min = 0.001,
-                        max = 3,
-                        step = 0.001,
-                        format = "%.3f",
-                    },
-                    SmartGunAdsTimeToLock = {
-                        uiDescription = "Ads Lock Time",
-                        statType = "BaseStats.SmartGunAdsTimeToLock",
-                        uiLabel = "Ads Lock Time",
-                        min = 0.001,
-                        max = 3,
-                        step = 0.001,
-                        format = "%.3f",
+                    Stats = {
+                        SmartGunHipTimeToLock = {
+                            uiDescription = "Hip Lock Time",
+                            statType = "BaseStats.SmartGunHipTimeToLock",
+                            uiLabel = "Hip Lock Time",
+                            min = 0.001,
+                            max = 3,
+                            step = 0.001,
+                            format = "%.3f",
+                        },
+                        SmartGunAdsTimeToLock = {
+                            uiDescription = "Ads Lock Time",
+                            statType = "BaseStats.SmartGunAdsTimeToLock",
+                            uiLabel = "Ads Lock Time",
+                            min = 0.001,
+                            max = 3,
+                            step = 0.001,
+                            format = "%.3f",
+                        }
                     }
                 }
             },
             TechWeapon = nil,
             data = {
                 LocalizedName = "",
-                Crosshair = {
-                    uiComponent = "SelectorString",
-                    uiLabel = "Crosshair",
-                    uiDescription = "Weapon Crosshair"
+                Stats = {
+                    Crosshair = {
+                        uiComponent = "SelectorString",
+                        uiLabel = "Crosshair",
+                        uiDescription = "Weapon Crosshair"
+                    },
+                    Damage = {
+                        uiComponent = "Rangefloat",
+                        uiLabel = "Damage",
+                        uiDescription = "Damage (Scales with weapon quality)",
+                        statType = "BaseStats.DPS",
+                        min = 0,
+                        max = 1500,
+                        step = 1,
+                        format = "%.0f"
+                    },
+                    Magazine = {
+                        uiComponent = "Rangefloat",
+                        uiDescription = "Magazine Capacity",
+                        statType = "BaseStats.MagazineCapacityBase",
+                        uiLabel = "Magazine",
+                        min = 0,
+                        max = 300,
+                        step = 1,
+                        format = "%.0f"
+                    },
+                    CycleTime = {
+                        uiComponent = "Rangefloat",
+                        uiDescription = "Cycle Time (in Milliseconds)",
+                        statType = "BaseStats.CycleTimeBase",
+                        uiLabel = "Cycle Time",
+                        min = 0.001,
+                        max = 5,
+                        step = 0.001,
+                        format = "%.3f"
+                    }
                 },
-                Damage = {
-                    uiComponent = "Rangefloat",
-                    uiLabel = "Damage",
-                    uiDescription = "Damage (Scales with weapon quality)",
-                    statType = "BaseStats.DPS",
-                    min = 0,
-                    max = 1500,
-                    step = 1,
-                    format = "%.0f"
-                },
-                Magazine = {
-                    uiComponent = "Rangefloat",
-                    uiDescription = "Magazine Capacity",
-                    statType = "BaseStats.MagazineCapacityBase",
-                    uiLabel = "Magazine",
-                    min = 0,
-                    max = 300,
-                    step = 1,
-                    format = "%.0f"
-                },
-                CycleTime = {
-                    uiComponent = "Rangefloat",
-                    uiDescription = "Cycle Time (in Milliseconds)",
-                    statType = "BaseStats.CycleTimeBase",
-                    uiLabel = "Cycle Time",
-                    min = 0.001,
-                    max = 5,
-                    step = 0.001,
-                    format = "%.3f"
+                Mods = {
+
                 }
             }
         },
         MeleeWeapon = {
             ThrowableWeapon = {
                 data = {
-                    EffectiveRange = {
-                        uiDescription = "Thrown Range",
-                        statType = "BaseStats.EffectiveRange",
-                        uiLabel = "Throwing Range",
-                        min = 0.1,
-                        max = 100,
-                        step = 0.1,
-                        format = "%.1f",
+                    stats = {
+                        EffectiveRange = {
+                            uiDescription = "Thrown Range",
+                            statType = "BaseStats.EffectiveRange",
+                            uiLabel = "Throwing Range",
+                            min = 0.1,
+                            max = 100,
+                            step = 0.1,
+                            format = "%.1f",
+                        }
                     }
                 }
             },
             data = {
                 LocalizedName = nil,
-                Range = {
-                    uiDescription = "Attack Range",
-                    statType = "BaseStats.Range",
-                    uiLabel = "Attack Range",
-                    min = 0.1,
-                    max = 100,
-                    step = 0.1,
-                    format = "%.1f",
+                Stats = {
+                    Crosshair = {
+                        uiComponent = "SelectorString",
+                        uiLabel = "Crosshair",
+                        uiDescription = "Weapon Crosshair"
+                    },
+                    Range = {
+                        uiDescription = "Attack Range",
+                        statType = "BaseStats.Range",
+                        uiLabel = "Attack Range",
+                        min = 0.1,
+                        max = 100,
+                        step = 0.1,
+                        format = "%.1f",
+                    },
+                    Damage = {
+                        uiComponent = "Rangefloat",
+                        uiLabel = "Damage",
+                        uiDescription = "Damage (Scales with weapon quality)",
+                        statType = "BaseStats.DPS",
+                        min = 0,
+                        max = 1500,
+                        step = 1,
+                        format = "%.0f"
+                    }
                 }
             }
         }
@@ -168,51 +194,52 @@ end
 ---@return table
 function Weapon.genVarData(classiData, recordPath, weaponName, classification, weaponRecord)
     local result = {}
-    for statsKey, statsData in pairs(classiData) do
-        local classiResult = {}
-        local tableWeapon = Weapon.Find(weaponName, classification)
+    for dataGroupKey, dataGroup in pairs(classiData) do
+        if dataGroupKey == "LocalizedName" then
+            result[dataGroupKey] = Weapon.GetLocalizedName(recordPath)
+        elseif type(dataGroup) == "table" then
+            local dataGroupKey = dataGroupKey
+            result[dataGroupKey] = {}
+            for statsKey, statsData in pairs(dataGroup) do
+                local classiResult = {}
+                local tableWeapon = Weapon.Find(weaponName, classification)
 
-        if type(statsData) == "table" then
-            for stat, statValue in pairs(statsData) do
-                classiResult[stat] = statValue
-            end
-        end
-
-        if statsKey == "LocalizedName" then
-            result[statsKey] = Weapon.GetLocalizedName(recordPath)
-        elseif statsKey == "Crosshair" then
-            local xh = weaponRecord:Crosshair():GetRecordID().value
-            xh = string.gsub(xh, "Crosshairs.", "")
-            result[statsKey] = {}
-            result[statsKey]['default'] = xh
-            result[statsKey]['custom'] = xh
-        else
-            local flatPath = Weapon.findStatModifier(statsData.statType, recordPath)
-
-            if not flatPath then
-                log("Weapon.lua:203: Can't find the flatPath for the weapon " ..
-                    recordPath .. ", stat " .. statsKey)
-            end
-
-            local defaultFlatPath = nil
-
-            if tableWeapon then
-                if table_count(tableWeapon.Variants) > 0 then
-                    pcall(
-                        function()
-                            defaultFlatPath = tableWeapon.Variants.Default[statsKey].flatPath
-                        end
-                    )
+                if type(statsData) == "table" then
+                    for stat, statValue in pairs(statsData) do
+                        classiResult[stat] = statValue
+                    end
                 end
-            end
 
-            if flatPath and defaultFlatPath ~= flatPath then
-                classiResult["flatPath"] = flatPath
-                classiResult["modifierType"] = TweakDB:GetFlat(flatPath .. ".modifierType").value
-                classiResult["default"] = TweakDB:GetFlat(flatPath .. ".value")
-                classiResult["custom"] = classiResult["default"]
+                if statsKey == "Crosshair" then
+                    local xh = weaponRecord:Crosshair():GetRecordID().value
+                    xh = string.gsub(xh, "Crosshairs.", "")
+                    result[dataGroupKey][statsKey] = {}
+                    result[dataGroupKey][statsKey]['default'] = xh
+                    result[dataGroupKey][statsKey]['custom'] = xh
+                else
+                    local flatPath = Weapon.findStatModifier(statsData.statType, recordPath)
 
-                result[statsKey] = classiResult
+                    local defaultFlatPath = nil
+
+                    if tableWeapon then
+                        if table_count(tableWeapon.Variants) > 0 then
+                            pcall(
+                                function()
+                                    defaultFlatPath = tableWeapon.Variants.Default[statsKey].flatPath
+                                end
+                            )
+                        end
+                    end
+
+                    if flatPath and defaultFlatPath ~= flatPath then
+                        classiResult["flatPath"] = flatPath
+                        classiResult["modifierType"] = TweakDB:GetFlat(flatPath .. ".modifierType").value
+                        classiResult["default"] = TweakDB:GetFlat(flatPath .. ".value")
+                        classiResult["custom"] = classiResult["default"]
+
+                        result[dataGroupKey][statsKey] = classiResult
+                    end
+                end
             end
         end
     end
@@ -227,18 +254,23 @@ function Weapon.findStatModifier(statType, weaponPath)
     local statGroups = TweakDB:GetFlat(weaponPath .. ".statModifierGroups")
     local result = nil
     local weaponName = Weapon.GetName(weaponPath)
-    local defaultWeapon = string_split(weaponName, "_")[1]
+    local nameParts = string_split(weaponName, "_")
+
+    local defaultWeapon = weaponName
+    if weaponName == "Tech_Sniper_Rifle" then defaultWeapon = "Rasetsu" end
 
     for key, statGroup in pairs(statGroups) do
+        local statGroupName = TweakDB:GetRecord(statGroup):GetRecordID().value
         local modifiers = TweakDB:GetRecord(statGroup):StatModifiers()
 
         for key, modifier in pairs(modifiers or {}) do
             local dbStatType = nil
             local modifierRecordName = modifier:GetRecordID().value
 
-
             local status, errorMessage = pcall(function()
                 dbStatType = modifier:StatType():GetRecordID().value
+
+
 
                 if dbStatType and string_contains(modifierRecordName, defaultWeapon) then
                     local inline = modifier:GetRecordID().value
@@ -256,6 +288,10 @@ function Weapon.findStatModifier(statType, weaponPath)
                 log(errorMessage)
             end
         end
+    end
+    if not result then
+        log("Weapon.lua: Can't find the flatPath for the weapon " ..
+        weaponName .. ", stat " .. statType)
     end
     return result
 end

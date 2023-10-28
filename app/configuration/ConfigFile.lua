@@ -10,43 +10,59 @@ function ConfigFile.Init(newFile)
         ConfigFile.Generate()
         MainUI.Init()
     else
-        ConfigFile.weapons = FileManager.openJson(config("storage.weapons", "weapons.json"))
         MainUI.Init()
     end
 
     ConfigFile.SetAllRecords()
 end
 
+function ConfigFile.Save()
+    local data = {
+        version = config("app.version"),
+        data = ConfigFile.weapons
+    }
+
+    if data.version then
+        FileManager.saveAsJson(data, config("storage.weapons", "weapons.json"))
+    else
+        error("ConfigFile: Can't save Weapons Stats. Game version is not valid!")
+    end
+end
+
+function ConfigFile.Load()
+    ConfigFile.weapons = FileManager.openJson(config("storage.weapons", "weapons.json"))
+end
+
 function ConfigFile.Generate()
     ConfigFile.weaponItemRecords = TweakDB:GetRecords('gamedataWeaponItem_Record')
 
-    log("AWSC: loaded " .. table_count(ConfigFile.weaponItemRecords) .. " Weapon Item Records")
+    log("ConfigFile: loaded " .. table_count(ConfigFile.weaponItemRecords) .. " Weapon Item Records")
 
     local defaultWeapons = {}
 
-
-    for k, record in pairs(ConfigFile.weaponItemRecords) do
+    table_map(ConfigFile.weaponItemRecords, function(k, record)
         ---@type gamedataWeaponItem_Record
         local record = record
 
         local recordPath = record:GetRecordID().value
-        local isDefault = string_endswith(recordPath, "Default")
-        if not isDefault then goto continue end
-        local weaponName = Weapon.GetName(recordPath)
-
-        local localizedName = Game.GetLocalizedItemNameByCName(record:DisplayName()) or weaponName
+        local isDefault = string_endsWith(recordPath, "Default")
+        local isPreset = string_startsWith(recordPath, "Items.Preset")
 
 
-        if
-            isDefault
-            and localizedName ~= "!OBSOLETE"
-            and not table_contains(ConfigStatics.forbiddenWeapons, weaponName)
-        then
-            defaultWeapons[recordPath] = record
+        if isPreset and isDefault then
+            local weaponName = Weapon.GetName(recordPath)
+            local localizedName = Game.GetLocalizedItemNameByCName(record:DisplayName()) or weaponName
+
+            if
+                localizedName ~= "!OBSOLETE"
+                and not table_contains(ConfigStatics.forbiddenWeapons, weaponName)
+            then
+                defaultWeapons[recordPath] = record
+            end
         end
+    end)
 
-        ::continue::
-    end
+    log("ConfigFile: found " .. table_count(defaultWeapons) .. " valid Default Weapons")
 
     for weaponRecordPath, weaponRecord in pairs(defaultWeapons) do
         local classification = Weapon.Classify(weaponRecord, weaponRecordPath)
@@ -89,7 +105,7 @@ function ConfigFile.Generate()
 
             if isVariant
                 and isValidVariant
-                and not string_endswith(recordPath, "Default")
+                and not string_endsWith(recordPath, "Default")
                 and not isDeprecatedIconic
                 and isIconic
             then
@@ -110,8 +126,9 @@ function ConfigFile.Generate()
     end
 
 
-    --dd(ConfigFile.weapons)
-    FileManager.saveAsJson(ConfigFile.weapons, config("storage.weapons", "weapons.json"))
+
+    ConfigFile.Save()
+    log("ConfigFile: '" .. config("storage.weapons", "weapons.json") .. "' saved!")
 end
 
 function ConfigFile.Validate()
