@@ -5,6 +5,6 @@ return {
         name = env("APP_NAME", "Cyberpunk 2077 Cyber Eengine Tweaks Mod"),
         shortName = env("APP_SHORT_NAME", "CP77 CET Mod"),
         enabled = env("APP_ENABLED", true),
-        version = env("APP_ENABLED", "0")
+        version = env("APP_VERSION", "0")
     }
 }

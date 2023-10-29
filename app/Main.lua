@@ -60,17 +60,7 @@ function Main.init()
     registerForEvent("onInit", function()
         log("AWSC: Hello World!")
 
-        local fileValidation = ConfigFile.Validate()
-
-        if fileValidation ~= true then
-            log("Weapons.json file validation failed. Errors: ")
-            log(fileValidation)
-        else
-            --MoveBase.init()
-        end
-
-        ConfigFile.Init(fileValidation ~= true)
-
+        ConfigFile.Init()
     end)
 end
 
@@ -93,14 +83,18 @@ function Main.SetRecordValue(path, field, value)
         return false
     end
 
-    if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
-        log("Failed to SetFlat: '" ..
-            path .. "." .. field .. "' as '" .. value .. "'")
-        return false
-    end
-    if not TweakDB:Update(path) then
-        log("Failed to Update path: " .. path)
-        return false
+    if TweakDB:GetFlat(path .. "." .. field) then
+        if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
+            log("Main.lua: Failed to SetFlat: '" ..
+                path .. "." .. field .. "' as '" .. value .. "'")
+            return false
+        end
+        if not TweakDB:Update(path) then
+            log("Main.lua: Failed to Update path '" .. path .. "." .. field .. "' with value '" .. value .. "'")
+            return false
+        end
+    else
+        -- log("Main.lua: the flat '" .. path .. "." .. field .. "' does not exist.")
     end
     return true
 end

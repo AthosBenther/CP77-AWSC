@@ -48,7 +48,7 @@ function RangedUI.Init()
         "Class"
     )
 
-    local options = table_keys(ConfigFile.weapons.RangedWeapon)
+    local options = table_keys(ConfigFile.Weapons.RangedWeapon)
     local optionsLabels = table_map(options, function(k, v) return Main.classLabels[v] end)
 
     local activeClass = nil
@@ -65,7 +65,7 @@ function RangedUI.Init()
             classLabel
         )
 
-        local kinds = table_keys(ConfigFile.weapons.RangedWeapon[class])
+        local kinds = table_keys(ConfigFile.Weapons.RangedWeapon[class])
         local kindLabels = table_map(kinds, function(k, kind) return Main.kindLabels[kind] end)
 
         local setKind = function(value)
@@ -80,12 +80,12 @@ function RangedUI.Init()
                 kindLabel
             )
 
-            local weapons = table_keys(ConfigFile.weapons.RangedWeapon[class][kind])
+            local weapons = table_keys(ConfigFile.Weapons.RangedWeapon[class][kind])
             local weaponNames = {}
 
             table_map(weapons,
                 function(k, weapon)
-                    weaponNames[k] = ConfigFile.weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
+                    weaponNames[k] = ConfigFile.Weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
                 end
             )
 
@@ -104,7 +104,7 @@ function RangedUI.Init()
                         Class = class,
                         Kind = kind
                     },
-                    ConfigFile.weapons
+                    ConfigFile.Weapons
                 )
 
                 local variantNames = {
@@ -180,7 +180,7 @@ function RangedUI.Init()
                                             RangedUI.xhairsOptions[value])
 
                                         if flatSuccess then
-                                            ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
+                                            ConfigFile.Weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
                                                 RangedUI.xhairsOptions[value]
 
                                             ConfigFile.Save()
@@ -232,49 +232,51 @@ function RangedUI.Init()
                     log(table_keys(validStats))
 
                     for stat, statValues in pairs(validStats) do
-                        log("RangedUI: creating the control for " .. stat)
+                        if stat ~= "Crosshair" then
+                            log("RangedUI: creating the control for " .. stat)
 
-                        local status, errorMessage = pcall(function()
-                            log("RangedUI: Creating the " ..
-                                statValues.uiLabel ..
-                                " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                            local status, errorMessage = pcall(function()
+                                log("RangedUI: Creating the " ..
+                                    statValues.uiLabel ..
+                                    " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
 
-                            local label = statValues.uiLabel
-                            local desc = statValues.uiDescription
-                            if statValues.modifierType == "Multiplier" then
-                                label = label .. " Multiplier"
-                                desc = desc .. " Multiplier"
-                            end
-                            ui.addRangeFloat(
-                                subcat,                   --path
-                                label,                    --label
-                                statValues.uiDescription, --description
-                                statValues.min,           --min
-                                statValues.max,           --max
-                                statValues.step,          --step
-                                statValues.format,        --format
-                                statValues.custom + 0.0,  --currentValue
-                                statValues.default + 0.0, --defaultValue
-                                function(value)           --callback
-                                    log("RangedUI: Setting " ..
-                                        statValues.uiLabel ..
-                                        " for the '" ..
-                                        variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                                    Main.SetRecordValue(statValues.flatPath, "value", value)
-                                    ConfigFile.weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName].Stats[stat].custom =
-                                        value
-                                    ConfigFile.Save()
+                                local label = statValues.uiLabel
+                                local desc = statValues.uiDescription
+                                if statValues.modifierType == "Multiplier" then
+                                    label = label .. " Multiplier"
+                                    desc = desc .. " Multiplier"
                                 end
+                                ui.addRangeFloat(
+                                    subcat,               --path
+                                    label,                --label
+                                    statValues.uiDescription, --description
+                                    statValues.min,       --min
+                                    statValues.max,       --max
+                                    statValues.step,      --step
+                                    statValues.format,    --format
+                                    statValues.custom + 0.0, --currentValue
+                                    statValues.default + 0.0, --defaultValue
+                                    function(value)       --callback
+                                        log("RangedUI: Setting " ..
+                                            statValues.uiLabel ..
+                                            " for the '" ..
+                                            variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                        Main.SetRecordValue(statValues.flatPath, "value", value)
+                                        ConfigFile.Weapons.RangedWeapon[class][kind][weaponRecordName].Variants[variantName].Stats[stat].custom =
+                                            value
+                                        ConfigFile.Save()
+                                    end
+                                )
+                            end
                             )
-                        end
-                        )
 
-                        if not status then
-                            log("RangedUI: Failed to create the control for the " ..
-                                stat ..
-                                " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                            log(errorMessage)
-                            log(statValues)
+                            if not status then
+                                log("RangedUI: Failed to create the control for the " ..
+                                    stat ..
+                                    " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                log(errorMessage)
+                                log(statValues)
+                            end
                         end
                     end
                 end

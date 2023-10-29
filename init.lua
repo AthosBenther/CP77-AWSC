@@ -5,6 +5,14 @@ Mod = {
 require("vendors/autoloader")
 Autoloader.init()
 Config.Init()
-Mod.init = Main.init()
+local a = config("app.enabled", true)
+
 FileManager.save("", "../" .. config("app.shortName") .. ".log")
-if config("app.enabled", true) then return Mod end
+
+if config("app.enabled", true) then
+    Mod.init = Main.init()
+else
+    Mod.init = os.exit()
+end
+
+return Mod
