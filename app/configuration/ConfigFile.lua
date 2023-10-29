@@ -98,18 +98,27 @@ function ConfigFile.Generate()
 
         local defaultVariantData = Weapon.GetVariantData(weaponName, weaponRecordPath, classification, weaponRecord)
 
+        local oldVariant = {}
 
-        local storageVariant = ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind]
-            [weaponName]["Variants"]["Default"]
-            
-        if storageVariant then
-            for statKey, stats in pairs(defaultVariantData.Stats) do
-                local storageStat = storageVariant.Stats[statKey]
+        if pcall(function()
+                oldVariant = ConfigFile.oldWeapons[classification.Range][classification.Class]
+                    [classification.Kind]
+                    [weaponName]["Variants"]["Default"]
+            end)
+        then
+            if oldVariant then
+                for statKey, stats in pairs(defaultVariantData.Stats) do
+                    if statKey ~= "EffectiveRange" then
+                        local oldStat = oldVariant.Stats[statKey]
 
-                if storageStat then
-                    defaultVariantData.Stats[statKey].custom = storageStat.custom
+                        if oldStat then
+                            defaultVariantData.Stats[statKey].custom = oldStat.custom
+                        end
+                    end
                 end
             end
+        else
+            log("ConfigFile: The weapon " .. weaponName .. " cant be found in the old save. Creating new records...")
         end
 
         ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"]["Default"] =

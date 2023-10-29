@@ -42,7 +42,7 @@ Weapon = {
                         uiDescription = "Damage (Scales with weapon quality)",
                         statType = "BaseStats.DPS",
                         min = 0,
-                        max = 1500,
+                        max = 5000,
                         step = 1,
                         format = "%.0f"
                     },
@@ -52,19 +52,59 @@ Weapon = {
                         statType = "BaseStats.MagazineCapacityBase",
                         uiLabel = "Magazine",
                         min = 0,
-                        max = 300,
+                        max = 3000,
                         step = 1,
                         format = "%.0f"
                     },
                     CycleTime = {
                         uiComponent = "Rangefloat",
-                        uiDescription = "Cycle Time (in Milliseconds)",
+                        uiDescription = "Cycle Time",
                         statType = "BaseStats.CycleTimeBase",
                         uiLabel = "Cycle Time",
-                        min = 0.001,
-                        max = 5,
-                        step = 0.001,
-                        format = "%.3f"
+                        min = 0.0001,
+                        max = 10,
+                        step = 0.0001,
+                        format = "%.4f"
+                    },
+                    EffectiveRange = {
+                        uiComponent = "Rangefloat",
+                        uiDescription = "Effective Range",
+                        statType = "BaseStats.EffectiveRange",
+                        uiLabel = "Effective Range",
+                        min = -100,
+                        max = 100,
+                        step = 0.01,
+                        format = "%.2f"
+                    },
+                    HeadshotDamageMultiplier = {
+                        uiComponent = "Rangefloat",
+                        uiDescription = "Headshot Damage",
+                        statType = "BaseStats.HeadshotDamageMultiplier",
+                        uiLabel = "Headshot Damage",
+                        min = -100,
+                        max = 100,
+                        step = 0.01,
+                        format = "%.2f"
+                    },
+                    ProjectilesPerShotBase = {
+                        uiComponent = "Rangefloat",
+                        uiDescription = "Projectiles Per Shot",
+                        statType = "BaseStats.ProjectilesPerShotBase",
+                        uiLabel = "Projectiles Per Shot",
+                        min = 1,
+                        max = 100,
+                        step = 1,
+                        format = "%.0f"
+                    },
+                    NumShotsToFire = {
+                        uiComponent = "Rangefloat",
+                        uiDescription = "Number of bullets to fire in a burst",
+                        statType = "BaseStats.NumShotsToFire",
+                        uiLabel = "Shots To Fire",
+                        min = 1,
+                        max = 100,
+                        step = 1,
+                        format = "%.0f"
                     }
                 },
                 Mods = {

@@ -7,8 +7,8 @@ function ConvertSave.Init()
 
         local file = FileManager.openJson(config("storage.weapons"))
         if not file.Version then
-            ConfigFile.Weapons = FileManager.openJson(config("storage.weapons"))
-            for range, classes in pairs(ConfigFile.Weapons) do
+            ConfigFile.oldWeapons = FileManager.openJson(config("storage.weapons"))
+            for range, classes in pairs(ConfigFile.oldWeapons) do
                 for class, kinds in pairs(classes) do
                     for kind, weapons in pairs(kinds) do
                         for weapon, wStats in pairs(weapons) do
@@ -26,7 +26,7 @@ function ConvertSave.Init()
                                 end
                             end
 
-                            ConfigFile.Weapons[range][class][kind][weapon] = Stats
+                            ConfigFile.oldWeapons[range][class][kind][weapon] = Stats
                         end
                     end
                 end
