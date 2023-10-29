@@ -46,7 +46,11 @@ function log(data, toFile, die, force)
 
     if config("app.debug") or force then
         if toFile then
-            FileManager.save(Debug.genDump(data), "application.log")
+            if type(data) == "string" then
+                FileManager.save(data, "application.log")
+            else
+                FileManager.save(Debug.genDump(data), "application.log")
+            end
         else
             print(Debug.genDump(data, 0))
         end

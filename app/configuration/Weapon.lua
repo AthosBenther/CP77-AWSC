@@ -150,33 +150,40 @@ function Weapon.GetVariantData(weaponName, recordPath, classification, weaponRec
 
     if Weapon.VariantData[classification.Range] then
         local classiDataRange = Weapon.VariantData[classification.Range].data
-        variantData = table_merge(variantData,
-            Weapon.genVarData(classiDataRange, recordPath, weaponName, classification, weaponRecord))
+
+        local genData = Weapon.genVarData(classiDataRange, recordPath, weaponName, classification, weaponRecord)
+
+        variantData = table_merge(
+            genData,
+            variantData
+        )
 
         if Weapon.VariantData[classification.Range][classification.Class] then
             local classiDataClass = Weapon.VariantData[classification.Range][classification.Class].data
-            variantData = table_merge(variantData,
+            variantData = table_merge(
                 Weapon.genVarData(
                     classiDataClass,
                     recordPath,
                     weaponName,
                     classification,
                     weaponRecord
-                )
+                ),
+                variantData
             )
 
             if Weapon.VariantData[classification.Range][classification.Class][classification.Type] then
                 local classiDataKind = Weapon.VariantData[classification.Range][classification.Class]
                     [classification.Type]
                     .data
-                variantData = table_merge(variantData,
+                variantData = table_merge(
                     Weapon.genVarData(
                         classiDataKind,
                         recordPath,
                         weaponName,
                         classification,
                         weaponRecord
-                    )
+                    ),
+                    variantData
                 )
             end
         end
@@ -291,7 +298,7 @@ function Weapon.findStatModifier(statType, weaponPath)
     end
     if not result then
         log("Weapon.lua: Can't find the flatPath for the weapon " ..
-        weaponName .. ", stat " .. statType)
+            weaponName .. ", stat " .. statType)
     end
     return result
 end
@@ -344,7 +351,7 @@ function Weapon.GetLocalizedName(weaponRecord)
 end
 
 function Weapon.Find(weaponName, classification, weaponsTable)
-    local weaponsTable = weaponsTable or ConfigFile.weapons
+    local weaponsTable = weaponsTable or ConfigFile.Weapons
     local weapon = {}
     if pcall(
             function()

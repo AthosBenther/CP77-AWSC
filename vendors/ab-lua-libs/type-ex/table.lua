@@ -142,15 +142,6 @@ function table_map(data, callback, keepNils)
     return results
 end
 
--- function table_merge(data, dataToMerge)
---     local result = {}
---     for key, value in pairs(data) do
---         for mkey, mvalue in pairs(dataToMerge) do
---             if key == mkey then result[key] = mvalue else result[key] = value
---         end
---     end
--- end
-
 function table_merge(subject, incoming)
     local function merge_recursive(target, source)
         for k, v in pairs(source) do

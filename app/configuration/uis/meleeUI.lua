@@ -48,7 +48,7 @@ function MeleeUI.Init()
         "Class"
     )
 
-    local options = table_keys(ConfigFile.weapons.MeleeWeapon)
+    local options = table_keys(ConfigFile.Weapons.MeleeWeapon)
     local optionsLabels = table_map(options, function(k, v) return Main.classLabels[v] end)
 
     local activeClass = nil
@@ -65,7 +65,7 @@ function MeleeUI.Init()
             classLabel
         )
 
-        local kinds = table_keys(ConfigFile.weapons.MeleeWeapon[class])
+        local kinds = table_keys(ConfigFile.Weapons.MeleeWeapon[class])
         local kindLabels = table_map(kinds, function(k, kind) return Main.kindLabels[kind] end)
 
         local setKind = function(value)
@@ -80,13 +80,13 @@ function MeleeUI.Init()
                 kindLabel
             )
 
-            local weapons = table_keys(ConfigFile.weapons.MeleeWeapon[class][kind])
+            local weapons = table_keys(ConfigFile.Weapons.MeleeWeapon[class][kind])
             local weaponNames = {}
 
             table_map(weapons,
                 function(k, weapon)
-                    weaponNames[k] = ConfigFile.weapons.MeleeWeapon[class][kind][weapon].Variants.Default.LocalizedName or
-                    weapon
+                    weaponNames[k] = ConfigFile.Weapons.MeleeWeapon[class][kind][weapon].Variants.Default.LocalizedName or
+                        weapon
                 end
             )
 
@@ -106,7 +106,7 @@ function MeleeUI.Init()
                         Class = class,
                         Kind = kind
                     },
-                    ConfigFile.weapons
+                    ConfigFile.Weapons
                 )
 
                 local variantNames = {
@@ -183,7 +183,7 @@ function MeleeUI.Init()
                                             MeleeUI.xhairsOptions[value])
 
                                         if flatSuccess then
-                                            ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
+                                            ConfigFile.Weapons.MeleeWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
                                                 MeleeUI.xhairsOptions[value]
 
                                             ConfigFile.Save()
@@ -228,56 +228,59 @@ function MeleeUI.Init()
                     local subcat = "/AWSCMelee/variant"
                     if isIconic then subcat = "/AWSCMelee/iconicDisclaimer" end
 
-                    local validStats = table_filter(storageVariant.Stats, function(k, v) return (type(v) == "table" and k ~= "Crosshair")  end)
+                    local validStats = table_filter(storageVariant.Stats,
+                        function(k, v) return (type(v) == "table" and k ~= "Crosshair") end)
 
 
                     log("MeleeUI: " .. table_count(validStats) .. " stats identified:")
                     log(table_keys(validStats))
 
                     for stat, statValues in pairs(validStats) do
-                        log("MeleeUI: creating the control for " .. stat)
+                        if stat ~= "Crosshair" then
+                            log("MeleeUI: creating the control for " .. stat)
 
-                        local status, errorMessage = pcall(function()
-                            log("MeleeUI: Creating the " ..
-                                statValues.uiLabel ..
-                                " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                            local status, errorMessage = pcall(function()
+                                log("MeleeUI: Creating the " ..
+                                    statValues.uiLabel ..
+                                    " control for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
 
-                            local label = statValues.uiLabel
-                            local desc = statValues.uiDescription
-                            if statValues.modifierType == "Multiplier" then
-                                label = label .. " Multiplier"
-                                desc = desc .. " Multiplier"
-                            end
-                            ui.addRangeFloat(
-                                subcat,                   --path
-                                label,                    --label
-                                statValues.uiDescription, --description
-                                statValues.min,           --min
-                                statValues.max,           --max
-                                statValues.step,          --step
-                                statValues.format,        --format
-                                statValues.custom + 0.0,  --currentValue
-                                statValues.default + 0.0, --defaultValue
-                                function(value)           --callback
-                                    log("MeleeUI: Setting " ..
-                                        statValues.uiLabel ..
-                                        " for the '" ..
-                                        variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                                    Main.SetRecordValue(statValues.flatPath, "value", value)
-                                    ConfigFile.weapons.MeleeWeapon[class][kind][weaponRecordName].Variants[variantName].Stats[stat].custom =
-                                        value
-                                        ConfigFile.Save()
+                                local label = statValues.uiLabel
+                                local desc = statValues.uiDescription
+                                if statValues.modifierType == "Multiplier" then
+                                    label = label .. " Multiplier"
+                                    desc = desc .. " Multiplier"
                                 end
+                                ui.addRangeFloat(
+                                    subcat,               --path
+                                    label,                --label
+                                    statValues.uiDescription, --description
+                                    statValues.min,       --min
+                                    statValues.max,       --max
+                                    statValues.step,      --step
+                                    statValues.format,    --format
+                                    statValues.custom + 0.0, --currentValue
+                                    statValues.default + 0.0, --defaultValue
+                                    function(value)       --callback
+                                        log("MeleeUI: Setting " ..
+                                            statValues.uiLabel ..
+                                            " for the '" ..
+                                            variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                        Main.SetRecordValue(statValues.flatPath, "value", value)
+                                        ConfigFile.Weapons.MeleeWeapon[class][kind][weaponRecordName].Variants[variantName].Stats[stat].custom =
+                                            value
+                                        ConfigFile.Save()
+                                    end
+                                )
+                            end
                             )
-                        end
-                        )
 
-                        if not status then
-                            log("MeleeUI: Failed to create the control for the " ..
-                                stat ..
-                                " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
-                            log(errorMessage)
-                            log(statValues)
+                            if not status then
+                                log("MeleeUI: Failed to create the control for the " ..
+                                    stat ..
+                                    " stat for the '" .. variantLabel .. "' variant of '" .. weaponLabel .. "'")
+                                log(errorMessage)
+                                log(statValues)
+                            end
                         end
                     end
                 end

@@ -1,12 +1,22 @@
 ConfigFile = {
-    weapons = {}
+    Weapons = {}
 }
 
-function ConfigFile.Init(newFile)
-    local newFile = newFile or false
+function ConfigFile.Init()
+    local newFile = false
+
+    local fileValidation = ConfigFile.Validate()
+
+    if fileValidation ~= true then
+        log("ConfigFile: Weapons.json file validation failed. Errors: ")
+        log(fileValidation)
+        newFile = true
+        ConvertSave.Init()
+    end
 
     -- loads config file if not forcing the cration of a new one
     if newFile or config("configs.forcenew", false) then
+        if newFile then log("ConfigFile: generating new " .. config("storage.weapons")) end
         ConfigFile.Generate()
     else
         ConfigFile.Load()
@@ -18,19 +28,19 @@ end
 
 function ConfigFile.Save()
     local data = {
-        version = config("app.version"),
-        data = ConfigFile.weapons
+        Version = config("app.version"),
+        Weapons = ConfigFile.Weapons
     }
 
-    if data.version then
-        FileManager.saveAsJson(data.data, config("storage.weapons", "weapons.json"))
+    if data.Version then
+        FileManager.saveAsJson(data, config("storage.weapons", "weapons.json"))
     else
         error("ConfigFile: Can't save Weapons Stats. Game version is not valid!")
     end
 end
 
 function ConfigFile.Load()
-    ConfigFile.weapons = FileManager.openJson(config("storage.weapons", "weapons.json"))
+    ConfigFile.Weapons = FileManager.openJson(config("storage.weapons", "weapons.json")).Weapons
 end
 
 function ConfigFile.Generate()
@@ -67,27 +77,42 @@ function ConfigFile.Generate()
     for weaponRecordPath, weaponRecord in pairs(defaultWeapons) do
         local classification = Weapon.Classify(weaponRecord, weaponRecordPath)
         local weaponName = Weapon.GetName(weaponRecordPath)
-        if (ConfigFile.weapons[classification.Range] == nil) then
-            ConfigFile.weapons[classification.Range] = {}
+        if (ConfigFile.Weapons[classification.Range] == nil) then
+            ConfigFile.Weapons[classification.Range] = {}
         end
-        if (ConfigFile.weapons[classification.Range][classification.Class] == nil) then
-            ConfigFile.weapons[classification.Range][classification.Class] = {}
-        end
-
-        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind] == nil) then
-            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind] = {}
+        if (ConfigFile.Weapons[classification.Range][classification.Class] == nil) then
+            ConfigFile.Weapons[classification.Range][classification.Class] = {}
         end
 
-        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName] == nil) then
-            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName] = {}
+        if (ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind] == nil) then
+            ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind] = {}
         end
 
-        if (ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"] == nil) then
-            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"] = {}
+        if (ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName] == nil) then
+            ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName] = {}
+        end
+
+        if (ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"] == nil) then
+            ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"] = {}
         end
 
         local defaultVariantData = Weapon.GetVariantData(weaponName, weaponRecordPath, classification, weaponRecord)
-        ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"]["Default"] =
+
+
+        local storageVariant = ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind]
+            [weaponName]["Variants"]["Default"]
+            
+        if storageVariant then
+            for statKey, stats in pairs(defaultVariantData.Stats) do
+                local storageStat = storageVariant.Stats[statKey]
+
+                if storageStat then
+                    defaultVariantData.Stats[statKey].custom = storageStat.custom
+                end
+            end
+        end
+
+        ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"]["Default"] =
             defaultVariantData
 
 
@@ -120,7 +145,7 @@ function ConfigFile.Generate()
 
             local variantData = Weapon.GetVariantData(weaponName, variantRecordPath, variantClassification, weaponRecord)
 
-            ConfigFile.weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"][variantName] =
+            ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"][variantName] =
                 variantData
         end
     end
@@ -133,6 +158,7 @@ end
 
 function ConfigFile.Validate()
     local weapons = nil
+    local file = nil
     local tests = {
         [1] = {
             name = "fileExists",
@@ -143,14 +169,20 @@ function ConfigFile.Validate()
         [2] = {
             name = "jsonIsValid",
             assertTrue = function() return pcall(function() FileManager.openJson(config("storage.weapons")) end) end,
-            onPass = function() weapons = FileManager.openJson(config("storage.weapons")) end,
-            errorMessage = "File 'weapons.json' is not a valid json",
+            onPass = function() file = FileManager.openJson(config("storage.weapons")) end,
+            errorMessage = "File " .. config("storage.weapons") .. " is not a valid json",
             breakOnError = true
         },
         [3] = {
-            name = "notNil",
-            assertTrue = function() return weapons ~= nil end,
-            errorMessage = "'Weapons' is nil",
+            name = "fileFormatIsValid",
+            assertTrue = function()
+                return
+                    type(file.Version) == "string"
+                    and file.Version == config("app.version")
+                    and type(file.Weapons) == "table"
+            end,
+            onPass = function() weapons = file.Weapons end,
+            errorMessage = "File " .. config("storage.weapons") .. " is not correctly formatted",
             breakOnError = true
         },
         [4] = {
@@ -207,8 +239,8 @@ function ConfigFile.Validate()
 end
 
 function ConfigFile.SetAllRecords()
-    log("configFile: Setting all records")
-    for range, classes in pairs(ConfigFile.weapons) do
+    log("configFile: Setting records...")
+    for range, classes in pairs(ConfigFile.Weapons) do
         for class, kinds in pairs(classes) do
             for kind, weapons in pairs(kinds) do
                 for weapon, weaponData in pairs(weapons) do
