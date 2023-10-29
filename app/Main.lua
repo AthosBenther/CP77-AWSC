@@ -60,42 +60,43 @@ function Main.init()
     registerForEvent("onInit", function()
         log("AWSC: Hello World!")
 
-        local fileValidation = ConfigFile.Validate()
-        Main.UI = GetMod("nativeSettings")
-
-        if fileValidation ~= true then
-            log("Weapons.json file validation failed. Errors: ")
-            log(fileValidation)
-        end
-
-        ConfigFile.Generate(fileValidation ~= true or config("configs.forcenew", false))
-
-
-        for range, classes in pairs(Main.weapons) do
-            for class, kinds in pairs(classes) do
-                for kind, weapons in pairs(kinds) do
-                    for weapon, weaponProps in pairs(weapons) do
-                        for statIndex, stat in pairs(weaponProps.stats) do
-                            Main.SetRecordValue(stat.flatPath, "value", stat.custom)
-                        end
-                    end
-                end
-            end
-        end
-
-        if Main.UI then
-            Ranged.Init()
-            Melee.Init()
-        end
+        ConfigFile.Init()
     end)
 end
 
 function Main.SetRecordValue(path, field, value)
-    if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
-        log("Error SetFlat: '" ..
-            path .. "." .. field .. "' as '" .. value .. "'")
+    if path == nil then log("Cannot set a record because it's path is not set") end
+    if field == nil then log("Cannot set a record because it's field is not set") end
+    if value == nil then log("Cannot set a record because it's value is not set") end
+
+    if path == nil
+        or field == nil
+        or value == nil
+    then
+        log(
+            {
+                path,
+                field,
+                value
+            }
+        )
+        return false
     end
-    if not TweakDB:Update(path) then log("Error Update: " .. path) end
+
+    if TweakDB:GetFlat(path .. "." .. field) then
+        if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
+            log("Main.lua: Failed to SetFlat: '" ..
+                path .. "." .. field .. "' as '" .. value .. "'")
+            return false
+        end
+        if not TweakDB:Update(path) then
+            log("Main.lua: Failed to Update path '" .. path .. "." .. field .. "' with value '" .. value .. "'")
+            return false
+        end
+    else
+        -- log("Main.lua: the flat '" .. path .. "." .. field .. "' does not exist.")
+    end
+    return true
 end
 
 return Main
