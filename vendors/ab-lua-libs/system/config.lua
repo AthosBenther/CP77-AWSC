@@ -1,3 +1,4 @@
+---@diagnostic disable: lowercase-global
 Config = {
 }
 
@@ -18,14 +19,19 @@ function Config.Init()
 end
 
 function config(config, default)
-    default = default or nil
+    
+    local default = default or nil
 
     local params = string_split(config, ".")
-    local cfgLvl = configs
 
-    for _, value in pairs(params) do
-        cfgLvl = cfgLvl[value] or nil
+    local cfgLvl = configs[params[1]]
+
+    
+
+    if cfgLvl then
+        local value = cfgLvl[params[2]]
+        if value ~= nil then return value end
+    else
+        return default
     end
-
-    return cfgLvl or default
 end

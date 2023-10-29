@@ -36,7 +36,7 @@ end
 
 function table_filter(data, callback)
     local result = {}
-    for key, value in ipairs(data) do
+    for key, value in pairs(data) do
         if callback(key, value) then
             result[key] = value
         end
@@ -60,19 +60,18 @@ function table_foreach(data, callback)
     end
 end
 
-function table_values(data)
-    local result = {}
-    for key, value in pairs(data) do
-        table.insert(result, value)
-    end
-    return result;
-end
-
 function table_indexOfKey(data, key)
     local i = 1
     for tKey, value in pairs(data) do
         if key == tKey then return i end
         i = i + 1
+    end
+    return nil
+end
+
+function table_indexOf(data, value)
+    for dataKey, dataValue in pairs(data) do
+        if dataValue == value then return dataKey end
     end
     return nil
 end
@@ -99,6 +98,23 @@ function table_intersect(dataA, dataB, keepKeys)
     return intersection
 end
 
+---Joins all table values into a string with a separator
+---@param data table
+---@param separator? string
+---@return string result
+function table_join(data, separator)
+    local separator = separator or ","
+    local result = data[1]
+
+    if table_count(data) > 1 then
+        for i = 2, table_count(data), 1 do
+            result = result .. separator .. data[i]
+        end
+    end
+
+    return result
+end
+
 function table_keys(data)
     local keys = {}
     for key, value in pairs(data) do
@@ -107,12 +123,42 @@ function table_keys(data)
     return keys
 end
 
-function table_map(data, callback)
-    local result = {}
+---comment
+---@param data table
+---@param callback function
+---@param keepNils? boolean Indcates if nil returns should be added in the results. Default is true
+---@return table result
+function table_map(data, callback, keepNils)
+    local keepNils = keepNils or true
+    local results = {}
     for key, value in pairs(data) do
-        result[key] = callback(key, value)
+        local result = callback(key, value)
+        if result then
+            results[key] = result
+        elseif keepNils then
+            results[key] = result
+        end
     end
-    return result
+    return results
+end
+
+function table_merge(subject, incoming)
+    local function merge_recursive(target, source)
+        for k, v in pairs(source) do
+            if type(v) == "table" and type(target[k]) == "table" then
+                target[k] = merge_recursive(target[k], v)
+            else
+                if type(k) == "number" then
+                    table.insert(target, v)
+                else
+                    target[k] = v
+                end
+            end
+        end
+        return target
+    end
+
+    return merge_recursive(subject, incoming)
 end
 
 function table_remove(data, key)
@@ -153,4 +199,12 @@ function table_update(target, source)
         end
     end
     return target
+end
+
+function table_values(data)
+    local result = {}
+    for key, value in pairs(data) do
+        table.insert(result, value)
+    end
+    return result;
 end

@@ -60,13 +60,13 @@ function ConfigFile.Generate(newFile)
     --FileManager.saveAsJson(nil, 'weapons.json')
 
     if not newFile then
-        ConfigFile.weapons = FileManager.openJson('weapons.json');
+        ConfigFile.Weapons = FileManager.openJson('weapons.json');
     end
 
     local weaponItemRecords = TweakDB:GetRecords('gamedataWeaponItem_Record')
     log("AWSC: loaded " .. #weaponItemRecords .. " Weapon Item Records")
 
-    local fWeaponItemRecords = table_values(
+    local fWeaponItemRecords = table_getValues(
         table_filter(
             weaponItemRecords,
             function(key, record)
@@ -119,19 +119,19 @@ function ConfigFile.Generate(newFile)
 
         if (fullyClassified) then
             -- log(weaponName .. ": " .. localizedName)
-            if (ConfigFile.weapons[thisRange] == nil) then
-                ConfigFile.weapons[thisRange] = {}
+            if (ConfigFile.Weapons[thisRange] == nil) then
+                ConfigFile.Weapons[thisRange] = {}
             end
-            if (ConfigFile.weapons[thisRange][thisClass] == nil) then
-                ConfigFile.weapons[thisRange][thisClass] = {}
+            if (ConfigFile.Weapons[thisRange][thisClass] == nil) then
+                ConfigFile.Weapons[thisRange][thisClass] = {}
             end
 
-            if (ConfigFile.weapons[thisRange][thisClass][thisKind] == nil) then
-                ConfigFile.weapons[thisRange][thisClass][thisKind] = {}
+            if (ConfigFile.Weapons[thisRange][thisClass][thisKind] == nil) then
+                ConfigFile.Weapons[thisRange][thisClass][thisKind] = {}
             end
 
             if (thisRange == "RangedWeapon") then
-                local weapon = ConfigFile.weapons[thisRange][thisClass][thisKind][weaponName] or {}
+                local weapon = ConfigFile.Weapons[thisRange][thisClass][thisKind][weaponName] or {}
 
                 local newWeapon = {
                     LocalizedName = localizedName,
@@ -139,9 +139,9 @@ function ConfigFile.Generate(newFile)
                     -- tags = tags
                 }
 
-                ConfigFile.weapons[thisRange][thisClass][thisKind][weaponName] = table_update(weapon, newWeapon)
+                ConfigFile.Weapons[thisRange][thisClass][thisKind][weaponName] = table_update(weapon, newWeapon)
             else
-                local weapon = ConfigFile.weapons[thisRange][thisClass][thisKind][weaponName] or {}
+                local weapon = ConfigFile.Weapons[thisRange][thisClass][thisKind][weaponName] or {}
 
                 local newWeapon = {
                     LocalizedName = localizedName,
@@ -149,13 +149,13 @@ function ConfigFile.Generate(newFile)
                     -- tags = tags
                 }
 
-                ConfigFile.weapons[thisRange][thisClass][thisKind][weaponName] = table_update(weapon, newWeapon)
+                ConfigFile.Weapons[thisRange][thisClass][thisKind][weaponName] = table_update(weapon, newWeapon)
             end
         end
     end
-    FileManager.saveAsJson(ConfigFile.weapons, "weapons.json")
-    Main.weapons = ConfigFile.weapons
-    ConfigFile.weapons = nil
+    FileManager.saveAsJson(ConfigFile.Weapons, "weapons.json")
+    Main.weapons = ConfigFile.Weapons
+    ConfigFile.Weapons = nil
 end
 
 function ConfigFile.Ranged(weaponName, thisClass, thisKind)
