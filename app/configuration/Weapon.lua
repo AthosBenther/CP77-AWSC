@@ -162,12 +162,24 @@ Weapon = {
     }
 }
 
-function Weapon.Classify(weapon, recordPath)
-    local tags = table_map(weapon:Tags(), function(k, t) return t.value end)
+function Weapon.Classify(weaponRecord, weaponRecordPath)
+    local tags = {}
+
+
+    if ConfigStatics.additionalWeapons[weaponRecordPath] then
+        if ConfigStatics.additionalWeapons[weaponRecordPath].Tags then
+            tags = ConfigStatics.additionalWeapons[weaponRecordPath].Tags
+        else
+            tags = table_map(weaponRecord:Tags(), function(k, t) return t.value end)
+        end
+    else
+        tags = table_map(weaponRecord:Tags(), function(k, t) return t.value end)
+    end
+
     local thisRange = table_intersect(ConfigStatics.range, tags)[1]
     local thisClass = table_intersect(ConfigStatics.class, tags)[1]
     local thisKind = table_intersect(ConfigStatics.kind, tags)[1]
-    if string.find(recordPath, "Pozhar") ~= nil then
+    if string.find(weaponRecordPath, "Pozhar") ~= nil then
         thisKind = "ShotgunWeapon"
     end
     return {
@@ -357,12 +369,12 @@ function Weapon.FindFlat(statGroup, statType, weaponPath)
     return nil
 end
 
-function Weapon.GetName(weaponPath, stopOn)
+function Weapon.GetName(weaponRecordPath, stopOn)
     local stopOn = stopOn or "Default"
-    local parts = string_split(weaponPath, "_")
+    local parts = string_split(weaponRecordPath, "_")
     table.remove(parts, 1)
     local nameParts = {}
-    if stopOn and string_contains(weaponPath, stopOn) then
+    if stopOn and string_contains(weaponRecordPath, stopOn) then
         local stop = table_indexOf(parts, stopOn) - 1
         for i = 1, stop, 1 do
             nameParts[i] = parts[i]
@@ -386,7 +398,14 @@ end
 
 function Weapon.GetLocalizedName(weaponRecord)
     local thisWeaponRecord = weaponRecord
-    if type(weaponRecord) == "string" then thisWeaponRecord = TweakDB:GetRecord(weaponRecord) end
+    if type(weaponRecord) == "string" then
+        if ConfigStatics.additionalWeapons[weaponRecord] then
+            if ConfigStatics.additionalWeapons[weaponRecord].localizedName ~= nil then
+                return ConfigStatics.additionalWeapons[weaponRecord].localizedName
+            end
+        end
+        thisWeaponRecord = TweakDB:GetRecord(weaponRecord)
+    end
     return Game.GetLocalizedItemNameByCName(thisWeaponRecord:DisplayName())
 end
 

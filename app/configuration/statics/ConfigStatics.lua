@@ -1,11 +1,5 @@
 ConfigStatics = {
     forbiddenWeapons = {
-        -- "Silverhand",
-        -- "Zhuo",
-        -- "Warden",
-        -- "Palica",
-        -- "Authority",
-        -- "Borg4a",
         "RocketLauncher",
         -- "Blade",
         "Vehicle_Power_Weapon",
@@ -59,6 +53,27 @@ ConfigStatics = {
         'Two Hand Club',
         'Two Hand Hammer',
         'Knuckles'
+    },
+    additionalWeapons = {
+        ["Items.Preset_Silverhand_3516"] = {
+            HasVariants = false,
+            Tags = {
+                "RangedWeapon",
+                "PowerWeapon",
+                "Handgun"
+            }
+        },
+        ["Items.Preset_Nue_Default"] = {
+            Variants = {
+                ["Items.Preset_Nue_Arasaka_2077"] = {
+                    localizedName = "Tamayura (2077)"
+                },
+                ["Items.Preset_Nue_Arasaka_2020"] = {
+                    localizedName = "Tamayura (2020)"
+                }
+            }
+        }
+
     }
 }
 

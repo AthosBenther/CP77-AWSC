@@ -72,21 +72,17 @@ function ConfigFile.Generate()
         end
     end)
 
+    table_map(ConfigStatics.additionalWeapons, function(recordPath, v)
+        defaultWeapons[recordPath] = TweakDB:GetRecord(recordPath)
+    end)
+
     log("ConfigFile: found " .. table_count(defaultWeapons) .. " valid Default Weapons")
 
     for weaponRecordPath, weaponRecord in pairs(defaultWeapons) do
         local classification = Weapon.Classify(weaponRecord, weaponRecordPath)
         local weaponName = Weapon.GetName(weaponRecordPath)
-        if (ConfigFile.Weapons[classification.Range] == nil) then
-            ConfigFile.Weapons[classification.Range] = {}
-        end
-        if (ConfigFile.Weapons[classification.Range][classification.Class] == nil) then
-            ConfigFile.Weapons[classification.Range][classification.Class] = {}
-        end
 
-        if (ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind] == nil) then
-            ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind] = {}
-        end
+        ConfigFile.AddClassification(classification)
 
         if (ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName] == nil) then
             ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName] = {}
@@ -124,45 +120,66 @@ function ConfigFile.Generate()
         ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"]["Default"] =
             defaultVariantData
 
-
-
-        local variants = {}
-
-        for k, record in pairs(ConfigFile.weaponItemRecords) do
-            local recordPath = record:GetRecordID().value
-
-            local isVariant = string_startsWith(recordPath, "Items.Preset_" .. weaponName)
-            local isValidVariant = not string_contains(recordPath, ConfigStatics.forbiddenVariationTerms)
-            local tags = table_map(record:Tags(), function(k, t) return t.value end)
-            local isDeprecatedIconic = table_contains(tags, "DeprecatedIconic")
-            local isIconic = Weapon.IsIconic(record)
-
-            if isVariant
-                and isValidVariant
-                and not string_endsWith(recordPath, "Default")
-                and not isDeprecatedIconic
-                and isIconic
-            then
-                variants[recordPath] =
-                    record
+        if ConfigStatics.additionalWeapons[weaponRecordPath] then
+            if ConfigStatics.additionalWeapons[weaponRecordPath].HasVariants then
+                ConfigFile.AddVariants(weaponName)
             end
+        else
+            ConfigFile.AddVariants(weaponName, weaponRecord, classification)
         end
 
-        for variantRecordPath, variantRecord in pairs(variants) do
-            local variantName = Weapon.GetVariantName(variantRecordPath, variantRecord)
-            local variantClassification = Weapon.Classify(variantRecord, variantRecordPath)
 
-            local variantData = Weapon.GetVariantData(weaponName, variantRecordPath, variantClassification, weaponRecord)
 
-            ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"][variantName] =
-                variantData
+        ConfigFile.Save()
+        log("ConfigFile: '" .. config("storage.weapons", "weapons.json") .. "' saved!")
+    end
+end
+
+function ConfigFile.AddVariants(weaponName, weaponRecord, classification)
+    local variants = {}
+    for k, record in pairs(ConfigFile.weaponItemRecords) do
+        local recordPath = record:GetRecordID().value
+
+        local isVariant = string_startsWith(recordPath, "Items.Preset_" .. weaponName)
+        local isValidVariant = not string_contains(recordPath, ConfigStatics.forbiddenVariationTerms)
+        local tags = table_map(record:Tags(), function(k, t) return t.value end)
+        local isDeprecatedIconic = table_contains(tags, "DeprecatedIconic")
+        local isIconic = Weapon.IsIconic(record)
+
+        if isVariant
+            and isValidVariant
+            and not string_endsWith(recordPath, "Default")
+            and not isDeprecatedIconic
+            and isIconic
+        then
+            variants[recordPath] =
+                record
         end
     end
 
+    for variantRecordPath, variantRecord in pairs(variants) do
+        local variantName = Weapon.GetVariantName(variantRecordPath, variantRecord)
+        local variantClassification = Weapon.Classify(variantRecord, variantRecordPath)
 
+        local variantData = Weapon.GetVariantData(weaponName, variantRecordPath, variantClassification, weaponRecord)
 
-    ConfigFile.Save()
-    log("ConfigFile: '" .. config("storage.weapons", "weapons.json") .. "' saved!")
+        ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName]["Variants"][variantName] =
+            variantData
+    end
+end
+
+function ConfigFile.AddClassification(classification)
+    if (ConfigFile.Weapons[classification.Range] == nil) then
+        ConfigFile.Weapons[classification.Range] = {}
+    end
+
+    if (ConfigFile.Weapons[classification.Range][classification.Class] == nil) then
+        ConfigFile.Weapons[classification.Range][classification.Class] = {}
+    end
+
+    if (ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind] == nil) then
+        ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind] = {}
+    end
 end
 
 function ConfigFile.Validate()
