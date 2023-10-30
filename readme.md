@@ -15,6 +15,10 @@ Requires [Native Settings UI](https://github.com/justarandomguyintheinternet/CP7
 - Change ADS time
 - Change Base Zoom
 
+### Weapons needing specific code
+- Malorian
+- Tamayura
+
 ### 1.0 release:
 Covers all the missing features on SWSC
 
@@ -48,16 +52,21 @@ Will update the already crowded menu to work with paginations
 - Adds Fire Mode selection
 
 
-### 0.7 Iconics Update (Alpha Testing)
-- ✓ Adds Default Variant
-  - ✓ Adds Crosshair selection
-- ✓ Adds Iconics, given unique stats
-  - ✓ Add a disclaimer on Iconics about its stats being affected by other stuff
-- ✓ Updates weapons menus to add one more selector: Weapon Variants
+### ✓ 0.7 Iconics Update <=== YOU ARE HERE
+- Adds Default Variant
+  - Adds Crosshair selection
+- Ranged
+  - Adds Shots to Fire
+  - Adds Projectiles per Shot
+- Melee
+  - Adds Damage
+- Adds Iconics, given unique stats
+  - Add a disclaimer on Iconics about its stats being affected by other stuff
+- Updates weapons menus to add one more selector: Weapon Variants
 
 
-### 0.6.1 <=== YOU ARE HERE
+### ✓ 0.6.1 
 - Make Native Settings UI optional
 
 
-### 0.6 Weapons Menu Update
+### ✓ 0.6 Weapons Menu Update
