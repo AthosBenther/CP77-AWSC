@@ -81,31 +81,26 @@ function RangedUI.Init()
             )
 
             local weapons = table_keys(ConfigFile.Weapons.RangedWeapon[class][kind])
-            local weaponNames = {}
+            local weaponLabels = {}
 
             table_map(weapons,
                 function(k, weapon)
-                    weaponNames[k] = ConfigFile.Weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
+                    weaponLabels[k] = ConfigFile.Weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
                 end
             )
 
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCRanged/weapon")
                 ui.removeSubcategory("/AWSCRanged/variant")
-                log("RangedUI: setWeapon(" .. value .. ")")
 
-                local weaponLabel = weaponNames[value]
+
+                local weaponLabel = weaponLabels[value]
                 local weaponRecordName = weapons[value]
 
-                local storageWeapon = Weapon.Find(
-                    weaponRecordName,
-                    {
-                        Range = "RangedWeapon",
-                        Class = class,
-                        Kind = kind
-                    },
-                    ConfigFile.Weapons
-                )
+                log("RangedUI: Setting weapon " .. weaponLabel)
+
+                local storageWeapon = Weapon.FindByName(weaponRecordName)
+                if not storageWeapon then dd(weaponRecordName,storageWeapon) end
 
                 local variantNames = {
                     [1] = "Default"
@@ -115,14 +110,18 @@ function RangedUI.Init()
                     [1] = "Default"
                 }
 
+                
+
                 if not pcall(function()
+                    
                         table_map(
                             storageWeapon.Variants,
                             function(variantName, storageVariant)
                                 if table_count(storageVariant) > 1 and variantName ~= "Default" then
+                                    log(variantName, storageVariant.LocalizedName)
                                     if storageVariant.LocalizedName == storageWeapon.Variants.Default.LocalizedName then
-                                        table.insert(variantNames, variantName)
                                         table.insert(variantLabels, variantName)
+                                        table.insert(variantNames, variantName)
                                     else
                                         table.insert(variantLabels, storageVariant.LocalizedName)
                                         table.insert(variantNames, variantName)
@@ -207,7 +206,12 @@ function RangedUI.Init()
                         log("RangedUI: '" ..
                             variantLabel .. "' Identified as an Iconic")
 
-                        if table_count(storageVariant.Stats) < 3 then
+                        if storageVariant.Disclaimer then
+                            ui.addSubcategory(
+                                "/AWSCRanged/iconicDisclaimer",
+                                storageVariant.Disclaimer
+                            )
+                        elseif table_count(storageVariant.Stats) < 3 then
                             ui.removeSubcategory("/AWSCRanged/variant")
                             ui.addSubcategory(
                                 "/AWSCRanged/iconicDisclaimer",
@@ -233,8 +237,6 @@ function RangedUI.Init()
 
                     for stat, statValues in pairs(validStats) do
                         if stat ~= "Crosshair" then
-                            log("RangedUI: creating the control for " .. stat)
-
                             local status, errorMessage = pcall(function()
                                 log("RangedUI: Creating the " ..
                                     statValues.uiLabel ..
@@ -247,16 +249,16 @@ function RangedUI.Init()
                                     desc = desc .. " Multiplier"
                                 end
                                 ui.addRangeFloat(
-                                    subcat,               --path
-                                    label,                --label
+                                    subcat,                   --path
+                                    label,                    --label
                                     statValues.uiDescription, --description
-                                    statValues.min,       --min
-                                    statValues.max,       --max
-                                    statValues.step,      --step
-                                    statValues.format,    --format
-                                    statValues.custom + 0.0, --currentValue
+                                    statValues.min,           --min
+                                    statValues.max,           --max
+                                    statValues.step,          --step
+                                    statValues.format,        --format
+                                    statValues.custom + 0.0,  --currentValue
                                     statValues.default + 0.0, --defaultValue
-                                    function(value)       --callback
+                                    function(value)           --callback
                                         log("RangedUI: Setting " ..
                                             statValues.uiLabel ..
                                             " for the '" ..
@@ -285,7 +287,7 @@ function RangedUI.Init()
                     "/AWSCRanged/weapon",
                     "Variants",
                     "Choose a weapon variant",
-                    variantNames,
+                    variantLabels,
                     1,
                     1,
                     setVariant
@@ -298,7 +300,7 @@ function RangedUI.Init()
                 "/AWSCRanged/kind",
                 "Weapons",
                 "Choose a weapon",
-                weaponNames,
+                weaponLabels,
                 1,
                 1,
                 setWeapon

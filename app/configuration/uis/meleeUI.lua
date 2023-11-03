@@ -94,20 +94,14 @@ function MeleeUI.Init()
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCMelee/weapon")
                 ui.removeSubcategory("/AWSCMelee/variant")
-                log("MeleeUI: setWeapon(" .. value .. ")")
+                
 
                 local weaponLabel = weaponNames[value]
-                local weaponRecordName = weapons[value]
+                local WeaponName = weapons[value]
 
-                local storageWeapon = Weapon.Find(
-                    weaponRecordName,
-                    {
-                        Range = "MeleeWeapon",
-                        Class = class,
-                        Kind = kind
-                    },
-                    ConfigFile.Weapons
-                )
+                log("MeleeUI: Setting weapon " .. weaponLabel)
+
+                local storageWeapon = Weapon.FindByName(WeaponName)
 
                 local variantNames = {
                     [1] = "Default"
@@ -133,7 +127,7 @@ function MeleeUI.Init()
                             end
                         )
                     end) then
-                    log("RanderUI: Inserting one or more " .. weaponLabel .. " variants failed")
+                    log("MeleeUI: Inserting one or more " .. weaponLabel .. " variants failed")
                 end
 
                 log("MeleeUI: addSubcategory(" .. weaponLabel .. ")")
@@ -146,16 +140,16 @@ function MeleeUI.Init()
                 local setVariant = function(value)
                     ui.removeSubcategory("/AWSCMelee/variant")
                     ui.removeSubcategory("/AWSCMelee/iconicDisclaimer")
-                    log("MeleeUI: setVariant(" .. value .. ")")
+                    
 
 
                     local variantName = variantNames[value]
                     local variantLabel = variantLabels[value]
 
+                    log("MeleeUI: Setting variant " .. variantLabel)
+
 
                     local storageVariant = storageWeapon.Variants[variantName]
-
-                    log("MeleeUI: Setting variant " .. variantLabel)
 
                     ---@type gamedataWeaponItem_Record
                     --local variantRecord = TweakDB:GetRecord(storageVariant.recordPath)
@@ -251,16 +245,16 @@ function MeleeUI.Init()
                                     desc = desc .. " Multiplier"
                                 end
                                 ui.addRangeFloat(
-                                    subcat,               --path
-                                    label,                --label
+                                    subcat,                   --path
+                                    label,                    --label
                                     statValues.uiDescription, --description
-                                    statValues.min,       --min
-                                    statValues.max,       --max
-                                    statValues.step,      --step
-                                    statValues.format,    --format
-                                    statValues.custom + 0.0, --currentValue
+                                    statValues.min,           --min
+                                    statValues.max,           --max
+                                    statValues.step,          --step
+                                    statValues.format,        --format
+                                    statValues.custom + 0.0,  --currentValue
                                     statValues.default + 0.0, --defaultValue
-                                    function(value)       --callback
+                                    function(value)           --callback
                                         log("MeleeUI: Setting " ..
                                             statValues.uiLabel ..
                                             " for the '" ..

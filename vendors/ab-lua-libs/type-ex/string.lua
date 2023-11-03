@@ -9,7 +9,7 @@ end
 
 --- Checks if a string contains any of the provided substrings.
 ---@param subject string The string to search in.
----@param ... string[] One or more strings to search for.
+---@param ... string One or more strings to search for.
 ---@return boolean result True if any of the substrings are found, otherwise false.
 function string_contains(subject, ...)
     local args = ...
