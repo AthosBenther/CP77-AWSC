@@ -1,11 +1,5 @@
 ConfigStatics = {
     forbiddenWeapons = {
-        -- "Silverhand",
-        -- "Zhuo",
-        -- "Warden",
-        -- "Palica",
-        -- "Authority",
-        -- "Borg4a",
         "RocketLauncher",
         -- "Blade",
         "Vehicle_Power_Weapon",
@@ -14,13 +8,13 @@ ConfigStatics = {
         "Machete_Borg",
         "One_Hand_Blade"
     },
-    forbiddenVariationTerms = {
-        "Retrofix",
-        "Left_Hand",
-        "Scene",
-        "Hologram",
+    forbiddenVariantTerms = {
         "2020",
-        "Unbreakable"
+        "Hologram",
+        "Left_Hand",
+        "Retrofix",
+        "Scene",
+        "Unbreakable",
     },
     range = {
         'MeleeWeapon',
@@ -59,7 +53,73 @@ ConfigStatics = {
         'Two Hand Club',
         'Two Hand Hammer',
         'Knuckles'
+    },
+    additionalWeapons = {
+        ["Items.Preset_Silverhand_3516"] = {
+            addVariants = false,
+            addDefault = true,
+            statsAlias = "Silverhand",
+            Tags = {
+                "RangedWeapon",
+                "PowerWeapon",
+                "Handgun"
+            }
+        },
+        ["Items.Preset_Borg4a_HauntedGun"] = {
+            addVariants = false,
+            addDefault = true,
+            statsAlias = "Borg4a",
+            Tags = {
+                "RangedWeapon",
+                "PowerWeapon",
+                "SMG"
+            }
+        },
+        ["Items.Preset_Nue_Default"] = {
+            addVariants = true,
+            addDefault = false,
+            Variants = {
+                ["Items.Preset_Nue_Arasaka_2020"] = {
+                    localizedName = "Tamayura",
+                    disclaimer =
+                    "Tamayura does not inherit any stat from Nue, despite being listed as a variant"
+                }
+            }
+        },
+        ["Items.Preset_Masamune_Default"] = {
+            addVariants = true,
+            addDefault = false,
+            Variants = {
+                ["Items.Preset_Masamune_Arasaka_2020"] = {
+                    localizedName = "Nowaki"
+                }
+            }
+        },
+        ["Items.Preset_Saratoga_Default"] = {
+            addVariants = true,
+            addDefault = false,
+            Variants = {
+                ["Items.Preset_Saratoga_Arasaka_2020"] = {
+                    localizedName = "Shigure"
+                }
+            }
+        }
     }
 }
+
+function ConfigStatics.GetAdditional(weaponRecordPath)
+    if ConfigStatics.additionalWeapons[weaponRecordPath] then
+        return ConfigStatics.additionalWeapons[weaponRecordPath]
+    else
+        for additionalWeapon, additionalWeaponStats in pairs(ConfigStatics.additionalWeapons) do
+            if additionalWeaponStats.Variants then
+                if additionalWeaponStats.Variants[weaponRecordPath] then
+                    return additionalWeaponStats.Variants
+                        [weaponRecordPath]
+                end
+            end
+        end
+    end
+end
 
 return ConfigStatics

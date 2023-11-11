@@ -10,19 +10,19 @@ Weapon = {
                             uiDescription = "Hip Lock Time",
                             statType = "BaseStats.SmartGunHipTimeToLock",
                             uiLabel = "Hip Lock Time",
-                            min = 0.001,
+                            min = 0.01,
                             max = 3,
-                            step = 0.001,
-                            format = "%.3f",
+                            step = 0.01,
+                            format = "%.2f",
                         },
                         SmartGunAdsTimeToLock = {
                             uiDescription = "Ads Lock Time",
                             statType = "BaseStats.SmartGunAdsTimeToLock",
                             uiLabel = "Ads Lock Time",
-                            min = 0.001,
+                            min = 0.01,
                             max = 3,
-                            step = 0.001,
-                            format = "%.3f",
+                            step = 0.01,
+                            format = "%.2f",
                         }
                     }
                 }
@@ -37,7 +37,7 @@ Weapon = {
                         uiDescription = "Weapon Crosshair"
                     },
                     Damage = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiLabel = "Damage",
                         uiDescription = "Damage (Scales with weapon quality)",
                         statType = "BaseStats.DPS",
@@ -47,7 +47,7 @@ Weapon = {
                         format = "%.0f"
                     },
                     Magazine = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Magazine Capacity",
                         statType = "BaseStats.MagazineCapacityBase",
                         uiLabel = "Magazine",
@@ -57,52 +57,52 @@ Weapon = {
                         format = "%.0f"
                     },
                     CycleTime = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Cycle Time",
                         statType = "BaseStats.CycleTimeBase",
                         uiLabel = "Cycle Time",
-                        min = 0.0001,
-                        max = 10,
-                        step = 0.0001,
-                        format = "%.4f"
+                        min = 0.001,
+                        max = 3,
+                        step = 0.001,
+                        format = "%.3f"
                     },
                     EffectiveRange = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Effective Range",
                         statType = "BaseStats.EffectiveRange",
                         uiLabel = "Effective Range",
                         min = -100,
                         max = 100,
-                        step = 0.01,
-                        format = "%.2f"
+                        step = 0.1,
+                        format = "%.1f"
                     },
                     HeadshotDamageMultiplier = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Headshot Damage",
                         statType = "BaseStats.HeadshotDamageMultiplier",
                         uiLabel = "Headshot Damage",
                         min = -100,
                         max = 100,
-                        step = 0.01,
-                        format = "%.2f"
+                        step = 0.1,
+                        format = "%.1f"
                     },
                     ProjectilesPerShotBase = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Projectiles Per Shot",
                         statType = "BaseStats.ProjectilesPerShotBase",
                         uiLabel = "Projectiles Per Shot",
                         min = 1,
-                        max = 100,
+                        max = 50,
                         step = 1,
                         format = "%.0f"
                     },
                     NumShotsToFire = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Number of bullets to fire in a burst",
                         statType = "BaseStats.NumShotsToFire",
                         uiLabel = "Shots To Fire",
                         min = 1,
-                        max = 100,
+                        max = 20,
                         step = 1,
                         format = "%.0f"
                     }
@@ -146,12 +146,12 @@ Weapon = {
                         format = "%.1f",
                     },
                     Damage = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiLabel = "Damage",
                         uiDescription = "Damage (Scales with weapon quality)",
                         statType = "BaseStats.DPS",
                         min = 0,
-                        max = 1500,
+                        max = 3000,
                         step = 1,
                         format = "%.0f"
                     }
@@ -162,12 +162,29 @@ Weapon = {
     }
 }
 
-function Weapon.Classify(weapon, recordPath)
-    local tags = table_map(weapon:Tags(), function(k, t) return t.value end)
+---comment
+---@param weaponRecord gamedataWeaponItem_Record
+---@param weaponRecordPath string
+---@return table
+function Weapon.Classify(weaponRecord, weaponRecordPath)
+    local weaponRecord = weaponRecord or TweakDB:GetRecord(weaponRecordPath)
+    local tags = {}
+
+
+    if ConfigStatics.additionalWeapons[weaponRecordPath] then
+        if ConfigStatics.additionalWeapons[weaponRecordPath].Tags then
+            tags = ConfigStatics.additionalWeapons[weaponRecordPath].Tags
+        else
+            tags = table_map(weaponRecord:Tags(), function(k, t) return t.value end)
+        end
+    else
+        tags = table_map(weaponRecord:Tags(), function(k, t) return t.value end)
+    end
+
     local thisRange = table_intersect(ConfigStatics.range, tags)[1]
     local thisClass = table_intersect(ConfigStatics.class, tags)[1]
     local thisKind = table_intersect(ConfigStatics.kind, tags)[1]
-    if string.find(recordPath, "Pozhar") ~= nil then
+    if string.find(weaponRecordPath, "Pozhar") ~= nil then
         thisKind = "ShotgunWeapon"
     end
     return {
@@ -249,7 +266,7 @@ function Weapon.genVarData(classiData, recordPath, weaponName, classification, w
             result[dataGroupKey] = {}
             for statsKey, statsData in pairs(dataGroup) do
                 local classiResult = {}
-                local tableWeapon = Weapon.Find(weaponName, classification)
+                local tableWeapon = Weapon.Find(recordPath)
 
                 if type(statsData) == "table" then
                     for stat, statValue in pairs(statsData) do
@@ -295,16 +312,22 @@ end
 
 ---comment
 ---@param statType string
----@param weaponPath string
+---@param weaponRecordPath string
 ---@return unknown
-function Weapon.findStatModifier(statType, weaponPath)
-    local statGroups = TweakDB:GetFlat(weaponPath .. ".statModifierGroups")
+function Weapon.findStatModifier(statType, weaponRecordPath)
+    local statGroups = TweakDB:GetFlat(weaponRecordPath .. ".statModifierGroups")
     local result = nil
-    local weaponName = Weapon.GetName(weaponPath)
+    local weaponName = Weapon.GetName(weaponRecordPath)
     local nameParts = string_split(weaponName, "_")
 
     local defaultWeapon = weaponName
     if weaponName == "Tech_Sniper_Rifle" then defaultWeapon = "Rasetsu" end
+    local additionalWeapon = ConfigStatics.GetAdditional(weaponRecordPath)
+
+    local statGroupTerms = {
+        defaultWeapon
+    }
+    if additionalWeapon and additionalWeapon.statsAlias then table.insert(statGroupTerms, additionalWeapon.statsAlias) end
 
     for key, statGroup in pairs(statGroups) do
         local statGroupName = TweakDB:GetRecord(statGroup):GetRecordID().value
@@ -319,7 +342,7 @@ function Weapon.findStatModifier(statType, weaponPath)
 
 
 
-                if dbStatType and string_contains(modifierRecordName, defaultWeapon) then
+                if dbStatType and string_contains(modifierRecordName, statGroupTerms) then
                     local inline = modifier:GetRecordID().value
                     if dbStatType == statType and string_contains(inline, "inline") then
                         result = inline
@@ -328,8 +351,8 @@ function Weapon.findStatModifier(statType, weaponPath)
                 end
             end)
 
-            if not status then
-                log("Weapon.lua: Error trying to find the stat '" .. statType .. "' in '" .. weaponPath .. "'")
+            if status == false then
+                log("Weapon.lua: Error trying to find the stat '" .. statType .. "' in '" .. weaponRecordPath .. "'")
                 log("dbStatType: " .. (dbStatType or "nil"))
                 log("dbStatType: " .. (modifier:GetRecordID().value or "nil"))
                 log(errorMessage)
@@ -343,10 +366,10 @@ function Weapon.findStatModifier(statType, weaponPath)
     return result
 end
 
-function Weapon.FindFlat(statGroup, statType, weaponPath)
-    local weaponPath = weaponPath or nil
+function Weapon.FindFlat(statGroup, statType, weaponRecordPath)
+    local weaponRecordPath = weaponRecordPath or nil
     if statGroup == nil then
-        local inline = Weapon.findStatModifier(statType, weaponPath)
+        local inline = Weapon.findStatModifier(statType, weaponRecordPath)
         return inline
     end
     local modifiers = TweakDB:GetFlat(statGroup)
@@ -357,12 +380,12 @@ function Weapon.FindFlat(statGroup, statType, weaponPath)
     return nil
 end
 
-function Weapon.GetName(weaponPath, stopOn)
+function Weapon.GetName(weaponRecordPath, stopOn)
     local stopOn = stopOn or "Default"
-    local parts = string_split(weaponPath, "_")
+    local parts = string_split(weaponRecordPath, "_")
     table.remove(parts, 1)
     local nameParts = {}
-    if stopOn and string_contains(weaponPath, stopOn) then
+    if stopOn and string_contains(weaponRecordPath, stopOn) then
         local stop = table_indexOf(parts, stopOn) - 1
         for i = 1, stop, 1 do
             nameParts[i] = parts[i]
@@ -371,11 +394,12 @@ function Weapon.GetName(weaponPath, stopOn)
         nameParts = parts
     end
     local name = table_join(nameParts, "_")
+
     return name
 end
 
 function Weapon.GetVariantName(variantRecordName, variantRecord)
-    if (Weapon.IsIconic(variantRecord)) then return Weapon.GetLocalizedName(variantRecord) end
+    if (Weapon.IsIconic(variantRecord)) then return Weapon.GetLocalizedName(variantRecordName) end
     local vTag = table_map(variantRecord:VisualTags(), function(k, t) return t.value end)[1]
     return vTag
 end
@@ -384,27 +408,82 @@ function Weapon.IsIconic(weaponRecord)
     return table_contains(table_map(weaponRecord:Tags(), function(k, t) return t.value end), "IconicWeapon")
 end
 
-function Weapon.GetLocalizedName(weaponRecord)
-    local thisWeaponRecord = weaponRecord
-    if type(weaponRecord) == "string" then thisWeaponRecord = TweakDB:GetRecord(weaponRecord) end
-    return Game.GetLocalizedItemNameByCName(thisWeaponRecord:DisplayName())
+---comment
+---@param weaponRecordPath string
+---@return string
+function Weapon.GetLocalizedName(weaponRecordPath)
+    if ConfigStatics.additionalWeapons[weaponRecordPath] then
+        if ConfigStatics.additionalWeapons[weaponRecordPath].localizedName ~= nil then
+            return ConfigStatics.additionalWeapons[weaponRecordPath].localizedName
+        end
+    else
+        local result = nil
+        local a = table_map(ConfigStatics.additionalWeapons,
+            function(k, aw)
+                if aw.Variants then
+                    table_map(aw.Variants,
+                        function(k, v)
+                            if weaponRecordPath == k and v.localizedName then
+                                result = v.localizedName
+                            end
+                        end
+                    )
+                end
+            end
+        )
+        if result then return result end
+    end
+
+    local weaponRecord = TweakDB:GetRecord(weaponRecordPath)
+    return Game.GetLocalizedItemNameByCName(weaponRecord:DisplayName())
 end
 
-function Weapon.Find(weaponName, classification, weaponsTable)
+function Weapon.Find(weaponRecordPath, weaponsTable)
     local weaponsTable = weaponsTable or ConfigFile.Weapons
-    local weapon = {}
-    if pcall(
-            function()
-                weapon = weaponsTable
-                    [classification.Range]
-                    [classification.Class]
-                    [classification.Kind]
-                    [weaponName]
+
+    for range, classes in pairs(ConfigFile.Weapons) do
+        for class, kinds in pairs(classes) do
+            for kind, weapons in pairs(kinds) do
+                for weapon, weaponData in pairs(weapons) do
+                    if weaponData.Variants.Default then
+                        if weaponData.Variants.Default.recordPath then
+                            if weaponData.Variants.Default.recordPath == weaponRecordPath then return weaponData end
+                        end
+                    end
+                end
             end
-        ) then
-        return weapon
+        end
     end
-    return nil
+end
+
+function Weapon.FindByName(weaponName, weaponsTable)
+    local weaponsTable = weaponsTable or ConfigFile.Weapons
+
+    for range, classes in pairs(ConfigFile.Weapons) do
+        for class, kinds in pairs(classes) do
+            for kind, weapons in pairs(kinds) do
+                for weapon, weaponData in pairs(weapons) do
+                    if weapon == weaponName then return weaponData end
+                end
+            end
+        end
+    end
+end
+
+function Weapon.FindVariant(variantRecordPath)
+    for range, classes in pairs(ConfigFile.Weapons) do
+        for class, kinds in pairs(classes) do
+            for kind, weapons in pairs(kinds) do
+                for weapon, weaponData in pairs(weapons) do
+                    for variant, variantProperties in pairs(weaponData.Variants) do
+                        if variantProperties.recordPath then
+                            if variantProperties.recordPath == variantRecordPath then return variantProperties end
+                        end
+                    end
+                end
+            end
+        end
+    end
 end
 
 function Weapon.SetCrosshair(storageWeapon, crosshair)

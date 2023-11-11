@@ -37,6 +37,11 @@ function Debug.genDump(data, depth)
     end
 end
 
+---comment
+---@param data any
+---@param toFile? boolean
+---@param die? boolean
+---@param force? boolean
 function log(data, toFile, die, force)
     local toFile = toFile or false
     local die = die or false

@@ -1,36 +1,5 @@
 RangedUI = {
-    xhairsOptions = {
-        [1] = "Basic",
-        [2] = "BlackwallForce",
-        [3] = "Custom_HMG",
-        [4] = "Cyberware_Mantis_Blades",
-        [5] = "Cyberware_Projectile_Launcher",
-        [6] = "Driver_Combat_Missile_Launcher",
-        [7] = "Driver_Combat_Power_Weapon",
-        [8] = "Hercules",
-        [9] = "Hex",
-        [10] = "Jailbreak_power",
-        [11] = "Jailbreak_smart",
-        [12] = "Jailbreak_tech",
-        [13] = "Melee_Bottle",
-        [14] = "Melee_Hammer",
-        [15] = "Melee_Knife",
-        [16] = "Melee_Nano_Wire",
-        [17] = "Melee_Strong_Arms",
-        [18] = "Melee",
-        [19] = "None",
-        [20] = "NoWeapon",
-        [21] = "Pistol",
-        [22] = "Power_Defender",
-        [23] = "Power_Overture",
-        [24] = "Power_Saratoga",
-        [25] = "Rasetsu",
-        [26] = "Simple",
-        [27] = "SmartGun",
-        [28] = "Tech_Hex",
-        [29] = "Tech_Round",
-        [30] = "Tech_Simple"
-    }
+
 }
 
 function RangedUI.Init()
@@ -81,31 +50,27 @@ function RangedUI.Init()
             )
 
             local weapons = table_keys(ConfigFile.Weapons.RangedWeapon[class][kind])
-            local weaponNames = {}
+            local weaponLabels = {}
 
             table_map(weapons,
                 function(k, weapon)
-                    weaponNames[k] = ConfigFile.Weapons.RangedWeapon[class][kind][weapon].Variants.Default.LocalizedName
+                    weaponLabels[k] = ConfigFile.Weapons.RangedWeapon[class][kind][weapon].Variants.Default
+                    .LocalizedName
                 end
             )
 
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCRanged/weapon")
                 ui.removeSubcategory("/AWSCRanged/variant")
-                log("RangedUI: setWeapon(" .. value .. ")")
 
-                local weaponLabel = weaponNames[value]
+
+                local weaponLabel = weaponLabels[value]
                 local weaponRecordName = weapons[value]
 
-                local storageWeapon = Weapon.Find(
-                    weaponRecordName,
-                    {
-                        Range = "RangedWeapon",
-                        Class = class,
-                        Kind = kind
-                    },
-                    ConfigFile.Weapons
-                )
+                log("RangedUI: Setting weapon " .. weaponLabel)
+
+                local storageWeapon = Weapon.FindByName(weaponRecordName)
+                if not storageWeapon then dd(weaponRecordName, storageWeapon) end
 
                 local variantNames = {
                     [1] = "Default"
@@ -115,14 +80,17 @@ function RangedUI.Init()
                     [1] = "Default"
                 }
 
+
+
                 if not pcall(function()
                         table_map(
                             storageWeapon.Variants,
                             function(variantName, storageVariant)
                                 if table_count(storageVariant) > 1 and variantName ~= "Default" then
+                                    log(variantName, storageVariant.LocalizedName)
                                     if storageVariant.LocalizedName == storageWeapon.Variants.Default.LocalizedName then
-                                        table.insert(variantNames, variantName)
                                         table.insert(variantLabels, variantName)
+                                        table.insert(variantNames, variantName)
                                     else
                                         table.insert(variantLabels, storageVariant.LocalizedName)
                                         table.insert(variantNames, variantName)
@@ -172,16 +140,16 @@ function RangedUI.Init()
                                     "/AWSCRanged/variant",
                                     "Crosshair",
                                     "Crosshair",
-                                    RangedUI.xhairsOptions,
-                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Stats.Crosshair.custom),
-                                    table_indexOf(RangedUI.xhairsOptions, storageVariant.Stats.Crosshair.default),
+                                    MainUI.xhairsOptions,
+                                    table_indexOf(MainUI.xhairsOptions, storageVariant.Stats.Crosshair.custom),
+                                    table_indexOf(MainUI.xhairsOptions, storageVariant.Stats.Crosshair.default),
                                     function(value)
                                         local flatSuccess = Weapon.SetCrosshair(storageWeapon,
-                                            RangedUI.xhairsOptions[value])
+                                            MainUI.xhairsOptions[value])
 
                                         if flatSuccess then
                                             ConfigFile.Weapons.RangedWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
-                                                RangedUI.xhairsOptions[value]
+                                                MainUI.xhairsOptions[value]
 
                                             ConfigFile.Save()
 
@@ -207,7 +175,12 @@ function RangedUI.Init()
                         log("RangedUI: '" ..
                             variantLabel .. "' Identified as an Iconic")
 
-                        if table_count(storageVariant.Stats) < 3 then
+                        if storageVariant.Disclaimer then
+                            ui.addSubcategory(
+                                "/AWSCRanged/iconicDisclaimer",
+                                storageVariant.Disclaimer
+                            )
+                        elseif table_count(storageVariant.Stats) < 3 then
                             ui.removeSubcategory("/AWSCRanged/variant")
                             ui.addSubcategory(
                                 "/AWSCRanged/iconicDisclaimer",
@@ -233,8 +206,6 @@ function RangedUI.Init()
 
                     for stat, statValues in pairs(validStats) do
                         if stat ~= "Crosshair" then
-                            log("RangedUI: creating the control for " .. stat)
-
                             local status, errorMessage = pcall(function()
                                 log("RangedUI: Creating the " ..
                                     statValues.uiLabel ..
@@ -247,16 +218,16 @@ function RangedUI.Init()
                                     desc = desc .. " Multiplier"
                                 end
                                 ui.addRangeFloat(
-                                    subcat,               --path
-                                    label,                --label
+                                    subcat,                   --path
+                                    label,                    --label
                                     statValues.uiDescription, --description
-                                    statValues.min,       --min
-                                    statValues.max,       --max
-                                    statValues.step,      --step
-                                    statValues.format,    --format
-                                    statValues.custom + 0.0, --currentValue
+                                    statValues.min,           --min
+                                    statValues.max,           --max
+                                    statValues.step,          --step
+                                    statValues.format,        --format
+                                    statValues.custom + 0.0,  --currentValue
                                     statValues.default + 0.0, --defaultValue
-                                    function(value)       --callback
+                                    function(value)           --callback
                                         log("RangedUI: Setting " ..
                                             statValues.uiLabel ..
                                             " for the '" ..
@@ -285,7 +256,7 @@ function RangedUI.Init()
                     "/AWSCRanged/weapon",
                     "Variants",
                     "Choose a weapon variant",
-                    variantNames,
+                    variantLabels,
                     1,
                     1,
                     setVariant
@@ -298,7 +269,7 @@ function RangedUI.Init()
                 "/AWSCRanged/kind",
                 "Weapons",
                 "Choose a weapon",
-                weaponNames,
+                weaponLabels,
                 1,
                 1,
                 setWeapon

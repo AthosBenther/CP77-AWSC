@@ -1,5 +1,5 @@
 Mod = {
-    descrition = "Sandbox"
+    descrition = "Advanced Weapon Stat Customization"
 }
 
 require("vendors/autoloader")
