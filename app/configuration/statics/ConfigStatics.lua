@@ -79,13 +79,8 @@ ConfigStatics = {
             addVariants = true,
             addDefault = false,
             Variants = {
-                -- ["Items.Preset_Nue_Arasaka_2077"] = {
-                --     localizedName = "Tamayura (2077)",
-                --     disclaimer =
-                --     "Tamayura (2077) inherits some stats from Tamayura (2020), and have no other unique stats"
-                -- },
                 ["Items.Preset_Nue_Arasaka_2020"] = {
-                    localizedName = "Tamayura (2020)",
+                    localizedName = "Tamayura",
                     disclaimer =
                     "Tamayura does not inherit any stat from Nue, despite being listed as a variant"
                 }
@@ -95,13 +90,8 @@ ConfigStatics = {
             addVariants = true,
             addDefault = false,
             Variants = {
-                -- ["Items.Preset_Masamune_Arasaka_2077"] = {
-                --     localizedName = "Nowaki (2077)",
-                --     disclaimer =
-                --     "Nowaki (2077) inherits some stats from Nowaki (2020), and have no other unique stats"
-                -- },
                 ["Items.Preset_Masamune_Arasaka_2020"] = {
-                    localizedName = "Nowaki (2020)"
+                    localizedName = "Nowaki"
                 }
             }
         },
@@ -109,22 +99,8 @@ ConfigStatics = {
             addVariants = true,
             addDefault = false,
             Variants = {
-                -- ["Items.Preset_Masamune_Arasaka_2077"] = {
-                --     localizedName = "Nowaki (2077)",
-                --     disclaimer =
-                --     "Nowaki (2077) inherits some stats from Nowaki (2020), and have no other unique stats"
-                -- },
                 ["Items.Preset_Saratoga_Arasaka_2020"] = {
                     localizedName = "Shigure"
-                }
-            }
-        },
-        ["Items.Preset_Defender_Default"] = {
-            addVariants = true,
-            addDefault = false,
-            Variants = {
-                ["Items.Preset_Defender_MaxTac_2nd_wave"] = {
-                    localizedName = "MaxTac 2nd Wave"
                 }
             }
         }

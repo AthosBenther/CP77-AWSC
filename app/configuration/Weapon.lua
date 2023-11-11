@@ -10,19 +10,19 @@ Weapon = {
                             uiDescription = "Hip Lock Time",
                             statType = "BaseStats.SmartGunHipTimeToLock",
                             uiLabel = "Hip Lock Time",
-                            min = 0.001,
+                            min = 0.01,
                             max = 3,
-                            step = 0.001,
-                            format = "%.3f",
+                            step = 0.01,
+                            format = "%.2f",
                         },
                         SmartGunAdsTimeToLock = {
                             uiDescription = "Ads Lock Time",
                             statType = "BaseStats.SmartGunAdsTimeToLock",
                             uiLabel = "Ads Lock Time",
-                            min = 0.001,
+                            min = 0.01,
                             max = 3,
-                            step = 0.001,
-                            format = "%.3f",
+                            step = 0.01,
+                            format = "%.2f",
                         }
                     }
                 }
@@ -37,7 +37,7 @@ Weapon = {
                         uiDescription = "Weapon Crosshair"
                     },
                     Damage = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiLabel = "Damage",
                         uiDescription = "Damage (Scales with weapon quality)",
                         statType = "BaseStats.DPS",
@@ -47,7 +47,7 @@ Weapon = {
                         format = "%.0f"
                     },
                     Magazine = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Magazine Capacity",
                         statType = "BaseStats.MagazineCapacityBase",
                         uiLabel = "Magazine",
@@ -57,52 +57,52 @@ Weapon = {
                         format = "%.0f"
                     },
                     CycleTime = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Cycle Time",
                         statType = "BaseStats.CycleTimeBase",
                         uiLabel = "Cycle Time",
-                        min = 0.0001,
-                        max = 10,
-                        step = 0.0001,
-                        format = "%.4f"
+                        min = 0.001,
+                        max = 3,
+                        step = 0.001,
+                        format = "%.3f"
                     },
                     EffectiveRange = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Effective Range",
                         statType = "BaseStats.EffectiveRange",
                         uiLabel = "Effective Range",
                         min = -100,
                         max = 100,
-                        step = 0.01,
-                        format = "%.2f"
+                        step = 0.1,
+                        format = "%.1f"
                     },
                     HeadshotDamageMultiplier = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Headshot Damage",
                         statType = "BaseStats.HeadshotDamageMultiplier",
                         uiLabel = "Headshot Damage",
                         min = -100,
                         max = 100,
-                        step = 0.01,
-                        format = "%.2f"
+                        step = 0.1,
+                        format = "%.1f"
                     },
                     ProjectilesPerShotBase = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Projectiles Per Shot",
                         statType = "BaseStats.ProjectilesPerShotBase",
                         uiLabel = "Projectiles Per Shot",
                         min = 1,
-                        max = 100,
+                        max = 50,
                         step = 1,
                         format = "%.0f"
                     },
                     NumShotsToFire = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiDescription = "Number of bullets to fire in a burst",
                         statType = "BaseStats.NumShotsToFire",
                         uiLabel = "Shots To Fire",
                         min = 1,
-                        max = 100,
+                        max = 20,
                         step = 1,
                         format = "%.0f"
                     }
@@ -146,12 +146,12 @@ Weapon = {
                         format = "%.1f",
                     },
                     Damage = {
-                        uiComponent = "Rangefloat",
+                        uiComponent = "RangeFloat",
                         uiLabel = "Damage",
                         uiDescription = "Damage (Scales with weapon quality)",
                         statType = "BaseStats.DPS",
                         min = 0,
-                        max = 1500,
+                        max = 3000,
                         step = 1,
                         format = "%.0f"
                     }

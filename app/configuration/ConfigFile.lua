@@ -7,6 +7,7 @@ function ConfigFile.Init()
 	-- dd(ConfigFile.Weapons)
 	local newFile = false
 	local fileValidation = ConfigFile.Validate()
+
 	if fileValidation ~= true then
 		log("ConfigFile: Weapons.json file validation failed. Errors: ")
 		log(fileValidation)
