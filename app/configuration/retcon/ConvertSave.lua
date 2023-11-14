@@ -2,7 +2,8 @@ ConvertSave = {}
 
 function ConvertSave.Init()
     if FileManager.Exists(config("storage.weapons")) then
-        FileManager.save(FileManager.open(config("storage.weapons")), "bkp/".. get_date_time_safe_string() .."-weapons.json")
+        FileManager.save(FileManager.open(config("storage.weapons")),
+            "bkp/" .. get_date_time_safe_string() .. "-weapons.json")
 
 
         local file = FileManager.openJson(config("storage.weapons"))
@@ -31,8 +32,11 @@ function ConvertSave.Init()
                     end
                 end
             end
+        elseif file.Version == "0.7" then
+            ConfigFile.oldWeapons = FileManager.openJson(config("storage.weapons"))
         else
-            log("ConvertSave: the file '" .. config("storage.weapons") .. "' is not a AWSC 0.6 save file.")
+            log("ConvertSave: the file '" ..
+            config("storage.weapons") .. "' is not a an recognized (^0.6) AWSC save file. ")
             return false
         end
         return true

@@ -1,36 +1,4 @@
 MeleeUI = {
-    xhairsOptions = {
-        [1] = "Basic",
-        [2] = "BlackwallForce",
-        [3] = "Custom_HMG",
-        [4] = "Cyberware_Mantis_Blades",
-        [5] = "Cyberware_Projectile_Launcher",
-        [6] = "Driver_Combat_Missile_Launcher",
-        [7] = "Driver_Combat_Power_Weapon",
-        [8] = "Hercules",
-        [9] = "Hex",
-        [10] = "Jailbreak_power",
-        [11] = "Jailbreak_smart",
-        [12] = "Jailbreak_tech",
-        [13] = "Melee_Bottle",
-        [14] = "Melee_Hammer",
-        [15] = "Melee_Knife",
-        [16] = "Melee_Nano_Wire",
-        [17] = "Melee_Strong_Arms",
-        [18] = "Melee",
-        [19] = "None",
-        [20] = "NoWeapon",
-        [21] = "Pistol",
-        [22] = "Power_Defender",
-        [23] = "Power_Overture",
-        [24] = "Power_Saratoga",
-        [25] = "Rasetsu",
-        [26] = "Simple",
-        [27] = "SmartGun",
-        [28] = "Tech_Hex",
-        [29] = "Tech_Round",
-        [30] = "Tech_Simple"
-    }
 }
 
 function MeleeUI.Init()
@@ -94,20 +62,14 @@ function MeleeUI.Init()
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCMelee/weapon")
                 ui.removeSubcategory("/AWSCMelee/variant")
-                log("MeleeUI: setWeapon(" .. value .. ")")
+
 
                 local weaponLabel = weaponNames[value]
-                local weaponRecordName = weapons[value]
+                local WeaponName = weapons[value]
 
-                local storageWeapon = Weapon.Find(
-                    weaponRecordName,
-                    {
-                        Range = "MeleeWeapon",
-                        Class = class,
-                        Kind = kind
-                    },
-                    ConfigFile.Weapons
-                )
+                log("MeleeUI: Setting weapon " .. weaponLabel)
+
+                local storageWeapon = Weapon.FindByName(WeaponName)
 
                 local variantNames = {
                     [1] = "Default"
@@ -133,7 +95,7 @@ function MeleeUI.Init()
                             end
                         )
                     end) then
-                    log("RanderUI: Inserting one or more " .. weaponLabel .. " variants failed")
+                    log("MeleeUI: Inserting one or more " .. weaponLabel .. " variants failed")
                 end
 
                 log("MeleeUI: addSubcategory(" .. weaponLabel .. ")")
@@ -146,16 +108,16 @@ function MeleeUI.Init()
                 local setVariant = function(value)
                     ui.removeSubcategory("/AWSCMelee/variant")
                     ui.removeSubcategory("/AWSCMelee/iconicDisclaimer")
-                    log("MeleeUI: setVariant(" .. value .. ")")
+
 
 
                     local variantName = variantNames[value]
                     local variantLabel = variantLabels[value]
 
+                    log("MeleeUI: Setting variant " .. variantLabel)
+
 
                     local storageVariant = storageWeapon.Variants[variantName]
-
-                    log("MeleeUI: Setting variant " .. variantLabel)
 
                     ---@type gamedataWeaponItem_Record
                     --local variantRecord = TweakDB:GetRecord(storageVariant.recordPath)
@@ -175,16 +137,16 @@ function MeleeUI.Init()
                                     "/AWSCMelee/variant",
                                     "Crosshair",
                                     "Crosshair",
-                                    MeleeUI.xhairsOptions,
-                                    table_indexOf(MeleeUI.xhairsOptions, storageVariant.Stats.Crosshair.custom),
-                                    table_indexOf(MeleeUI.xhairsOptions, storageVariant.Stats.Crosshair.default),
+                                    MainUI.xhairsOptions,
+                                    table_indexOf(MainUI.xhairsOptions, storageVariant.Stats.Crosshair.custom),
+                                    table_indexOf(MainUI.xhairsOptions, storageVariant.Stats.Crosshair.default),
                                     function(value)
                                         local flatSuccess = Weapon.SetCrosshair(storageWeapon,
-                                            MeleeUI.xhairsOptions[value])
+                                            MainUI.xhairsOptions[value])
 
                                         if flatSuccess then
                                             ConfigFile.Weapons.MeleeWeapon[class][kind][weaponRecordName].Variants.Default.Stats.Crosshair.custom =
-                                                MeleeUI.xhairsOptions[value]
+                                                MainUI.xhairsOptions[value]
 
                                             ConfigFile.Save()
 
@@ -251,16 +213,16 @@ function MeleeUI.Init()
                                     desc = desc .. " Multiplier"
                                 end
                                 ui.addRangeFloat(
-                                    subcat,               --path
-                                    label,                --label
+                                    subcat,                   --path
+                                    label,                    --label
                                     statValues.uiDescription, --description
-                                    statValues.min,       --min
-                                    statValues.max,       --max
-                                    statValues.step,      --step
-                                    statValues.format,    --format
-                                    statValues.custom + 0.0, --currentValue
+                                    statValues.min,           --min
+                                    statValues.max,           --max
+                                    statValues.step,          --step
+                                    statValues.format,        --format
+                                    statValues.custom + 0.0,  --currentValue
                                     statValues.default + 0.0, --defaultValue
-                                    function(value)       --callback
+                                    function(value)           --callback
                                         log("MeleeUI: Setting " ..
                                             statValues.uiLabel ..
                                             " for the '" ..
