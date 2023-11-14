@@ -136,7 +136,7 @@ function ConfigFile.AddWeapon(weaponRecordPath, weaponRecord, addVariants)
 			end
 		end
 	else
-		log("ConfigFile: The weapon " .. weaponName .. " cant be found in the old save. Creating new records...")
+		log("ConfigFile: The weapon " .. weaponName .. " haven't been previously loaded. Creating new records...")
 	end
 
 	ConfigFile.Weapons[classification.Range][classification.Class][classification.Kind][weaponName].Variants.Default =
@@ -219,6 +219,9 @@ function ConfigFile.AddVariants(weaponName, weaponRecord, classification)
 end
 
 function ConfigFile.AddClassification(classification)
+	if not classification.Range or not classification.Class or not classification.Kind then
+		dd(classification)
+	end
 	if ConfigFile.Weapons[classification.Range] == nil then
 		ConfigFile.Weapons[classification.Range] = {}
 	end
