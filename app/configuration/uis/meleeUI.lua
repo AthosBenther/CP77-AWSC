@@ -1,4 +1,5 @@
 MeleeUI = {
+
 }
 
 function MeleeUI.Init()
@@ -49,27 +50,27 @@ function MeleeUI.Init()
             )
 
             local weapons = table_keys(ConfigFile.Weapons.MeleeWeapon[class][kind])
-            local weaponNames = {}
+            local weaponLabels = {}
 
             table_map(weapons,
                 function(k, weapon)
-                    weaponNames[k] = ConfigFile.Weapons.MeleeWeapon[class][kind][weapon].Variants.Default.LocalizedName or
-                        weapon
+                    weaponLabels[k] = ConfigFile.Weapons.MeleeWeapon[class][kind][weapon].Variants.Default
+                    .LocalizedName or weapon
                 end
             )
-
 
             local setWeapon = function(value)
                 ui.removeSubcategory("/AWSCMelee/weapon")
                 ui.removeSubcategory("/AWSCMelee/variant")
 
 
-                local weaponLabel = weaponNames[value]
-                local WeaponName = weapons[value]
+                local weaponLabel = weaponLabels[value]
+                local weaponRecordName = weapons[value]
 
                 log("MeleeUI: Setting weapon " .. weaponLabel)
 
-                local storageWeapon = Weapon.FindByName(WeaponName)
+                local storageWeapon = Weapon.FindByName(weaponRecordName)
+                if not storageWeapon then dd(weaponRecordName, storageWeapon) end
 
                 local variantNames = {
                     [1] = "Default"
@@ -79,14 +80,17 @@ function MeleeUI.Init()
                     [1] = "Default"
                 }
 
+
+
                 if not pcall(function()
                         table_map(
                             storageWeapon.Variants,
                             function(variantName, storageVariant)
                                 if table_count(storageVariant) > 1 and variantName ~= "Default" then
+                                    log(variantName, storageVariant.LocalizedName)
                                     if storageVariant.LocalizedName == storageWeapon.Variants.Default.LocalizedName then
-                                        table.insert(variantNames, variantName)
                                         table.insert(variantLabels, variantName)
+                                        table.insert(variantNames, variantName)
                                     else
                                         table.insert(variantLabels, storageVariant.LocalizedName)
                                         table.insert(variantNames, variantName)
@@ -95,10 +99,9 @@ function MeleeUI.Init()
                             end
                         )
                     end) then
-                    log("MeleeUI: Inserting one or more " .. weaponLabel .. " variants failed")
+                    log("RanderUI: Inserting one or more " .. weaponLabel .. " variants failed")
                 end
 
-                log("MeleeUI: addSubcategory(" .. weaponLabel .. ")")
                 ui.addSubcategory(
                     "/AWSCMelee/weapon",
                     weaponLabel
@@ -114,10 +117,10 @@ function MeleeUI.Init()
                     local variantName = variantNames[value]
                     local variantLabel = variantLabels[value]
 
-                    log("MeleeUI: Setting variant " .. variantLabel)
-
 
                     local storageVariant = storageWeapon.Variants[variantName]
+
+                    log("MeleeUI: Setting variant " .. variantLabel)
 
                     ---@type gamedataWeaponItem_Record
                     --local variantRecord = TweakDB:GetRecord(storageVariant.recordPath)
@@ -160,7 +163,7 @@ function MeleeUI.Init()
                             end
                         )
                         if xhsuccess then
-                            -- storageVariant.Stats = table_remove(storageVariant.Stats, "Crosshair")
+                            --storageVariant.Stats = table_remove(storageVariant.Stats, "Crosshair")
                         else
                             log("MeleeUI: Failed to create the Crosshair control for the '" ..
                                 variantLabel .. "' variant of '" .. weaponLabel .. "'")
@@ -172,7 +175,12 @@ function MeleeUI.Init()
                         log("MeleeUI: '" ..
                             variantLabel .. "' Identified as an Iconic")
 
-                        if table_count(storageVariant.Stats) < 3 then
+                        if storageVariant.Disclaimer then
+                            ui.addSubcategory(
+                                "/AWSCMelee/iconicDisclaimer",
+                                storageVariant.Disclaimer
+                            )
+                        elseif table_count(storageVariant.Stats) < 3 then
                             ui.removeSubcategory("/AWSCMelee/variant")
                             ui.addSubcategory(
                                 "/AWSCMelee/iconicDisclaimer",
@@ -190,8 +198,7 @@ function MeleeUI.Init()
                     local subcat = "/AWSCMelee/variant"
                     if isIconic then subcat = "/AWSCMelee/iconicDisclaimer" end
 
-                    local validStats = table_filter(storageVariant.Stats,
-                        function(k, v) return (type(v) == "table" and k ~= "Crosshair") end)
+                    local validStats = table_filter(storageVariant.Stats, function(k, v) return type(v) == "table" end)
 
 
                     log("MeleeUI: " .. table_count(validStats) .. " stats identified:")
@@ -199,8 +206,6 @@ function MeleeUI.Init()
 
                     for stat, statValues in pairs(validStats) do
                         if stat ~= "Crosshair" then
-                            log("MeleeUI: creating the control for " .. stat)
-
                             local status, errorMessage = pcall(function()
                                 log("MeleeUI: Creating the " ..
                                     statValues.uiLabel ..
@@ -251,7 +256,7 @@ function MeleeUI.Init()
                     "/AWSCMelee/weapon",
                     "Variants",
                     "Choose a weapon variant",
-                    variantNames,
+                    variantLabels,
                     1,
                     1,
                     setVariant
@@ -264,7 +269,7 @@ function MeleeUI.Init()
                 "/AWSCMelee/kind",
                 "Weapons",
                 "Choose a weapon",
-                weaponNames,
+                weaponLabels,
                 1,
                 1,
                 setWeapon

@@ -84,17 +84,15 @@ function Main.SetRecordValue(path, field, value)
     end
 
     if TweakDB:GetFlat(path .. "." .. field) then
-        if not TweakDB:SetFlatNoUpdate(path .. "." .. field, value) then
-            log("Main.lua: Failed to SetFlat: '" ..
+        if not TweakDB:SetFlat(path .. "." .. field, value) then
+            log("Main: Failed to SetFlat: '" ..
                 path .. "." .. field .. "' as '" .. value .. "'")
             return false
         end
-        if not TweakDB:Update(path) then
-            log("Main.lua: Failed to Update path '" .. path .. "." .. field .. "' with value '" .. value .. "'")
-            return false
-        end
     else
-        -- log("Main.lua: the flat '" .. path .. "." .. field .. "' does not exist.")
+        if not field == "crosshair" then
+            log("Main: the flat '" .. path .. "." .. field .. "' does not exist.")
+        end
     end
     return true
 end
