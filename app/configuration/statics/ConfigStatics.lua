@@ -55,6 +55,16 @@ ConfigStatics = {
         'Knuckles'
     },
     additionalWeapons = {
+        ["Items.Preset_Base_Slaughtomatic"] = {
+            addVariants = false,
+            addDefault = true,
+            statsAlias = "Slaughtomatic",
+            Tags = {
+                "RangedWeapon",
+                "PowerWeapon",
+                "Handgun"
+            }
+        },
         ["Items.Preset_Silverhand_3516"] = {
             addVariants = false,
             addDefault = true,
