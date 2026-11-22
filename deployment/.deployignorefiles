@@ -3,3 +3,4 @@
 *.bkp
 *.json
 Statics.lua
+.gitignore
